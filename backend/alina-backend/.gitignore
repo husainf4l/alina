@@ -1,0 +1,52 @@
+# Environment-specific files
+.env
+.env.local
+.env.production
+.env.*.local
+
+# RSA Keys (NEVER commit these!)
+keys/
+*.pem
+*.key
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# macOS
+.DS_Store
+
+# Rider
+.idea/
+*.sln.iml
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Database
+*.db
+*.sqlite
+
+# Backup folder for Package Reference Convert tool in Visual Studio 2017
+MigrationBackup/

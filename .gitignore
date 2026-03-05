@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Environment files
+.env
+.env.local
+.env.production
+*.env
+
+# Private keys
+*.pem
+*.key
+keys/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Sensitive configuration files
+appsettings.Development.json
+appsettings.Local.json
+*secrets.json

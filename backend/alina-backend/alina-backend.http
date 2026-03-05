@@ -1,0 +1,294 @@
+@alina_backend_HostAddress = http://localhost:5602
+
+###
+# HEALTH CHECK
+###
+
+GET {{alina_backend_HostAddress}}/api/health
+Accept: application/json
+
+###
+# AUTHENTICATION ENDPOINTS
+###
+
+# Register User
+POST {{alina_backend_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "TestPassword123!",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+###
+
+# Login User
+POST {{alina_backend_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "TestPassword123!"
+}
+
+###
+
+# Google OAuth Login
+POST {{alina_backend_HostAddress}}/api/auth/google-login
+Content-Type: application/json
+
+{
+  "idToken": "GOOGLE_ID_TOKEN_HERE"
+}
+
+###
+
+# Refresh Token
+POST {{alina_backend_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "REFRESH_TOKEN_HERE"
+}
+
+###
+
+# Forgot Password
+POST {{alina_backend_HostAddress}}/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+
+###
+
+# Reset Password
+POST {{alina_backend_HostAddress}}/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "RESET_TOKEN_HERE",
+  "newPassword": "NewPassword123!"
+}
+
+###
+# USER PROFILE ENDPOINTS (Requires Authentication)
+###
+
+# Get Current User Profile
+GET {{alina_backend_HostAddress}}/api/profiles/me
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Update Profile
+PUT {{alina_backend_HostAddress}}/api/profiles/me
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "bio": "Experienced developer",
+  "skills": ["C#", "React", "Node.js"],
+  "hourlyRate": 50
+}
+
+###
+
+# Get User Profile by ID
+GET {{alina_backend_HostAddress}}/api/profiles/123e4567-e89b-12d3-a456-426614174000
+Accept: application/json
+
+###
+# MARKETPLACE ENDPOINTS
+###
+
+# Get All Gigs
+GET {{alina_backend_HostAddress}}/api/marketplace/gigs
+Accept: application/json
+
+###
+
+# Get Gig by ID
+GET {{alina_backend_HostAddress}}/api/marketplace/gigs/123e4567-e89b-12d3-a456-426614174000
+Accept: application/json
+
+###
+
+# Create Gig (Requires Authentication)
+POST {{alina_backend_HostAddress}}/api/marketplace/gigs
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "Full Stack Web Development",
+  "description": "I will build modern web applications",
+  "categoryId": 1,
+  "subcategoryId": 1,
+  "price": 100.00,
+  "deliveryTime": 7,
+  "revisions": 3
+}
+
+###
+
+# Search Gigs
+GET {{alina_backend_HostAddress}}/api/marketplace/gigs/search?q=web%20development&category=1
+Accept: application/json
+
+###
+
+# Get Categories
+GET {{alina_backend_HostAddress}}/api/marketplace/categories
+Accept: application/json
+
+###
+# ORDERS ENDPOINTS (Requires Authentication)
+###
+
+# Create Order
+POST {{alina_backend_HostAddress}}/api/orders
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "gigId": "123e4567-e89b-12d3-a456-426614174000",
+  "requirements": "Need a responsive website with 5 pages"
+}
+
+###
+
+# Get User Orders
+GET {{alina_backend_HostAddress}}/api/orders
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Get Order by ID
+GET {{alina_backend_HostAddress}}/api/orders/123e4567-e89b-12d3-a456-426614174000
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Update Order Status
+PUT {{alina_backend_HostAddress}}/api/orders/123e4567-e89b-12d3-a456-426614174000/status
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "status": "in_progress"
+}
+
+###
+# MESSAGING ENDPOINTS (Requires Authentication)
+###
+
+# Get Conversations
+GET {{alina_backend_HostAddress}}/api/messaging/conversations
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Get Messages in Conversation
+GET {{alina_backend_HostAddress}}/api/messaging/conversations/123e4567-e89b-12d3-a456-426614174000/messages
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Send Message
+POST {{alina_backend_HostAddress}}/api/messaging/messages
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "receiverId": "123e4567-e89b-12d3-a456-426614174000",
+  "content": "Hello! I'm interested in your gig.",
+  "orderId": "123e4567-e89b-12d3-a456-426614174000"
+}
+
+###
+# FILE UPLOAD ENDPOINTS (Requires Authentication)
+###
+
+# Upload File
+POST {{alina_backend_HostAddress}}/api/media/upload
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="example.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/file.jpg
+------WebKitFormBoundary--
+
+###
+# ANALYTICS ENDPOINTS (Requires Authentication)
+###
+
+# Get Seller Analytics
+GET {{alina_backend_HostAddress}}/api/analytics/seller
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Get Platform Analytics (Admin Only)
+GET {{alina_backend_HostAddress}}/api/analytics/platform
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+# FINANCE ENDPOINTS (Requires Authentication)
+###
+
+# Get Wallet Balance
+GET {{alina_backend_HostAddress}}/api/finance/wallet
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Get Transactions
+GET {{alina_backend_HostAddress}}/api/finance/transactions
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Withdraw Funds
+POST {{alina_backend_HostAddress}}/api/finance/withdraw
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "amount": 100.00,
+  "paymentMethod": "bank_transfer"
+}
+
+###
+# NOTIFICATIONS ENDPOINTS (Requires Authentication)
+###
+
+# Get Notifications
+GET {{alina_backend_HostAddress}}/api/notifications
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+# Mark Notification as Read
+PUT {{alina_backend_HostAddress}}/api/notifications/123e4567-e89b-12d3-a456-426614174000/read
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "isRead": true
+}
