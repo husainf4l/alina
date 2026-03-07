@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
@@ -63,11 +64,26 @@ export default function AuthCard() {
 
       {/* Heading */}
       <div className="mb-7 animate-fade-up" style={{ animationDelay: "120ms" }}>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          <span className="font-[family-name:var(--font-display)] italic font-normal">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2 flex-wrap">
+          <span>
             {isLogin ? t("loginTitle") : t("registerTitle")}
-          </span>{" "}
-          <span>{isLogin ? t("loginTitleBrand") : t("registerTitleBrand")}</span>
+          </span>
+          <span className="inline-block">
+            <Image
+              src="/logo/alinalogo-lighttheme.png"
+              alt="Alina"
+              width={85}
+              height={28}
+              className="block dark:hidden"
+            />
+            <Image
+              src="/logo/alinalogodark.png"
+              alt="Alina"
+              width={85}
+              height={28}
+              className="hidden dark:block"
+            />
+          </span>
         </h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
           {isLogin ? t("loginSubtitle") : t("registerSubtitle")}
