@@ -28,16 +28,16 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative isolate flex min-h-[600px] lg:min-h-[680px] flex-col items-start justify-center overflow-hidden px-6 lg:px-12 py-20 lg:py-24">
+    <section className="relative flex min-h-[600px] lg:min-h-[680px] flex-col items-start justify-center overflow-hidden px-6 lg:px-12 py-20 lg:py-24">
 
-      {/* Video background */}
-      <div className="pointer-events-none absolute inset-0 z-0">
+      {/* Video background — first in DOM so it's naturally behind all siblings */}
+      <div className="pointer-events-none absolute inset-0">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 h-full w-full object-cover"
+          className="h-full w-full object-cover object-[center_30%]"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
