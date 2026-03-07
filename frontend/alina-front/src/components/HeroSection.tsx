@@ -73,12 +73,12 @@ export default function HeroSection() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("searchPlaceholder")}
-                  className="w-full h-14 pl-12 pr-4 rounded-lg sm:rounded-r-none bg-white dark:bg-card text-foreground placeholder:text-muted-foreground border-0 focus:outline-none focus:ring-2 focus:ring-[#E70E8A] text-base"
+                  className="w-full h-14 pl-12 pr-4 rounded-lg sm:rounded-r-none bg-white dark:bg-card text-foreground placeholder:text-muted-foreground border-0 focus:outline-none focus:ring-2 focus:ring-[#B05088] text-base"
                 />
               </div>
               <button
                 type="submit"
-                className="h-14 px-8 bg-[#E70E8A] hover:bg-[#E70E8A]/90 text-white font-semibold rounded-lg sm:rounded-l-none transition-colors text-base whitespace-nowrap"
+                className="h-14 px-8 bg-[#B05088] hover:bg-[#B05088]/90 text-white font-semibold rounded-lg sm:rounded-l-none transition-colors text-base whitespace-nowrap"
               >
                 {t("searchButton")}
               </button>
@@ -94,7 +94,7 @@ export default function HeroSection() {
             {popularSearches.map((search, index) => {
               const isFirst = index === 0;
               const baseClasses = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors text-xs sm:text-sm font-medium";
-              const pinkClasses = "bg-[#E70E8A] hover:bg-[#E70E8A]/90 text-white";
+              const pinkClasses = "bg-[#B05088] hover:bg-[#B05088]/90 text-white";
               const defaultClasses = "border border-white/30 text-white hover:bg-white/10 backdrop-blur-sm";
               
               return (
@@ -110,8 +110,6 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent z-20" />
     </section>
   );
 }

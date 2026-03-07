@@ -29,9 +29,9 @@ export default function AboutSection() {
   }, []);
 
   const stats = [
-    { key: "freelancers", icon: Users, color: "#E70E8A" },
+    { key: "freelancers", icon: Users, color: "#B05088" },
     { key: "projects", icon: Target, color: "#3E9666" },
-    { key: "satisfaction", icon: Award, color: "#E70E8A" },
+    { key: "satisfaction", icon: Award, color: "#B05088" },
     { key: "countries", icon: Globe, color: "#3E9666" }
   ];
 
@@ -49,18 +49,13 @@ export default function AboutSection() {
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background">
           <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#E70E8A]/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#B05088]/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#3E9666]/20 rounded-full blur-3xl animate-pulse animation-delay-2000" />
           </div>
         </div>
         
         <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-12 py-20 text-center">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 backdrop-blur-xl border border-border/50">
-              <Sparkles className="size-4 text-[#E70E8A]" />
-              <span className="text-sm font-medium text-muted-foreground">Empowering the future of work</span>
-            </div>
-            
             <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1]">
               <span className="bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
                 {t("hero.title")}
@@ -70,13 +65,6 @@ export default function AboutSection() {
             <p className="mx-auto max-w-3xl text-lg sm:text-xl lg:text-2xl text-muted-foreground leading-relaxed font-light">
               {t("hero.description")}
             </p>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-border flex items-start justify-center p-2">
-            <div className="w-1 h-2 bg-foreground rounded-full" />
           </div>
         </div>
       </section>
@@ -131,7 +119,7 @@ export default function AboutSection() {
                 <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-tight">
                   {t("mission.title")}
                 </h2>
-                <div className="h-1 w-20 bg-gradient-to-r from-[#E70E8A] to-[#3E9666] rounded-full" />
+                <div className="h-1 w-20 bg-gradient-to-r from-[#B05088] to-[#3E9666] rounded-full" />
               </div>
               
               <div className="space-y-6 text-base lg:text-lg text-muted-foreground leading-relaxed font-light">
@@ -142,11 +130,11 @@ export default function AboutSection() {
             </div>
             
             <div className="relative">
-              <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-gradient-to-br from-[#E70E8A]/10 via-background to-[#3E9666]/10 p-12 flex items-center justify-center backdrop-blur-xl border border-border/50">
+              <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-gradient-to-br from-[#B05088]/10 via-background to-[#3E9666]/10 p-12 flex items-center justify-center backdrop-blur-xl border border-border/50">
                 <div className="text-center space-y-6">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-[#E70E8A]/20 rounded-full blur-3xl" />
-                    <Target className="relative size-32 mx-auto text-[#E70E8A]" />
+                    <div className="absolute inset-0 bg-[#B05088]/20 rounded-full blur-3xl" />
+                    <Target className="relative size-32 mx-auto text-[#B05088]" />
                   </div>
                   <p className="text-2xl lg:text-3xl font-semibold leading-tight">
                     {t("mission.tagline")}
@@ -182,18 +170,18 @@ export default function AboutSection() {
                   <div 
                     className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      background: `linear-gradient(135deg, ${isEven ? '#E70E8A' : '#3E9666'}05, ${isEven ? '#E70E8A' : '#3E9666'}15)`
+                      background: `linear-gradient(135deg, ${isEven ? '#B05088' : '#3E9666'}05, ${isEven ? '#B05088' : '#3E9666'}15)`
                     }}
                   />
                   
                   <div className="relative z-10 space-y-6">
                     <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                      style={{ backgroundColor: isEven ? "#E70E8A15" : "#3E966615" }}
+                      style={{ backgroundColor: isEven ? "#B0508815" : "#3E966615" }}
                     >
                       <Icon 
                         className="size-8 transition-transform duration-500 group-hover:scale-110"
-                        style={{ color: isEven ? "#E70E8A" : "#3E9666" }}
+                        style={{ color: isEven ? "#B05088" : "#3E9666" }}
                       />
                     </div>
                     
@@ -216,7 +204,7 @@ export default function AboutSection() {
       {/* CTA Section - Apple-style Elevated Card */}
       <section className="py-20 lg:py-32 bg-muted/30">
         <div className="mx-auto max-w-5xl px-6 lg:px-12">
-          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#E70E8A] via-[#E70E8A]/90 to-[#3E9666] p-12 lg:p-16 text-center text-white shadow-2xl">
+          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#B05088] via-[#B05088]/90 to-[#3E9666] p-12 lg:p-16 text-center text-white shadow-2xl">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl" />
@@ -234,7 +222,7 @@ export default function AboutSection() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <a
                   href="/signup"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#E70E8A] font-semibold rounded-full hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#B05088] font-semibold rounded-full hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   {t("cta.button1")}
                   <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />

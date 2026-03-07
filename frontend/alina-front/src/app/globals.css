@@ -106,8 +106,8 @@
   --destructive:          oklch(0.626 0.239 22);  /* Apple red #ff3b30        */
   
   /* Accent Pink — Used sparingly (10%) for highlights and CTAs */
-  --accent-pink:          oklch(0.573 0.248 345); /* #E70E8A                  */
-  --accent-pink-hover:    oklch(0.513 0.248 345); /* Darker hover state       */
+  --accent-pink:          oklch(0.52 0.13 345); /* #B05088                  */
+  --accent-pink-hover:    oklch(0.46 0.13 345); /* Darker hover state       */
 
   /* Chrome — Apple systemGray4 light #d1d1d6                           */
   --border:               oklch(0.836 0 0);  /* #d1d1d6  systemGray4 light   */
@@ -170,8 +170,8 @@
   --destructive:          oklch(0.656 0.239 22);  /* Apple dark red #ff453a  */
   
   /* Accent Pink — Used sparingly (10%) for highlights and CTAs */
-  --accent-pink:          oklch(0.573 0.248 345); /* #E70E8A                  */
-  --accent-pink-hover:    oklch(0.513 0.248 345); /* Darker hover state       */
+  --accent-pink:          oklch(0.52 0.13 345); /* #B05088                  */
+  --accent-pink-hover:    oklch(0.46 0.13 345); /* Darker hover state       */
 
   /* Chrome — Apple systemGray4 dark #3a3a3c                            */
   --border:               oklch(0.249 0 0);  /* #3a3a3c  systemGray4 dark    */
