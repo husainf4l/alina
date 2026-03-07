@@ -26,6 +26,9 @@ public class WalletController : ControllerBase
         var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
 
+        if (dto.Amount <= 0)
+            return BadRequest(new { error = "Deposit amount must be greater than zero" });
+
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         if (profile == null) return BadRequest("Profile not found");
 
@@ -66,6 +69,9 @@ public class WalletController : ControllerBase
     {
         var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        if (dto.Amount <= 0)
+            return BadRequest(new { error = "Deposit amount must be greater than zero" });
 
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         if (profile == null) return BadRequest("Profile not found");
@@ -115,6 +121,9 @@ public class WalletController : ControllerBase
     {
         var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        if (dto.Amount <= 0)
+            return BadRequest(new { error = "Deposit amount must be greater than zero" });
 
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         if (profile == null) return BadRequest("Profile not found");

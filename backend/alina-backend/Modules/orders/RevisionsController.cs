@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using alina_backend.Modules.orders;
 
 namespace alina_backend.Modules.orders;
 
+[Authorize]
 [ApiController]
 [Route("api/order/revision")]
 public class RevisionsController : ControllerBase
@@ -57,7 +59,7 @@ public class RevisionsController : ControllerBase
     /// Get revisions for a specific order
     /// </summary>
     [HttpGet("order/{orderId}")]
-    public async Task<IActionResult> GetOrderRevisions(int orderId)
+    public async Task<IActionResult> GetOrderRevisions(Guid orderId)
     {
         var userId = GetCurrentUserId();
 
@@ -205,7 +207,7 @@ public class RevisionsController : ControllerBase
 
 public class RequestRevisionRequest
 {
-    public int OrderId { get; set; }
+    public Guid OrderId { get; set; }
     public string Description { get; set; } = string.Empty;
     public List<string>? Attachments { get; set; }
 }

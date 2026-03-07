@@ -184,6 +184,8 @@ public class CustomOffersController : ControllerBase
         var userId = GetCurrentUserId();
 
         var offer = await _context.CustomOffers
+            .Include(co => co.Sender)
+            .Include(co => co.Recipient)
             .FirstOrDefaultAsync(co => co.Id == offerId && co.RecipientId == userId);
 
         if (offer == null)
@@ -194,6 +196,12 @@ public class CustomOffersController : ControllerBase
         if (offer.Status != CustomOfferStatus.Pending)
         {
             return BadRequest(new { error = "Offer has already been responded to" });
+        }
+
+        // BUG-14: Reject expired offers
+        if (offer.ExpiryDate < DateTime.UtcNow)
+        {
+            return BadRequest(new { error = "This offer has expired and can no longer be accepted" });
         }
 
         offer.Status = request.Accept ? CustomOfferStatus.Accepted : CustomOfferStatus.Rejected;

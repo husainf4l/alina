@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using alina_backend.Modules.users;
 using alina_backend.Modules.profiles;
@@ -256,7 +257,7 @@ public class AuthController : ControllerBase
     {
         var refreshToken = new RefreshToken
         {
-            Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
             UserId = userId,
             ExpiresAt = DateTime.UtcNow.AddDays(7), // 7 days
             CreatedAt = DateTime.UtcNow

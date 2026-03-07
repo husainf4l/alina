@@ -14,6 +14,7 @@ using alina_backend.Modules.fraud;
 using alina_backend.Modules.dashboard;
 using alina_backend.Modules.marketing;
 using alina_backend.Modules.business;
+using alina_backend.Modules.auth;
 using alina_backend.Modules.settings;
 
 namespace alina_backend;
@@ -96,6 +97,7 @@ public class AppDbContext : DbContext
     // Two-Factor Authentication
     public DbSet<alina_backend.Modules.auth.TwoFactorVerification> TwoFactorVerifications { get; set; }
     public DbSet<alina_backend.Modules.auth.UserTotpSettings> UserTotpSettings { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -185,6 +187,30 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Review>()
             .HasIndex(r => r.GigId)
             .HasDatabaseName("IX_Reviews_GigId");
+
+
+        // Messaging: Conversations by participants (frequent lookup)
+        modelBuilder.Entity<Conversation>()
+            .HasIndex(c => new { c.User1Id, c.User2Id })
+            .HasDatabaseName("IX_Conversations_User1Id_User2Id");
+
+        modelBuilder.Entity<Conversation>()
+            .HasIndex(c => c.UpdatedAt)
+            .HasDatabaseName("IX_Conversations_UpdatedAt");
+
+        // Messages by conversation (for GetMessages queries)
+        modelBuilder.Entity<Message>()
+            .HasIndex(m => m.ConversationId)
+            .HasDatabaseName("IX_Messages_ConversationId");
+
+        modelBuilder.Entity<Message>()
+            .HasIndex(m => new { m.ConversationId, m.CreatedAt })
+            .HasDatabaseName("IX_Messages_ConversationId_CreatedAt");
+
+        // TwoFactor: quick lookup by UserId+Purpose
+        modelBuilder.Entity<alina_backend.Modules.auth.TwoFactorVerification>()
+            .HasIndex(v => new { v.UserId, v.Purpose, v.IsUsed })
+            .HasDatabaseName("IX_TwoFactorVerifications_UserId_Purpose");
 
         // ── End Indexes ────────────────────────────────────────────────────────
 
@@ -302,13 +328,13 @@ public class AppDbContext : DbContext
         
         modelBuilder.Entity<Media>()
             .HasOne(m => m.Gig)
-            .WithMany()
+            .WithMany(g => g.Gallery)
             .HasForeignKey(m => m.GigId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Media>()
             .HasOne(m => m.UserTask)
-            .WithMany()
+            .WithMany(t => t.Attachments)
             .HasForeignKey(m => m.UserTaskId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -336,6 +362,24 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Wallet>()
             .Property(w => w.EscrowBalance)
             .HasPrecision(18, 2);
+
+        // Decimal precision for Order and other money fields
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Amount)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.SellerAmount)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Gig>()
+            .Property(g => g.BasePrice)
+            .HasPrecision(18, 2);
+
+        // DB-03: Concurrency token for Wallet balances to prevent race conditions
+        modelBuilder.Entity<Wallet>()
+            .Property(w => w.RowVersion)
+            .IsRowVersion();
 
         // Notifications
         modelBuilder.Entity<Notification>()

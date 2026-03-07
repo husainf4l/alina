@@ -25,8 +25,8 @@ public class Transaction
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid WalletId { get; set; }
-    public Wallet Wallet { get; set; } = null!;
+    public Guid? WalletId { get; set; }
+    public Wallet? Wallet { get; set; }
     
     // User who initiated the transaction (optional, for tracking)
     public Guid? UserId { get; set; }

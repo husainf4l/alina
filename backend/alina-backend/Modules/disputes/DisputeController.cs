@@ -106,6 +106,13 @@ public class DisputeController : ControllerBase
             return Unauthorized();
         }
 
+        // Resolve to profile ID (orders use Profile IDs, not User IDs)
+        var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId.Value);
+        if (profile == null)
+            return BadRequest("Profile not found");
+
+        var profileId = profile.Id;
+
         var disputes = await _context.Disputes
             .Include(d => d.Order)
                 .ThenInclude(o => o.Buyer)
@@ -117,7 +124,7 @@ public class DisputeController : ControllerBase
                 .ThenInclude(o => o.Gig)
             .Include(d => d.Order)
                 .ThenInclude(o => o.Offer)
-            .Where(d => d.Order.BuyerId == userId || d.Order.SellerId == userId)
+            .Where(d => d.Order.BuyerId == profileId || d.Order.SellerId == profileId)
             .OrderByDescending(d => d.CreatedAt)
             .Select(d => new
             {
@@ -145,7 +152,7 @@ public class DisputeController : ControllerBase
     /// <summary>
     /// Resolve a dispute (Admin only)
     /// </summary>
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}/resolve")]
     public async Task<IActionResult> ResolveDispute(Guid id, [FromBody] ResolveDisputeRequest request)
     {
@@ -177,8 +184,10 @@ public class DisputeController : ControllerBase
             // Handle escrow resolution
             await ResolveEscrow(dispute, request);
 
-            // Update order status back to Completed
-            dispute.Order.Status = OrderStatus.Completed;
+            // Update order status based on resolution
+            dispute.Order.Status = request.Resolution == DisputeResolution.RefundBuyer
+                ? OrderStatus.Cancelled
+                : OrderStatus.Completed;
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
@@ -222,7 +231,7 @@ public class DisputeController : ControllerBase
         else if (request.Resolution == DisputeResolution.ReleaseSeller)
         {
             // Full release to seller (with commission)
-            var commission = escrowAmount * 0.10m; // 10% platform fee
+            var commission = escrowAmount * 0.15m; // 15% platform fee
             var sellerAmount = escrowAmount - commission;
 
             await CreateTransaction(order.SellerId, sellerAmount, TransactionType.Release, $"Dispute resolution release for order {order.Id}");
@@ -240,7 +249,7 @@ public class DisputeController : ControllerBase
             var sellerAmount = escrowAmount - buyerAmount;
 
             // Apply commission proportionally
-            var commission = sellerAmount * 0.10m;
+            var commission = sellerAmount * 0.15m;
             var sellerNetAmount = sellerAmount - commission;
 
             await CreateTransaction(order.BuyerId, buyerAmount, TransactionType.Refund, $"Partial dispute refund for order {order.Id}");
@@ -256,7 +265,7 @@ public class DisputeController : ControllerBase
         {
             var platformTransaction = new Transaction
             {
-                WalletId = Guid.Empty, // Platform wallet
+                WalletId = null, // Platform fee — no user wallet
                 Amount = amount,
                 Type = type,
                 Status = TransactionStatus.Completed,

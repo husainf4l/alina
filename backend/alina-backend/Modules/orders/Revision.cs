@@ -13,10 +13,10 @@ public enum RevisionStatus
 
 public class Revision
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public int OrderId { get; set; }
+    public Guid OrderId { get; set; }
 
     [Required]
     public Guid RequesterId { get; set; }

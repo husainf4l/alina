@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
@@ -14,15 +16,18 @@ public class PasswordController : ControllerBase
     private readonly AppDbContext _context;
     private readonly EmailService _emailService;
     private readonly ILogger<PasswordController> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public PasswordController(
         AppDbContext context,
         EmailService emailService,
-        ILogger<PasswordController> logger)
+        ILogger<PasswordController> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _context = context;
         _emailService = emailService;
         _logger = logger;
+        _scopeFactory = scopeFactory;
     }
 
     /// <summary>
@@ -77,22 +82,23 @@ public class PasswordController : ControllerBase
 
             _logger.LogInformation("Password changed successfully for user {UserId}", userId);
 
-            // Send email notification
+            // Send email notification (use IServiceScopeFactory to avoid capturing scoped service)
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            var userEmail = user.Email;
+            var userName = user.FullName ?? user.Email;
+            var changedAt = DateTime.UtcNow;
             _ = Task.Run(async () =>
             {
                 try
                 {
-                    await _emailService.SendPasswordChangeNotificationAsync(
-                        user.Email,
-                        user.FullName ?? user.Email,
-                        DateTime.UtcNow,
-                        ipAddress
-                    );
+                    using var scope = _scopeFactory.CreateScope();
+                    var emailSvc = scope.ServiceProvider.GetRequiredService<EmailService>();
+                    await emailSvc.SendPasswordChangeNotificationAsync(
+                        userEmail, userName, changedAt, ipAddress);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send password change email to {Email}", user.Email);
+                    _logger.LogError(ex, "Failed to send password change email to {Email}", userEmail);
                 }
             });
 
@@ -124,27 +130,42 @@ public class PasswordController : ControllerBase
                 return Ok(new { message = "If an account exists with this email, a reset link has been sent" });
             }
 
-            // Generate reset token (simple implementation - use proper token generation in production)
-            var resetToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            var resetExpiry = DateTime.UtcNow.AddHours(1);
+            // Generate cryptographically secure reset token
+            var rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+            var tokenHash = Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.HashData(
+                    System.Text.Encoding.UTF8.GetBytes(rawToken)));
 
-            // TODO: Store reset token in database with expiry
-            // For now, log it (in production, send email with reset link)
-            _logger.LogInformation("Password reset token for {Email}: {Token}, expires at {Expiry}", 
-                user.Email, resetToken, resetExpiry);
+            // Invalidate any existing unused tokens for this user
+            var existingTokens = await _context.PasswordResetTokens
+                .Where(t => t.UserId == user.Id && !t.IsUsed && t.ExpiresAt > DateTime.UtcNow)
+                .ToListAsync();
+            foreach (var t in existingTokens) t.IsUsed = true;
 
-            // Send reset email
+            // Persist the hashed token (never store the raw token)
+            _context.PasswordResetTokens.Add(new PasswordResetToken
+            {
+                UserId = user.Id,
+                TokenHash = tokenHash,
+                ExpiresAt = DateTime.UtcNow.AddHours(1)
+            });
+            await _context.SaveChangesAsync();
+
+            // Send reset email (use IServiceScopeFactory for fire-and-forget)
+            var userEmail2 = user.Email;
+            var userName2 = user.FullName ?? user.Email;
             _ = Task.Run(async () =>
             {
                 try
                 {
-                    var resetLink = $"https://alina.com/reset-password?token={Uri.EscapeDataString(resetToken)}";
-                    // TODO: Create SendPasswordResetEmail method in EmailService
-                    _logger.LogInformation("Password reset link: {Link}", resetLink);
+                    using var scope = _scopeFactory.CreateScope();
+                    var emailSvc = scope.ServiceProvider.GetRequiredService<EmailService>();
+                    var resetLink = $"https://alina.com/reset-password?token={Uri.EscapeDataString(rawToken)}";
+                    await emailSvc.SendPasswordResetEmailAsync(userEmail2, userName2, resetLink);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to send password reset email to {Email}", user.Email);
+                    _logger.LogError(ex, "Failed to send password reset email to {Email}", userEmail2);
                 }
             });
 
@@ -154,6 +175,59 @@ public class PasswordController : ControllerBase
         {
             _logger.LogError(ex, "Error processing forgot password request");
             return StatusCode(500, new { error = "Failed to process password reset request" });
+        }
+    }
+
+
+    /// <summary>
+    /// Reset password using the token received by email
+    /// POST /api/auth/reset-password
+    /// </summary>
+    [AllowAnonymous]
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+        try
+        {
+            var tokenHash = Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.HashData(
+                    System.Text.Encoding.UTF8.GetBytes(dto.Token)));
+
+            var tokenRecord = await _context.PasswordResetTokens
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t =>
+                    t.TokenHash == tokenHash &&
+                    !t.IsUsed &&
+                    t.ExpiresAt > DateTime.UtcNow);
+
+            if (tokenRecord == null)
+            {
+                _logger.LogWarning("Invalid or expired password reset token used");
+                return BadRequest(new { error = "Invalid or expired reset token" });
+            }
+
+            var user = await _context.Users.FindAsync(tokenRecord.UserId);
+            if (user == null)
+                return BadRequest(new { error = "User not found" });
+
+            if (!IsValidPassword(dto.NewPassword))
+                return BadRequest(new { error = "Password must be at least 8 characters with uppercase, lowercase, number and special character" });
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+
+            tokenRecord.IsUsed = true;
+            tokenRecord.UsedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Password reset successfully for user {UserId}", user.Id);
+            return Ok(new { message = "Password reset successfully. You can now log in with your new password." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during password reset");
+            return StatusCode(500, new { error = "Failed to reset password" });
         }
     }
 

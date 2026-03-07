@@ -673,7 +673,6 @@ public class MarketplaceOpsController : ControllerBase
         // Order must be in Delivered state (seller has submitted delivery)
         if (order.Status != OrderStatus.Delivered)
             return BadRequest("Order must be in Delivered state for buyer to accept and complete it");
-            return BadRequest("Order must be InProgress to be completed");
 
         // Use database transaction for atomic escrow release
         using var transaction = await _context.Database.BeginTransactionAsync();

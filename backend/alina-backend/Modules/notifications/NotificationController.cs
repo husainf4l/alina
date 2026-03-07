@@ -80,16 +80,9 @@ public class NotificationController : ControllerBase
             return Unauthorized();
         }
 
-        var unreadNotifications = await _context.Notifications
+        await _context.Notifications
             .Where(n => n.UserId == userId && !n.IsRead)
-            .ToListAsync();
-
-        foreach (var notification in unreadNotifications)
-        {
-            notification.IsRead = true;
-        }
-
-        await _context.SaveChangesAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true));
 
         return Ok(new { message = "All notifications marked as read" });
     }
