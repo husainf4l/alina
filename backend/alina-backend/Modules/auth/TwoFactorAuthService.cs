@@ -39,12 +39,13 @@ public class TwoFactorAuthService
             var code = GenerateNumericCode(CODE_LENGTH);
             var expiresAt = DateTime.UtcNow.AddMinutes(CODE_EXPIRY_MINUTES);
 
-            // Store code in database
+            // Store HMAC hash of code — never store plaintext OTP
             var verification = new TwoFactorVerification
             {
                 UserId = userId,
-                Code = code,
+                CodeHash = HashCode(code),
                 Method = method,
+                Purpose = purpose,   // Purpose locked at generation time
                 ExpiresAt = expiresAt,
                 IsUsed = false
             };
@@ -56,12 +57,12 @@ public class TwoFactorAuthService
             if (method == "email")
             {
                 // TODO: Send email (integrate with email service in P1-6)
-_logger.LogInformation("2FA code {Code} generated for user {UserId} via email", code, userId);
+_logger.LogInformation("2FA code generated for user {UserId} via email", userId);
             }
             else if (method == "sms")
             {
                 // TODO: Send SMS (integrate with SMS service)
-                _logger.LogInformation("2FA code {Code} generated for user {UserId} via SMS", code, userId);
+                _logger.LogInformation("2FA code generated for user {UserId} via SMS", userId);
             }
 
             return (true, $"Verification code sent via {method}");
@@ -73,34 +74,48 @@ _logger.LogInformation("2FA code {Code} generated for user {UserId} via email", 
         }
     }
 
+        private const int MaxFailedAttempts = 5;
+
     /// <summary>
-    /// Verify 2FA code
+    /// Verify 2FA code — checks hash, purpose, and brute-force attempts
     /// </summary>
-    public async Task<(bool Success, string Message)> VerifyCodeAsync(Guid userId, string code, string purpose = "withdrawal")
+    public async Task<(bool Success, string Message)> VerifyCodeAsync(Guid userId, string code, string purpose = "login")
     {
         try
         {
+            var codeHash = HashCode(code);
+
             var verification = await _context.TwoFactorVerifications
-                .Where(v => v.UserId == userId && 
-                           v.Code == code && 
-                           !v.IsUsed && 
-                           v.ExpiresAt > DateTime.UtcNow)
+                .Where(v => v.UserId == userId &&
+                           v.Purpose == purpose &&
+                           !v.IsUsed &&
+                           v.ExpiresAt > DateTime.UtcNow &&
+                           v.FailedAttempts < MaxFailedAttempts)
                 .OrderByDescending(v => v.CreatedAt)
                 .FirstOrDefaultAsync();
 
             if (verification == null)
             {
-                _logger.LogWarning("Invalid or expired 2FA code for user {UserId}", userId);
+                _logger.LogWarning("Invalid or expired 2FA code for user {UserId} (purpose={Purpose})", userId, purpose);
                 return (false, "Invalid or expired verification code");
             }
 
-            // Mark as used
+            if (verification.CodeHash != codeHash)
+            {
+                verification.FailedAttempts++;
+                await _context.SaveChangesAsync();
+                var remaining = MaxFailedAttempts - verification.FailedAttempts;
+                _logger.LogWarning("Wrong 2FA code for user {UserId} (attempt {Attempt}/{Max})", userId, verification.FailedAttempts, MaxFailedAttempts);
+                return (false, remaining > 0
+                    ? $"Invalid code. {remaining} attempt(s) remaining."
+                    : "Code locked due to too many failed attempts. Request a new code.");
+            }
+
             verification.IsUsed = true;
             verification.UsedAt = DateTime.UtcNow;
-            verification.Purpose = purpose;
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("2FA code verified successfully for user {UserId}", userId);
+            _logger.LogInformation("2FA verified for user {UserId} (purpose={Purpose})", userId, purpose);
             return (true, "Verification successful");
         }
         catch (Exception ex)
@@ -300,11 +315,14 @@ public class TwoFactorVerification
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
-    public string Code { get; set; } = string.Empty;
+    /// <summary>HMACSHA256 hash of the code — never store plaintext</summary>
+    public string CodeHash { get; set; } = string.Empty;
     public string Method { get; set; } = "email"; // email, sms
-    public string? Purpose { get; set; } // withdrawal, login, etc.
+    /// <summary>Purpose is set at generation time and checked at verification time</summary>
+    public string Purpose { get; set; } = "login";
     public DateTime ExpiresAt { get; set; }
     public bool IsUsed { get; set; }
+    public int FailedAttempts { get; set; } = 0;
     public DateTime? UsedAt { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
