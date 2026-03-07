@@ -4,10 +4,6 @@
 .env.production
 .env.*.local
 
-# RSA Keys (NEVER commit these!)
-keys/
-*.pem
-*.key
 
 # User-specific files
 *.suo
