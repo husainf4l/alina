@@ -6,7 +6,9 @@
     "services": "الخدمات",
     "contact": "تواصل معنا",
     "openMenu": "فتح القائمة",
-    "closeMenu": "إغلاق القائمة"
+    "closeMenu": "إغلاق القائمة",
+    "login": "تسجيل الدخول",
+    "register": "انضم"
   },
   "Hero": {
     "heading": "اعثر على الخدمات",

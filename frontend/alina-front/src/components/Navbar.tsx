@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
@@ -22,7 +22,10 @@ export default function Navbar() {
   const t = useTranslations("Navbar");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-md">
@@ -34,12 +37,12 @@ export default function Navbar() {
           className="flex items-center transition-opacity hover:opacity-80"
         >
           <Image
-            src={theme === "dark" ? "/logo/alinalogodark.png" : "/logo/alinalogo-lighttheme.png"}
+            src={mounted && resolvedTheme === "dark" ? "/logo/alinalogodark.png" : "/logo/alinalogo-lighttheme.png"}
             alt={t("brand")}
             width={120}
             height={40}
             priority
-            className="h-10 w-auto"
+            style={{ height: "40px", width: "auto" }}
           />
         </Link>
 
@@ -63,9 +66,21 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop actions */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeToggle />
+          <Link
+            href="/auth"
+            className="px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("login")}
+          </Link>
+          <Link
+            href="/auth?mode=register"
+            className="px-4 py-1.5 text-sm font-semibold rounded-full bg-[#B05088] hover:bg-[#B05088]/90 text-white transition-colors"
+          >
+            {t("register")}
+          </Link>
         </div>
 
         {/* Mobile: actions + hamburger */}
@@ -105,6 +120,22 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          <div className="mt-3 flex flex-col gap-2 border-t border-border/60 pt-3">
+            <Link
+              href="/auth"
+              onClick={() => setIsOpen(false)}
+              className="block rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent/60 hover:text-foreground transition-colors"
+            >
+              {t("login")}
+            </Link>
+            <Link
+              href="/auth?mode=register"
+              onClick={() => setIsOpen(false)}
+              className="block text-center px-3 py-2.5 text-sm font-semibold rounded-full bg-[#B05088] hover:bg-[#B05088]/90 text-white transition-colors"
+            >
+              {t("register")}
+            </Link>
+          </div>
         </div>
       )}
     </header>
