@@ -1,20 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using alina_backend.app.users;
-using alina_backend.app.profiles;
-using alina_backend.app.marketplace;
-using alina_backend.app.messaging;
-using alina_backend.app.media;
-using alina_backend.app.finance;
-using alina_backend.app.orders;
-using alina_backend.app.notifications;
-using alina_backend.app.support;
-using alina_backend.app.legal;
-using alina_backend.app.disputes;
-using alina_backend.app.fraud;
-using alina_backend.app.dashboard;
-using alina_backend.app.marketing;
-using alina_backend.app.business;
-using alina_backend.app.settings;
+using alina_backend.Modules.users;
+using alina_backend.Modules.profiles;
+using alina_backend.Modules.marketplace;
+using alina_backend.Modules.messaging;
+using alina_backend.Modules.media;
+using alina_backend.Modules.finance;
+using alina_backend.Modules.orders;
+using alina_backend.Modules.notifications;
+using alina_backend.Modules.support;
+using alina_backend.Modules.legal;
+using alina_backend.Modules.disputes;
+using alina_backend.Modules.fraud;
+using alina_backend.Modules.dashboard;
+using alina_backend.Modules.marketing;
+using alina_backend.Modules.business;
+using alina_backend.Modules.settings;
 
 namespace alina_backend;
 
@@ -94,13 +94,100 @@ public class AppDbContext : DbContext
     public DbSet<UserSettings> UserSettings { get; set; }
     
     // Two-Factor Authentication
-    public DbSet<alina_backend.app.auth.TwoFactorVerification> TwoFactorVerifications { get; set; }
-    public DbSet<alina_backend.app.auth.UserTotpSettings> UserTotpSettings { get; set; }
+    public DbSet<alina_backend.Modules.auth.TwoFactorVerification> TwoFactorVerifications { get; set; }
+    public DbSet<alina_backend.Modules.auth.UserTotpSettings> UserTotpSettings { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // ── Performance Indexes ────────────────────────────────────────────────
+
+        // Auth: email lookup on every login
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique()
+            .HasDatabaseName("IX_Users_Email");
+
+        // Auth: refresh token lookup on every token refresh
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(rt => rt.Token)
+            .IsUnique()
+            .HasDatabaseName("IX_RefreshTokens_Token");
+
+        // Profile by UserId (used everywhere)
+        modelBuilder.Entity<Profile>()
+            .HasIndex(p => p.UserId)
+            .IsUnique()
+            .HasDatabaseName("IX_Profiles_UserId");
+
+        // Orders by buyer, seller, status
+        modelBuilder.Entity<Order>()
+            .HasIndex(o => o.BuyerId)
+            .HasDatabaseName("IX_Orders_BuyerId");
+
+        modelBuilder.Entity<Order>()
+            .HasIndex(o => o.SellerId)
+            .HasDatabaseName("IX_Orders_SellerId");
+
+        modelBuilder.Entity<Order>()
+            .HasIndex(o => o.Status)
+            .HasDatabaseName("IX_Orders_Status");
+
+        modelBuilder.Entity<Order>()
+            .HasIndex(o => new { o.SellerId, o.Status })
+            .HasDatabaseName("IX_Orders_SellerId_Status");
+
+        // Transactions by wallet and order
+        modelBuilder.Entity<Transaction>()
+            .HasIndex(t => t.WalletId)
+            .HasDatabaseName("IX_Transactions_WalletId");
+
+        modelBuilder.Entity<Transaction>()
+            .HasIndex(t => t.OrderId)
+            .HasDatabaseName("IX_Transactions_OrderId");
+
+        // Gigs by category and seller
+        modelBuilder.Entity<Gig>()
+            .HasIndex(g => g.CategoryId)
+            .HasDatabaseName("IX_Gigs_CategoryId");
+
+        modelBuilder.Entity<Gig>()
+            .HasIndex(g => g.SellerId)
+            .HasDatabaseName("IX_Gigs_SellerId");
+
+        // Notifications by user
+        modelBuilder.Entity<Notification>()
+            .HasIndex(n => n.UserId)
+            .HasDatabaseName("IX_Notifications_UserId");
+
+        // Search analytics by term
+        modelBuilder.Entity<SearchAnalytics>()
+            .HasIndex(sa => sa.SearchTerm)
+            .HasDatabaseName("IX_SearchAnalytics_SearchTerm");
+
+        // WithdrawalRequests by user and status
+        modelBuilder.Entity<WithdrawalRequest>()
+            .HasIndex(w => w.UserId)
+            .HasDatabaseName("IX_WithdrawalRequests_UserId");
+
+        modelBuilder.Entity<WithdrawalRequest>()
+            .HasIndex(w => w.Status)
+            .HasDatabaseName("IX_WithdrawalRequests_Status");
+
+        // Wallet by ProfileId
+        modelBuilder.Entity<Wallet>()
+            .HasIndex(w => w.ProfileId)
+            .HasDatabaseName("IX_Wallets_ProfileId");
+
+        // Reviews by GigId
+        modelBuilder.Entity<Review>()
+            .HasIndex(r => r.GigId)
+            .HasDatabaseName("IX_Reviews_GigId");
+
+        // ── End Indexes ────────────────────────────────────────────────────────
+
 
         // User-Profile one-to-one relationship
         modelBuilder.Entity<User>()

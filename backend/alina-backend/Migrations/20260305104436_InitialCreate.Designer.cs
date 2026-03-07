@@ -26,7 +26,7 @@ namespace alina_backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("alina_backend.app.auth.TwoFactorVerification", b =>
+            modelBuilder.Entity("alina_backend.Modules.auth.TwoFactorVerification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace alina_backend.Migrations
                     b.ToTable("TwoFactorVerifications");
                 });
 
-            modelBuilder.Entity("alina_backend.app.auth.UserTotpSettings", b =>
+            modelBuilder.Entity("alina_backend.Modules.auth.UserTotpSettings", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace alina_backend.Migrations
                     b.ToTable("UserTotpSettings");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.AvailabilitySetting", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.AvailabilitySetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +140,7 @@ namespace alina_backend.Migrations
                     b.ToTable("AvailabilitySettings");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.BusinessToolSetting", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.BusinessToolSetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -183,7 +183,7 @@ namespace alina_backend.Migrations
                     b.ToTable("BusinessToolSettings");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.ScheduleSlot", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.ScheduleSlot", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -238,7 +238,7 @@ namespace alina_backend.Migrations
                     b.ToTable("ScheduleSlots");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.AchievementBadge", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.AchievementBadge", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -278,7 +278,7 @@ namespace alina_backend.Migrations
                     b.ToTable("AchievementBadges");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.Goal", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.Goal", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -344,7 +344,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Goals");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.GoalProgress", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.GoalProgress", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -371,7 +371,7 @@ namespace alina_backend.Migrations
                     b.ToTable("GoalProgress");
                 });
 
-            modelBuilder.Entity("alina_backend.app.disputes.Dispute", b =>
+            modelBuilder.Entity("alina_backend.Modules.disputes.Dispute", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -414,7 +414,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Disputes");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.CurrencyRate", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.CurrencyRate", b =>
                 {
                     b.Property<string>("Code")
                         .HasColumnType("text");
@@ -474,7 +474,7 @@ namespace alina_backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.Transaction", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -531,7 +531,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.Wallet", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -568,7 +568,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.WithdrawalRequest", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.WithdrawalRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -609,7 +609,7 @@ namespace alina_backend.Migrations
                     b.ToTable("WithdrawalRequests");
                 });
 
-            modelBuilder.Entity("alina_backend.app.fraud.FraudFlag", b =>
+            modelBuilder.Entity("alina_backend.Modules.fraud.FraudFlag", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -653,7 +653,7 @@ namespace alina_backend.Migrations
                     b.ToTable("FraudFlags");
                 });
 
-            modelBuilder.Entity("alina_backend.app.legal.LegalDocument", b =>
+            modelBuilder.Entity("alina_backend.Modules.legal.LegalDocument", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -679,7 +679,7 @@ namespace alina_backend.Migrations
                     b.ToTable("LegalDocuments");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketing.AdCampaign", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketing.AdCampaign", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -769,7 +769,7 @@ namespace alina_backend.Migrations
                     b.ToTable("AdCampaigns");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketing.Promotion", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketing.Promotion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -846,7 +846,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Promotions");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Category", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1360,7 +1360,7 @@ namespace alina_backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.CustomOffer", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.CustomOffer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1421,7 +1421,7 @@ namespace alina_backend.Migrations
                     b.ToTable("CustomOffers");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Favorite", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Favorite", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1445,7 +1445,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Favorites");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Gig", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Gig", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1506,7 +1506,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Gigs");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Offer", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Offer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1545,7 +1545,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Order", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1639,7 +1639,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Package", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Package", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1680,7 +1680,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Packages");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Review", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1722,7 +1722,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.SearchAnalytics", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.SearchAnalytics", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1752,7 +1752,7 @@ namespace alina_backend.Migrations
                     b.ToTable("SearchAnalytics");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.UserTask", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.UserTask", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1815,7 +1815,7 @@ namespace alina_backend.Migrations
                     b.ToTable("UserTasks");
                 });
 
-            modelBuilder.Entity("alina_backend.app.media.Media", b =>
+            modelBuilder.Entity("alina_backend.Modules.media.Media", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1877,7 +1877,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Media");
                 });
 
-            modelBuilder.Entity("alina_backend.app.messaging.Conversation", b =>
+            modelBuilder.Entity("alina_backend.Modules.messaging.Conversation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1928,7 +1928,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Conversations");
                 });
 
-            modelBuilder.Entity("alina_backend.app.messaging.Message", b =>
+            modelBuilder.Entity("alina_backend.Modules.messaging.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2002,7 +2002,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("alina_backend.app.notifications.Notification", b =>
+            modelBuilder.Entity("alina_backend.Modules.notifications.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2046,7 +2046,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("alina_backend.app.notifications.UserNotificationSettings", b =>
+            modelBuilder.Entity("alina_backend.Modules.notifications.UserNotificationSettings", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2083,7 +2083,7 @@ namespace alina_backend.Migrations
                     b.ToTable("UserNotificationSettings");
                 });
 
-            modelBuilder.Entity("alina_backend.app.orders.Revision", b =>
+            modelBuilder.Entity("alina_backend.Modules.orders.Revision", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2126,7 +2126,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Revisions");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Language", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Language", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2209,7 +2209,7 @@ namespace alina_backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Profile", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Profile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2308,7 +2308,7 @@ namespace alina_backend.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.ProfileLanguage", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.ProfileLanguage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2334,7 +2334,7 @@ namespace alina_backend.Migrations
                     b.ToTable("ProfileLanguages");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.ProfileSkill", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.ProfileSkill", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2359,7 +2359,7 @@ namespace alina_backend.Migrations
                     b.ToTable("ProfileSkills");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Skill", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Skill", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2561,7 +2561,7 @@ namespace alina_backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("alina_backend.app.settings.UserNotificationPreference", b =>
+            modelBuilder.Entity("alina_backend.Modules.settings.UserNotificationPreference", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2655,7 +2655,7 @@ namespace alina_backend.Migrations
                     b.ToTable("UserNotificationPreferences");
                 });
 
-            modelBuilder.Entity("alina_backend.app.settings.UserSettings", b =>
+            modelBuilder.Entity("alina_backend.Modules.settings.UserSettings", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2760,7 +2760,7 @@ namespace alina_backend.Migrations
                     b.ToTable("UserSettings");
                 });
 
-            modelBuilder.Entity("alina_backend.app.support.SupportTicket", b =>
+            modelBuilder.Entity("alina_backend.Modules.support.SupportTicket", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2797,7 +2797,7 @@ namespace alina_backend.Migrations
                     b.ToTable("SupportTickets");
                 });
 
-            modelBuilder.Entity("alina_backend.app.users.RefreshToken", b =>
+            modelBuilder.Entity("alina_backend.Modules.users.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2826,7 +2826,7 @@ namespace alina_backend.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("alina_backend.app.users.User", b =>
+            modelBuilder.Entity("alina_backend.Modules.users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2861,9 +2861,9 @@ namespace alina_backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.AvailabilitySetting", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.AvailabilitySetting", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Seller")
+                    b.HasOne("alina_backend.Modules.users.User", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2872,9 +2872,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.BusinessToolSetting", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.BusinessToolSetting", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Seller")
+                    b.HasOne("alina_backend.Modules.users.User", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2883,17 +2883,17 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.business.ScheduleSlot", b =>
+            modelBuilder.Entity("alina_backend.Modules.business.ScheduleSlot", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Buyer")
+                    b.HasOne("alina_backend.Modules.users.User", "Buyer")
                         .WithMany()
                         .HasForeignKey("BuyerId");
 
-                    b.HasOne("alina_backend.app.marketplace.Order", "Order")
+                    b.HasOne("alina_backend.Modules.marketplace.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("alina_backend.app.users.User", "Seller")
+                    b.HasOne("alina_backend.Modules.users.User", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2906,9 +2906,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.Goal", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.Goal", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "Profile")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2917,9 +2917,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.GoalProgress", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.GoalProgress", b =>
                 {
-                    b.HasOne("alina_backend.app.dashboard.Goal", "Goal")
+                    b.HasOne("alina_backend.Modules.dashboard.Goal", "Goal")
                         .WithMany("ProgressEntries")
                         .HasForeignKey("GoalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2928,9 +2928,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Goal");
                 });
 
-            modelBuilder.Entity("alina_backend.app.disputes.Dispute", b =>
+            modelBuilder.Entity("alina_backend.Modules.disputes.Dispute", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Order", "Order")
+                    b.HasOne("alina_backend.Modules.marketplace.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2939,9 +2939,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.Transaction", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.Transaction", b =>
                 {
-                    b.HasOne("alina_backend.app.finance.Wallet", "Wallet")
+                    b.HasOne("alina_backend.Modules.finance.Wallet", "Wallet")
                         .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2950,19 +2950,19 @@ namespace alina_backend.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.Wallet", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.Wallet", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "Profile")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Profile")
                         .WithOne()
-                        .HasForeignKey("alina_backend.app.finance.Wallet", "ProfileId")
+                        .HasForeignKey("alina_backend.Modules.finance.Wallet", "ProfileId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("alina_backend.app.finance.WithdrawalRequest", b =>
+            modelBuilder.Entity("alina_backend.Modules.finance.WithdrawalRequest", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "User")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2971,9 +2971,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.fraud.FraudFlag", b =>
+            modelBuilder.Entity("alina_backend.Modules.fraud.FraudFlag", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2982,9 +2982,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketing.AdCampaign", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketing.AdCampaign", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Seller")
+                    b.HasOne("alina_backend.Modules.users.User", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2993,9 +2993,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketing.Promotion", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketing.Promotion", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Seller")
+                    b.HasOne("alina_backend.Modules.users.User", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3004,9 +3004,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Category", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Category", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Category", "Parent")
+                    b.HasOne("alina_backend.Modules.marketplace.Category", "Parent")
                         .WithMany("SubCategories")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -3014,15 +3014,15 @@ namespace alina_backend.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.CustomOffer", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.CustomOffer", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Recipient")
+                    b.HasOne("alina_backend.Modules.users.User", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.users.User", "Sender")
+                    b.HasOne("alina_backend.Modules.users.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3033,15 +3033,15 @@ namespace alina_backend.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Favorite", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Favorite", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", "Gig")
                         .WithMany()
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3052,15 +3052,15 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Gig", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Gig", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Category", "Category")
+                    b.HasOne("alina_backend.Modules.marketplace.Category", "Category")
                         .WithMany("Gigs")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Seller")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3071,15 +3071,15 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Offer", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Offer", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.UserTask", "Task")
+                    b.HasOne("alina_backend.Modules.marketplace.UserTask", "Task")
                         .WithMany("Offers")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Tasker")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Tasker")
                         .WithMany()
                         .HasForeignKey("TaskerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3090,23 +3090,23 @@ namespace alina_backend.Migrations
                     b.Navigation("Tasker");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Order", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Order", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "Buyer")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Buyer")
                         .WithMany()
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", "Gig")
                         .WithMany()
                         .HasForeignKey("GigId");
 
-                    b.HasOne("alina_backend.app.marketplace.Offer", "Offer")
+                    b.HasOne("alina_backend.Modules.marketplace.Offer", "Offer")
                         .WithOne()
-                        .HasForeignKey("alina_backend.app.marketplace.Order", "OfferId");
+                        .HasForeignKey("alina_backend.Modules.marketplace.Order", "OfferId");
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Seller")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3121,9 +3121,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Package", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Package", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", "Gig")
                         .WithMany("Packages")
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3132,25 +3132,25 @@ namespace alina_backend.Migrations
                     b.Navigation("Gig");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Review", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Review", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", "Gig")
                         .WithMany("Reviews")
                         .HasForeignKey("GigId");
 
-                    b.HasOne("alina_backend.app.marketplace.Order", "Order")
+                    b.HasOne("alina_backend.Modules.marketplace.Order", "Order")
                         .WithOne()
-                        .HasForeignKey("alina_backend.app.marketplace.Review", "OrderId")
+                        .HasForeignKey("alina_backend.Modules.marketplace.Review", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Reviewee")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Reviewee")
                         .WithMany()
                         .HasForeignKey("RevieweeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Reviewer")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3165,28 +3165,28 @@ namespace alina_backend.Migrations
                     b.Navigation("Reviewer");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.SearchAnalytics", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.SearchAnalytics", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "User")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.UserTask", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.UserTask", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "AssignedTasker")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "AssignedTasker")
                         .WithMany()
                         .HasForeignKey("AssignedTaskerId");
 
-                    b.HasOne("alina_backend.app.marketplace.Category", "Category")
+                    b.HasOne("alina_backend.Modules.marketplace.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Poster")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Poster")
                         .WithMany()
                         .HasForeignKey("PosterId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3199,31 +3199,31 @@ namespace alina_backend.Migrations
                     b.Navigation("Poster");
                 });
 
-            modelBuilder.Entity("alina_backend.app.media.Media", b =>
+            modelBuilder.Entity("alina_backend.Modules.media.Media", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.CustomOffer", "CustomOffer")
+                    b.HasOne("alina_backend.Modules.marketplace.CustomOffer", "CustomOffer")
                         .WithMany("Attachments")
                         .HasForeignKey("CustomOfferId");
 
-                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", "Gig")
                         .WithMany()
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("alina_backend.app.marketplace.Gig", null)
+                    b.HasOne("alina_backend.Modules.marketplace.Gig", null)
                         .WithMany("Gallery")
                         .HasForeignKey("GigId1");
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Owner")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
-                    b.HasOne("alina_backend.app.marketplace.UserTask", "UserTask")
+                    b.HasOne("alina_backend.Modules.marketplace.UserTask", "UserTask")
                         .WithMany()
                         .HasForeignKey("UserTaskId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("alina_backend.app.marketplace.UserTask", null)
+                    b.HasOne("alina_backend.Modules.marketplace.UserTask", null)
                         .WithMany("Attachments")
                         .HasForeignKey("UserTaskId1");
 
@@ -3236,15 +3236,15 @@ namespace alina_backend.Migrations
                     b.Navigation("UserTask");
                 });
 
-            modelBuilder.Entity("alina_backend.app.messaging.Conversation", b =>
+            modelBuilder.Entity("alina_backend.Modules.messaging.Conversation", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User1")
+                    b.HasOne("alina_backend.Modules.users.User", "User1")
                         .WithMany()
                         .HasForeignKey("User1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.users.User", "User2")
+                    b.HasOne("alina_backend.Modules.users.User", "User2")
                         .WithMany()
                         .HasForeignKey("User2Id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3255,25 +3255,25 @@ namespace alina_backend.Migrations
                     b.Navigation("User2");
                 });
 
-            modelBuilder.Entity("alina_backend.app.messaging.Message", b =>
+            modelBuilder.Entity("alina_backend.Modules.messaging.Message", b =>
                 {
-                    b.HasOne("alina_backend.app.messaging.Conversation", "Conversation")
+                    b.HasOne("alina_backend.Modules.messaging.Conversation", "Conversation")
                         .WithMany("Messages")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Receiver")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.messaging.Message", "ReplyToMessage")
+                    b.HasOne("alina_backend.Modules.messaging.Message", "ReplyToMessage")
                         .WithMany()
                         .HasForeignKey("ReplyToMessageId");
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Sender")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3288,9 +3288,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("alina_backend.app.notifications.Notification", b =>
+            modelBuilder.Entity("alina_backend.Modules.notifications.Notification", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3299,9 +3299,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.notifications.UserNotificationSettings", b =>
+            modelBuilder.Entity("alina_backend.Modules.notifications.UserNotificationSettings", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3310,9 +3310,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.orders.Revision", b =>
+            modelBuilder.Entity("alina_backend.Modules.orders.Revision", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "Requester")
+                    b.HasOne("alina_backend.Modules.users.User", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3321,26 +3321,26 @@ namespace alina_backend.Migrations
                     b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Profile", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Profile", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithOne()
-                        .HasForeignKey("alina_backend.app.profiles.Profile", "UserId")
+                        .HasForeignKey("alina_backend.Modules.profiles.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.ProfileLanguage", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.ProfileLanguage", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Language", "Language")
+                    b.HasOne("alina_backend.Modules.profiles.Language", "Language")
                         .WithMany("ProfileLanguages")
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Profile", "Profile")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Profile")
                         .WithMany("ProfileLanguages")
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3351,15 +3351,15 @@ namespace alina_backend.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.ProfileSkill", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.ProfileSkill", b =>
                 {
-                    b.HasOne("alina_backend.app.profiles.Profile", "Profile")
+                    b.HasOne("alina_backend.Modules.profiles.Profile", "Profile")
                         .WithMany("ProfileSkills")
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("alina_backend.app.profiles.Skill", "Skill")
+                    b.HasOne("alina_backend.Modules.profiles.Skill", "Skill")
                         .WithMany("ProfileSkills")
                         .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3370,9 +3370,9 @@ namespace alina_backend.Migrations
                     b.Navigation("Skill");
                 });
 
-            modelBuilder.Entity("alina_backend.app.settings.UserNotificationPreference", b =>
+            modelBuilder.Entity("alina_backend.Modules.settings.UserNotificationPreference", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3381,9 +3381,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.settings.UserSettings", b =>
+            modelBuilder.Entity("alina_backend.Modules.settings.UserSettings", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3392,9 +3392,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.support.SupportTicket", b =>
+            modelBuilder.Entity("alina_backend.Modules.support.SupportTicket", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3403,9 +3403,9 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.users.RefreshToken", b =>
+            modelBuilder.Entity("alina_backend.Modules.users.RefreshToken", b =>
                 {
-                    b.HasOne("alina_backend.app.users.User", "User")
+                    b.HasOne("alina_backend.Modules.users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3414,24 +3414,24 @@ namespace alina_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("alina_backend.app.dashboard.Goal", b =>
+            modelBuilder.Entity("alina_backend.Modules.dashboard.Goal", b =>
                 {
                     b.Navigation("ProgressEntries");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Category", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Category", b =>
                 {
                     b.Navigation("Gigs");
 
                     b.Navigation("SubCategories");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.CustomOffer", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.CustomOffer", b =>
                 {
                     b.Navigation("Attachments");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.Gig", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.Gig", b =>
                 {
                     b.Navigation("Gallery");
 
@@ -3440,31 +3440,31 @@ namespace alina_backend.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("alina_backend.app.marketplace.UserTask", b =>
+            modelBuilder.Entity("alina_backend.Modules.marketplace.UserTask", b =>
                 {
                     b.Navigation("Attachments");
 
                     b.Navigation("Offers");
                 });
 
-            modelBuilder.Entity("alina_backend.app.messaging.Conversation", b =>
+            modelBuilder.Entity("alina_backend.Modules.messaging.Conversation", b =>
                 {
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Language", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Language", b =>
                 {
                     b.Navigation("ProfileLanguages");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Profile", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Profile", b =>
                 {
                     b.Navigation("ProfileLanguages");
 
                     b.Navigation("ProfileSkills");
                 });
 
-            modelBuilder.Entity("alina_backend.app.profiles.Skill", b =>
+            modelBuilder.Entity("alina_backend.Modules.profiles.Skill", b =>
                 {
                     b.Navigation("ProfileSkills");
                 });

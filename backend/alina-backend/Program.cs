@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using alina_backend;
-using alina_backend.app.auth;
-using alina_backend.app.profiles;
-using alina_backend.app.Middleware;
-using alina_backend.app.finance;
-using alina_backend.app.notifications;
-using alina_backend.app.validation;
+using alina_backend.Modules.auth;
+using alina_backend.Modules.profiles;
+using alina_backend.Modules.Middleware;
+using alina_backend.Modules.finance;
+using alina_backend.Modules.notifications;
+using alina_backend.Modules.validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,26 +52,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<RsaKeyService>();
 builder.Services.AddScoped<GoogleAuthService>();
 builder.Services.AddScoped<TwoFactorAuthService>();
+builder.Services.AddScoped<WebhookVerificationService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<EmailValidationService>();
 builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
-builder.Services.AddScoped<alina_backend.app.finance.ICurrencyService, alina_backend.app.finance.CurrencyService>();
-builder.Services.AddScoped<alina_backend.app.notifications.NotificationService>();
-builder.Services.AddScoped<alina_backend.app.analytics.AnalyticsService>();
-builder.Services.AddScoped<alina_backend.app.marketplace.SellerLevelService>();
+builder.Services.AddScoped<alina_backend.Modules.finance.ICurrencyService, alina_backend.Modules.finance.CurrencyService>();
+builder.Services.AddScoped<alina_backend.Modules.notifications.NotificationService>();
+builder.Services.AddScoped<alina_backend.Modules.analytics.AnalyticsService>();
+builder.Services.AddScoped<alina_backend.Modules.marketplace.SellerLevelService>();
 
 // Add background services
-builder.Services.AddHostedService<alina_backend.app.marketplace.AutoReleaseService>();
+builder.Services.AddHostedService<alina_backend.Modules.marketplace.AutoReleaseService>();
 
 // Add SignalR
 builder.Services.AddSignalR();
 
 // Add memory cache for rate limiting
 builder.Services.AddMemoryCache();
-
-// Register services
-builder.Services.AddScoped<TwoFactorAuthService>();
-builder.Services.AddScoped<WebhookVerificationService>();
-builder.Services.AddScoped<EmailService>();
-builder.Services.AddScoped<EmailValidationService>();
 
 // Configure JWT Authentication
 var privateKeyPath = builder.Configuration["RSA_PRIVATE_KEY_PATH"];
@@ -127,7 +124,7 @@ if (!string.IsNullOrEmpty(privateKeyPath))
 var awsOptions = builder.Configuration.GetAWSOptions();
 builder.Services.AddDefaultAWSOptions(awsOptions);
 builder.Services.AddAWSService<Amazon.S3.IAmazonS3>();
-builder.Services.AddScoped<alina_backend.app.media.IStorageService, alina_backend.app.media.S3StorageService>();
+builder.Services.AddScoped<alina_backend.Modules.media.IStorageService, alina_backend.Modules.media.S3StorageService>();
 
 var app = builder.Build();
 
@@ -154,8 +151,8 @@ app.UseCsrfProtection(); // CSRF protection after CORS
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<alina_backend.app.messaging.ChatHub>("/api/hubs/chat");
-app.MapHub<alina_backend.app.notifications.NotificationHub>("/api/hubs/notifications");
+app.MapHub<alina_backend.Modules.messaging.ChatHub>("/api/hubs/chat");
+app.MapHub<alina_backend.Modules.notifications.NotificationHub>("/api/hubs/notifications");
 
 // Database is already initialized, skip automatic migrations
 // using (var scope = app.Services.CreateScope())
