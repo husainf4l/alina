@@ -430,7 +430,7 @@ export default function AboutSection() {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <a
-                  href="/signup"
+                  href="/auth?mode=register"
                   className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#c71463] font-semibold rounded-full hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   {t("cta.button1")}

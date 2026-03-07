@@ -205,5 +205,58 @@
     "finishButton": "Get started",
     "saving": "Saving...",
     "errorGeneric": "Something went wrong. Please try again."
+  },
+  "Contact": {
+    "hero": {
+      "description": "Have questions? Need support? We're here to help you succeed. Reach out to our team and we'll get back to you as soon as possible."
+    },
+    "info": {
+      "email": {
+        "title": "Email Us"
+      },
+      "phone": {
+        "title": "Call Us"
+      },
+      "location": {
+        "title": "Visit Us"
+      }
+    },
+    "form": {
+      "title": "Send us a message",
+      "subtitle": "Fill out the form below and we'll get back to you within 24 hours.",
+      "nameLabel": "Your name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Tell us more about your inquiry...",
+      "submit": "Send Message",
+      "sending": "Sending..."
+    },
+    "support": {
+      "title": "How we can help",
+      "subtitle": "Our dedicated support team is available to assist you with any questions or concerns.",
+      "features": {
+        "support247": {
+          "title": "24/7 Support",
+          "description": "Round-the-clock assistance whenever you need it. Our team is always available to help."
+        },
+        "liveChat": {
+          "title": "Live Chat",
+          "description": "Get instant answers through our live chat. Connect with support agents in real-time."
+        },
+        "fastResponse": {
+          "title": "Fast Response Time",
+          "description": "We typically respond within 2 hours. Your questions are our priority."
+        }
+      }
+    },
+    "faq": {
+      "title": "Looking for answers?",
+      "description": "Check out our FAQ section for quick solutions to common questions.",
+      "link": "Visit FAQ"
+    }
   }
 }
