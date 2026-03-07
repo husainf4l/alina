@@ -51,7 +51,7 @@ export default function WithdrawPage() {
         accountDetails 
       });
       
-      toast.success(`Withdrawal request for $${withdrawAmount.toFixed(2)} submitted successfully`);
+      toast.success(`Withdrawal request for $${Number(withdrawAmount || 0).toFixed(2)} submitted successfully`);
       setAmount('');
       setAccountDetails({
         accountHolder: '',
@@ -81,7 +81,7 @@ export default function WithdrawPage() {
               {/* Available Balance */}
               <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl">
                 <div className="text-sm text-green-700 dark:text-green-300 mb-1">Available Balance</div>
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400">${availableBalance.toFixed(2)}</div>
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400">${Number(availableBalance || 0).toFixed(2)}</div>
               </div>
 
               {/* Amount */}

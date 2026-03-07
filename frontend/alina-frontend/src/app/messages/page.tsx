@@ -74,6 +74,8 @@ export default function MessagesPage() {
     },
   ];
 
+  const selectedConversationData = conversations.find((c) => c.id === selectedConversation);
+
   const messages: Message[] = selectedConversation
     ? [
         {
@@ -256,20 +258,20 @@ export default function MessagesPage() {
                         <div className="flex items-center gap-3">
                           <div className="relative flex-shrink-0">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
-                              {conversations.find((c) => c.id === selectedConversation)?.userName.charAt(0)}
-                            </div>
-                            <div className="absolute bottom-0 right-0">
-                              <OnlineStatusBadge 
-                                isOnline={isUserOnline(conversations.find((c) => c.id === selectedConversation)?.userId || '')} 
+                            {selectedConversationData?.userName?.charAt(0) || '?'}
+                          </div>
+                          <div className="absolute bottom-0 right-0">
+                            <OnlineStatusBadge 
+                              isOnline={isUserOnline(selectedConversationData?.userId || '')} 
                               />
                             </div>
                           </div>
                           <div>
                             <h2 className="font-bold text-gray-900">
-                              {conversations.find((c) => c.id === selectedConversation)?.userName}
+                              {selectedConversationData?.userName || 'Unknown User'}
                             </h2>
                             <p className="text-sm text-gray-500">
-                              {isUserOnline(conversations.find((c) => c.id === selectedConversation)?.userId || '')
+                              {isUserOnline(selectedConversationData?.userId || '')
                                 ? 'Active now'
                                 : 'Offline'}
                             </p>
@@ -327,7 +329,7 @@ export default function MessagesPage() {
                         {typingUsers.length > 0 && (
                           <div className="flex justify-start">
                             <TypingIndicator 
-                              userName={conversations.find((c) => c.id === selectedConversation)?.userName}
+                              userName={selectedConversationData?.userName}
                             />
                           </div>
                         )}

@@ -99,19 +99,19 @@ export default function WalletPage() {
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl p-6 text-white">
                 <div className="text-sm opacity-90 mb-1">Available Balance</div>
-                <div className="text-4xl font-bold mb-4">${wallet.availableBalance.toFixed(2)}</div>
+                <div className="text-4xl font-bold mb-4">${Number(wallet.availableBalance || 0).toFixed(2)}</div>
                 <Link href="/wallet/withdraw">
                   <Button size="sm" variant="outline" className="bg-white/20 hover:bg-white/30 border-white/30 text-white">Withdraw</Button>
                 </Link>
               </div>
               <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 text-white">
                 <div className="text-sm opacity-90 mb-1">Pending Balance</div>
-                <div className="text-4xl font-bold mb-4">${wallet.pendingBalance.toFixed(2)}</div>
+                <div className="text-4xl font-bold mb-4">${Number(wallet.pendingBalance || 0).toFixed(2)}</div>
                 <div className="text-sm opacity-75">In escrow</div>
               </div>
               <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl p-6 text-white">
                 <div className="text-sm opacity-90 mb-1">Total Balance</div>
-                <div className="text-4xl font-bold mb-4">${wallet.balance.toFixed(2)}</div>
+                <div className="text-4xl font-bold mb-4">${Number(wallet.balance || 0).toFixed(2)}</div>
                 <Link href="/wallet/deposit">
                   <Button size="sm" variant="outline" className="bg-white/20 hover:bg-white/30 border-white/30 text-white">Deposit</Button>
                 </Link>
@@ -179,7 +179,7 @@ export default function WalletPage() {
                         <div className={`text-xl font-bold ${
                           transaction.amount > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                         }`}>
-                          {transaction.amount > 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
+                          {transaction.amount > 0 ? '+' : ''}${Math.abs(Number(transaction.amount || 0)).toFixed(2)}
                         </div>
                         <div className={`text-xs font-semibold px-2 py-1 rounded-full inline-block ${
                           transaction.status === 'completed'

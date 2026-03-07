@@ -48,8 +48,9 @@ export class RealtimeNotificationService {
       this.isInitialized = true;
       console.log('✅ Realtime notifications initialized');
     } catch (error) {
-      console.error('Failed to initialize notifications:', error);
-      throw error;
+      console.warn('⚠️ Failed to initialize notifications (SignalR may not be available):', error instanceof Error ? error.message : String(error));
+      // Don't throw error - allow app to continue without real-time notifications
+      this.isInitialized = false;
     }
   }
 
@@ -133,8 +134,19 @@ export class RealtimeNotificationService {
    */
   async getUnreadCount(): Promise<number> {
     if (!this.isInitialized) return 0;
-    
-    return await this.hub.invoke<number>('GetUnreadCount');
+
+    // Check if hub is actually connected
+    if (!this.hub.isConnected()) {
+      console.warn('Cannot get unread count: SignalR not connected');
+      return 0;
+    }
+
+    try {
+      return await this.hub.invoke<number>('GetUnreadCount');
+    } catch (error) {
+      console.error('Failed to get unread count:', error);
+      return 0;
+    }
   }
 
   /**

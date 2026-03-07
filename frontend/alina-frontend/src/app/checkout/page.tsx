@@ -330,7 +330,7 @@ function CheckoutContent() {
                         Processing Payment...
                       </span>
                     ) : (
-                      `Pay $${total.toFixed(2)}`
+                      `Pay $${Number(total || 0).toFixed(2)}`
                     )}
                   </Button>
 
@@ -386,11 +386,11 @@ function CheckoutContent() {
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between text-gray-700 dark:text-gray-300">
                       <span>Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>${Number(subtotal || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-gray-700 dark:text-gray-300">
                       <span>Service Fee (5%)</span>
-                      <span>${serviceFee.toFixed(2)}</span>
+                      <span>${Number(serviceFee || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white pt-3 border-t border-gray-200 dark:border-gray-700">
                       <span>Total</span>

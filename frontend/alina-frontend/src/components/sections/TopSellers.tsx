@@ -114,7 +114,7 @@ export default function TopSellers() {
                       ))}
                     </div>
                     <span className="text-sm font-bold text-gray-900 ml-1">
-                      {seller.rating.toFixed(1)}
+                      {Number(seller.rating || 0).toFixed(1)}
                     </span>
                   </div>
                   <span className="text-sm text-gray-500 font-medium">

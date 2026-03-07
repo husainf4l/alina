@@ -339,17 +339,17 @@ export default function OrdersPage() {
                               </div>
                               <div>
                                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Price</div>
-                                <div className="font-bold text-gray-900 dark:text-white">${order.price.toFixed(2)}</div>
+                                <div className="font-bold text-gray-900 dark:text-white">${Number(order.price || 0).toFixed(2)}</div>
                                 {activeTab === 'selling' && order.commissionAmount !== undefined && (
                                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    Fee: ${order.commissionAmount.toFixed(2)} ({order.platformFeePercentage}%)
+                                    Fee: ${Number(order.commissionAmount || 0).toFixed(2)} ({order.platformFeePercentage}%)
                                   </div>
                                 )}
                               </div>
                               {activeTab === 'selling' && order.sellerReceives !== undefined ? (
                                 <div>
                                   <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">You Receive</div>
-                                  <div className="font-bold text-green-600 dark:text-green-400">${order.sellerReceives.toFixed(2)}</div>
+                                  <div className="font-bold text-green-600 dark:text-green-400">${Number(order.sellerReceives || 0).toFixed(2)}</div>
                                 </div>
                               ) : (
                                 <div>

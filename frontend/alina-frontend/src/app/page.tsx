@@ -1,14 +1,5 @@
 import { Metadata } from 'next';
-import Navbar from '@/components/sections/Navbar';
-import HeroSection from '@/components/sections/HeroSection';
-import TrustStrip from '@/components/sections/TrustStrip';
-import FeaturedServices from '@/components/sections/FeaturedServices';
-import HowItWorks from '@/components/sections/HowItWorks';
-import TopSellers from '@/components/sections/TopSellers';
-import Testimonials from '@/components/sections/Testimonials';
-import Differentiation from '@/components/sections/Differentiation';
-import CTASection from '@/components/sections/CTASection';
-import Footer from '@/components/sections/Footer';
+import { HomePageContent } from '@/components/home/HomePageContent';
 
 export const metadata: Metadata = {
   title: 'Alina - Find the Perfect Service for Your Business | Professional Freelancers',
@@ -68,51 +59,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <main>
-        <HeroSection />
-        <TrustStrip />
-        <FeaturedServices />
-        <HowItWorks />
-        <TopSellers />
-        <Testimonials />
-        <Differentiation />
-        <CTASection />
-        <Footer />
-      </main>
-
-      {/* Structured Data for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Alina Marketplace",
-            "description": "Professional freelance marketplace connecting businesses with top-rated freelancers",
-            "url": process.env.NEXT_PUBLIC_SITE_URL || "https://alina.com",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": `${process.env.NEXT_PUBLIC_SITE_URL || "https://alina.com"}/marketplace?q={search_term_string}`
-              },
-              "query-input": "required name=search_term_string"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "Alina",
-              "logo": {
-                "@type": "ImageObject",
-                "url": `${process.env.NEXT_PUBLIC_SITE_URL || "https://alina.com"}/logo.png`
-              }
-            }
-          })
-        }}
-      />
-    </div>
-  );
+  return <HomePageContent />;
 }

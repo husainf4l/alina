@@ -95,6 +95,31 @@ if (!string.IsNullOrEmpty(privateKeyPath))
                 IssuerSigningKey = new RsaSecurityKey(rsa),
                 ClockSkew = TimeSpan.Zero // Remove default 5 minute clock skew
             };
+            
+            // Allow reading JWT from cookies for web clients
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    // Check cookie if no Authorization header is present
+                    if (string.IsNullOrEmpty(context.Token))
+                    {
+                        context.Token = context.Request.Cookies["access_token"];
+                    }
+                    
+                    // For SignalR, also check query string
+                    if (string.IsNullOrEmpty(context.Token))
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
+                    }
+                    
+                    return Task.CompletedTask;
+                }
+            };
         });
 }
 
@@ -129,8 +154,8 @@ app.UseCsrfProtection(); // CSRF protection after CORS
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<alina_backend.app.messaging.ChatHub>("/hubs/chat");
-app.MapHub<alina_backend.app.notifications.NotificationHub>("/hubs/notifications");
+app.MapHub<alina_backend.app.messaging.ChatHub>("/api/hubs/chat");
+app.MapHub<alina_backend.app.notifications.NotificationHub>("/api/hubs/notifications");
 
 // Database is already initialized, skip automatic migrations
 // using (var scope = app.Services.CreateScope())

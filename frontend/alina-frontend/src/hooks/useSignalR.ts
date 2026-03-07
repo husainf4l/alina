@@ -208,13 +208,19 @@ export function useRealtimeNotifications() {
     // Initialize connection
     service.initialize()
       .then(() => {
-        setIsConnected(true);
+        const connected = service.isConnected();
+        setIsConnected(connected);
         
-        // Get initial unread count
-        service.getUnreadCount().then(setUnreadCount);
+        // Get initial unread count only if connected
+        if (connected) {
+          service.getUnreadCount().then(setUnreadCount).catch(() => {
+            // Ignore errors getting initial count
+            setUnreadCount(0);
+          });
+        }
       })
       .catch((error) => {
-        console.error('Failed to connect to notifications:', error);
+        console.error('Failed to initialize notifications:', error);
         setIsConnected(false);
       });
 

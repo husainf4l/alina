@@ -21,10 +21,9 @@ public class CsrfProtectionMiddleware
     private static readonly string[] ExemptPaths = 
     {
         "/api/health",
-        "/api/auth/login",
-        "/api/auth/register",
-        "/api/auth/google",
+        "/api/auth/", // All auth endpoints (login, register, google, mobile, web)
         "/hubs/", // SignalR hubs
+        "/api/hubs/", // SignalR hubs with API prefix
         "/openapi/"
     };
 
@@ -42,6 +41,15 @@ public class CsrfProtectionMiddleware
         
         // Skip exempt paths
         if (ExemptPaths.Any(p => path.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
+        {
+            await _next(context);
+            return;
+        }
+
+        // Skip CSRF validation for requests using Bearer token authentication
+        // Bearer tokens in Authorization header are not susceptible to CSRF attacks
+        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
             await _next(context);
             return;

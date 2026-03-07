@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Cairo } from "next/font/google";
 import "./globals.css";
-import { QueryProvider } from "@/lib/providers/query-provider";
-import { AuthProvider } from "@/lib/providers/AuthProvider";
-import { ToastProvider } from "@/contexts/ToastContext";
-import { ToastContainer } from "@/components/ui/Toast";
-import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
-import { ApiHealthMonitor } from "@/components/ui/ApiHealthMonitor";
-import { OrderStatusToast } from "@/components/realtime/OrderStatusToast";
-import { PerformanceDashboard } from "@/components/performance/PerformanceDashboard";
-import { SecurityInitializer } from "@/components/security/SecurityInitializer";
+import { ClientProviders } from "@/components/providers/ClientProviders";
 import { SkipLink } from "@/components/accessibility/SkipLink";
-import { GlobalA11yAnnouncer } from "@/components/accessibility/A11yAnnouncer";
 import { OrganizationSchema, WebsiteSchema } from "@/components/seo/StructuredData";
 
 // Primary font for Latin scripts - Inter with variable weight
@@ -82,22 +73,11 @@ export default function RootLayout({
         <OrganizationSchema />
         <WebsiteSchema />
         <SkipLink />
-        <ErrorBoundary>
-          <QueryProvider>
-            <AuthProvider>
-              <ToastProvider>
-                <main id="main-content" tabIndex={-1}>
-                  {children}
-                </main>
-                <ToastContainer />
-                <OrderStatusToast />
-                <PerformanceDashboard />
-                <SecurityInitializer />
-                <GlobalA11yAnnouncer />
-              </ToastProvider>
-            </AuthProvider>
-          </QueryProvider>
-        </ErrorBoundary>
+        <ClientProviders>
+          <main id="main-content" tabIndex={-1}>
+            {children}
+          </main>
+        </ClientProviders>
       </body>
     </html>
   );

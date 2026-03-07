@@ -170,7 +170,7 @@ export default function MarketingPage() {
                           {new Date(promo.startDate).toLocaleDateString()} - {new Date(promo.endDate).toLocaleDateString()}
                         </span>
                         <span className="text-gray-600 dark:text-gray-400">
-                          CTR: {((promo.clicks / promo.impressions) * 100).toFixed(2)}%
+                          CTR: {promo.impressions > 0 ? ((promo.clicks / promo.impressions) * 100).toFixed(2) : '0.00'}%
                         </span>
                       </div>
                     </div>
@@ -238,7 +238,7 @@ export default function MarketingPage() {
                         ></div>
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {((ad.spent / ad.budget) * 100).toFixed(1)}% of budget used
+                        {ad.budget > 0 ? ((ad.spent / ad.budget) * 100).toFixed(1) : '0.0'}% of budget used
                       </div>
                     </div>
                   ))}

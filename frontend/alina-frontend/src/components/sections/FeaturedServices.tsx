@@ -126,7 +126,7 @@ export default function FeaturedServices() {
                         ))}
                       </div>
                       <span className="text-xs text-gray-500 ml-1 font-medium">
-                        {service.sellerRating?.toFixed(1) || '0.0'}
+                        {Number(service.sellerRating || 0).toFixed(1)}
                       </span>
                     </div>
                   </div>

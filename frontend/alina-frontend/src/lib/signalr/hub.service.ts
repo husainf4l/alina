@@ -39,20 +39,17 @@ export class SignalRService {
         accessTokenFactory: this.options?.accessTokenFactory,
         withCredentials: true, // Send cookies
       })
-      .withAutomaticReconnect({
-        nextRetryDelayInMilliseconds: (retryContext) => {
-          // Exponential backoff: 2s, 4s, 8s, 16s, 30s
-          if (retryContext.previousRetryCount >= this.maxReconnectAttempts) {
-            return null; // Stop reconnecting
-          }
-          return Math.min(1000 * Math.pow(2, retryContext.previousRetryCount), 30000);
-        },
-      })
-      .configureLogging(
-        process.env.NODE_ENV === 'development'
-          ? signalR.LogLevel.Information
-          : signalR.LogLevel.Warning
-      );
+      // Disable automatic reconnect since SignalR is optional
+      // .withAutomaticReconnect({
+      //   nextRetryDelayInMilliseconds: (retryContext) => {
+      //     // Reduced attempts for optional SignalR: 1s, 2s, 4s (max 3 attempts)
+      //     if (retryContext.previousRetryCount >= 3) {
+      //       return null; // Stop reconnecting
+      //     }
+      //     return Math.min(1000 * Math.pow(2, retryContext.previousRetryCount), 4000);
+      //   },
+      // })
+      .configureLogging(signalR.LogLevel.Warning);
 
     this.connection = connectionBuilder.build();
 
@@ -69,7 +66,10 @@ export class SignalRService {
       this.connectionState = 'Disconnected';
       this.options?.onStateChange?.(this.connectionState);
       this.options?.onError?.(error as Error);
-      console.error('❌ SignalR connection failed:', error);
+      // Only log connection failures in development since SignalR is optional
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️ SignalR connection failed (non-critical):', error);
+      }
       throw error;
     }
   }
@@ -233,10 +233,16 @@ export function getMessagingHub(): SignalRService {
         return token || '';
       },
       onStateChange: (state) => {
-        console.log('Messaging Hub State:', state);
+        // Only log state changes in development
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Messaging Hub State:', state);
+        }
       },
       onError: (error) => {
-        console.error('Messaging Hub Error:', error);
+        // Suppress connection errors since SignalR is optional
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('SignalR messaging connection error (non-critical):', error.message);
+        }
       },
     });
   }
@@ -256,10 +262,16 @@ export function getNotificationHub(): SignalRService {
         return token || '';
       },
       onStateChange: (state) => {
-        console.log('Notification Hub State:', state);
+        // Only log state changes in development
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Notification Hub State:', state);
+        }
       },
       onError: (error) => {
-        console.error('Notification Hub Error:', error);
+        // Suppress connection errors since SignalR is optional
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('SignalR connection error (non-critical):', error.message);
+        }
       },
     });
   }

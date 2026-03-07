@@ -15,8 +15,21 @@ import Navbar from '@/components/sections/Navbar';
 import type { OrderStatus } from '@/lib/api/types';
 
 function DashboardContent() {
-  const [viewMode, setViewMode] = useState<'seller' | 'buyer'>('seller');
   const { data: user } = useCurrentUser();
+  
+  // Determine available views based on user role
+  const isSeller = user?.role === 'Seller' || user?.role === 'Admin' || user?.role === 'SuperAdmin';
+  const isBuyer = user?.role === 'User' || user?.role === 'Admin' || user?.role === 'SuperAdmin';
+  
+  // Set initial view mode based on user role
+  const getInitialViewMode = () => {
+    if (isSeller && !isBuyer) return 'seller';
+    if (isBuyer && !isSeller) return 'buyer';
+    return 'seller'; // Default for admins who can see both
+  };
+  
+  const [viewMode, setViewMode] = useState<'seller' | 'buyer'>(getInitialViewMode);
+  
   const { data: sellerOrdersResponse } = useSellerOrders({ page: 1, pageSize: 5 });
   const { data: buyerOrdersResponse } = useBuyerOrders({ page: 1, pageSize: 5 });
   const { data: wallet } = useWallet();
@@ -24,7 +37,7 @@ function DashboardContent() {
   const { data: analytics } = useSellerAnalytics();
 
   const ordersResponse = viewMode === 'seller' ? sellerOrdersResponse : buyerOrdersResponse;
-  const activeGigs = myGigs?.filter(gig => gig.isActive) || [];
+  const activeGigs = Array.isArray(myGigs) ? myGigs.filter(gig => gig.isActive) : [];
 
   // Calculate total spending for buyer view
   const totalSpending = buyerOrdersResponse?.items.reduce((sum, order) => sum + order.price, 0) || 0;
@@ -56,7 +69,7 @@ function DashboardContent() {
   const sellerStats = [
     {
       label: 'Available Balance',
-      value: `$${wallet?.availableBalance.toFixed(2) || '0.00'}`,
+      value: `$${Number(wallet?.availableBalance || 0).toFixed(2)}`,
       gradient: 'from-green-500 to-emerald-500',
       icon: (
         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -68,7 +81,7 @@ function DashboardContent() {
     },
     {
       label: 'Total Earnings',
-      value: `$${analytics?.totalEarnings.toFixed(2) || '0.00'}`,
+      value: `$${Number(analytics?.totalEarnings || 0).toFixed(2)}`,
       gradient: 'from-purple-500 to-pink-500',
       icon: (
         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -87,11 +100,11 @@ function DashboardContent() {
           <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
         </svg>
       ),
-      trend: analytics?.completionRate ? `${analytics.completionRate.toFixed(0)}% completion` : null
+      trend: analytics?.completionRate ? `${Number(analytics.completionRate).toFixed(0)}% completion` : null
     },
     {
       label: 'Average Rating',
-      value: analytics?.averageRating ? analytics.averageRating.toFixed(1) : '0.0',
+      value: analytics?.averageRating ? Number(analytics.averageRating).toFixed(1) : '0.0',
       gradient: 'from-yellow-500 to-orange-500',
       icon: (
         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -105,7 +118,7 @@ function DashboardContent() {
   const buyerStats = [
     {
       label: 'Total Spent',
-      value: `$${totalSpending.toFixed(2)}`,
+      value: `$${Number(totalSpending || 0).toFixed(2)}`,
       gradient: 'from-blue-500 to-cyan-500',
       icon: (
         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -151,7 +164,7 @@ function DashboardContent() {
     }
   ];
 
-  const stats = viewMode === 'seller' ? sellerStats : buyerStats;
+  const stats = (viewMode === 'seller' && isSeller) ? sellerStats : buyerStats;
 
   return (
     <>
@@ -167,6 +180,8 @@ function DashboardContent() {
               </div>
               
               {/* View Mode Toggle */}
+            {/* View Switcher - Only show for users who can access both views */}
+            {isSeller && isBuyer && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-1 shadow-lg border border-gray-200/60 dark:border-gray-700">
                 <button
                   onClick={() => setViewMode('seller')}
@@ -189,6 +204,7 @@ function DashboardContent() {
                   Buyer View
                 </button>
               </div>
+            )}
             </div>
 
             {/* Stats Grid */}
@@ -259,8 +275,8 @@ function DashboardContent() {
             {/* Profile Completion Widget */}
             <ProfileCompletionWidget className="mb-8" />
 
-            {/* Seller Management Tools - Only visible in seller view */}
-            {viewMode === 'seller' && (
+            {/* Seller Management Tools - Only visible in seller view for sellers */}
+            {viewMode === 'seller' && isSeller && (
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-lg border border-gray-200/60 dark:border-gray-700/60 p-6 mb-8">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Seller Tools</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -350,7 +366,7 @@ function DashboardContent() {
               </div>
 
               {/* Active Gigs (Seller View) or Recent Notifications (Buyer View) */}
-              {viewMode === 'seller' ? (
+              {(viewMode === 'seller' && isSeller) ? (
                 <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-lg border border-gray-200/60 dark:border-gray-700/60 overflow-hidden">
                   <div className="p-6 border-b border-gray-200/60 dark:border-gray-700/60 flex items-center justify-between">
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Active Gigs</h2>
@@ -422,7 +438,7 @@ function DashboardContent() {
             </div>
 
             {/* Charts Section (Seller Only) */}
-            {viewMode === 'seller' && (
+            {viewMode === 'seller' && isSeller && (
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <Chart
                   data={revenueData}

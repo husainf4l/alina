@@ -32,12 +32,19 @@ interface AuthProviderProps {
 const PUBLIC_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password', '/'];
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   // Skip auth fetch on public pages to prevent flashing
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
-  const { data: userData, isLoading, refetch } = useCurrentUser({ enabled: !isPublicRoute });
+  const { data: userData, isLoading, refetch } = useCurrentUser({ 
+    enabled: mounted && !isPublicRoute 
+  });
 
   const logout = () => {
     clearTokens();

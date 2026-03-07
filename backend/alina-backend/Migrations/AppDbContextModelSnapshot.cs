@@ -23,6 +23,70 @@ namespace alina_backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("alina_backend.app.auth.TwoFactorVerification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TwoFactorVerifications");
+                });
+
+            modelBuilder.Entity("alina_backend.app.auth.UserTotpSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("EnabledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecretKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTotpSettings");
+                });
+
             modelBuilder.Entity("alina_backend.app.business.AvailabilitySetting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -70,7 +134,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("AvailabilitySettings", (string)null);
+                    b.ToTable("AvailabilitySettings");
                 });
 
             modelBuilder.Entity("alina_backend.app.business.BusinessToolSetting", b =>
@@ -113,7 +177,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("BusinessToolSettings", (string)null);
+                    b.ToTable("BusinessToolSettings");
                 });
 
             modelBuilder.Entity("alina_backend.app.business.ScheduleSlot", b =>
@@ -168,7 +232,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("ScheduleSlots", (string)null);
+                    b.ToTable("ScheduleSlots");
                 });
 
             modelBuilder.Entity("alina_backend.app.dashboard.AchievementBadge", b =>
@@ -208,7 +272,7 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AchievementBadges", (string)null);
+                    b.ToTable("AchievementBadges");
                 });
 
             modelBuilder.Entity("alina_backend.app.dashboard.Goal", b =>
@@ -274,7 +338,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Goals", (string)null);
+                    b.ToTable("Goals");
                 });
 
             modelBuilder.Entity("alina_backend.app.dashboard.GoalProgress", b =>
@@ -301,7 +365,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("GoalId");
 
-                    b.ToTable("GoalProgress", (string)null);
+                    b.ToTable("GoalProgress");
                 });
 
             modelBuilder.Entity("alina_backend.app.disputes.Dispute", b =>
@@ -344,7 +408,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Disputes", (string)null);
+                    b.ToTable("Disputes");
                 });
 
             modelBuilder.Entity("alina_backend.app.finance.CurrencyRate", b =>
@@ -360,49 +424,49 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("CurrencyRates", (string)null);
+                    b.ToTable("CurrencyRates");
 
                     b.HasData(
                         new
                         {
                             Code = "USD",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 1.0000m
                         },
                         new
                         {
                             Code = "SAR",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 3.7500m
                         },
                         new
                         {
                             Code = "AED",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 3.6725m
                         },
                         new
                         {
                             Code = "JOD",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 0.7090m
                         },
                         new
                         {
                             Code = "KWD",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 0.3070m
                         },
                         new
                         {
                             Code = "BHD",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1070),
                             Rate = 0.3760m
                         },
                         new
                         {
                             Code = "OMR",
-                            LastUpdated = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(750),
+                            LastUpdated = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1080),
                             Rate = 0.3845m
                         });
                 });
@@ -417,6 +481,9 @@ namespace alina_backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -427,11 +494,17 @@ namespace alina_backend.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<string>("Metadata")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("OrderId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("ProcessedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("RecipientId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Reference")
                         .HasColumnType("text");
@@ -442,6 +515,9 @@ namespace alina_backend.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
@@ -449,7 +525,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("alina_backend.app.finance.Wallet", b =>
@@ -486,7 +562,7 @@ namespace alina_backend.Migrations
                     b.HasIndex("ProfileId")
                         .IsUnique();
 
-                    b.ToTable("Wallets", (string)null);
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("alina_backend.app.finance.WithdrawalRequest", b =>
@@ -527,7 +603,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WithdrawalRequests", (string)null);
+                    b.ToTable("WithdrawalRequests");
                 });
 
             modelBuilder.Entity("alina_backend.app.fraud.FraudFlag", b =>
@@ -571,7 +647,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FraudFlags", (string)null);
+                    b.ToTable("FraudFlags");
                 });
 
             modelBuilder.Entity("alina_backend.app.legal.LegalDocument", b =>
@@ -597,7 +673,7 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LegalDocuments", (string)null);
+                    b.ToTable("LegalDocuments");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketing.AdCampaign", b =>
@@ -687,7 +763,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("AdCampaigns", (string)null);
+                    b.ToTable("AdCampaigns");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketing.Promotion", b =>
@@ -764,7 +840,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Promotions", (string)null);
+                    b.ToTable("Promotions");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Category", b =>
@@ -804,480 +880,480 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9080bc68-1b22-490b-b203-d04854db01a9"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1260),
+                            Id = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1600),
                             Icon = "brush",
                             Name = "Graphics & Design",
                             NameAr = "الجرافيك والتصميم"
                         },
                         new
                         {
-                            Id = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1260),
+                            Id = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1600),
                             Icon = "code",
                             Name = "Programming & Tech",
                             NameAr = "البرمجة والتكنولوجيا"
                         },
                         new
                         {
-                            Id = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1270),
+                            Id = new Guid("768acba4-7483-415f-9396-f4a4003b01c9"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1620),
                             Icon = "trending_up",
                             Name = "Digital Marketing",
                             NameAr = "التسويق الرقمي"
                         },
                         new
                         {
-                            Id = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1270),
+                            Id = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1620),
                             Icon = "pen",
                             Name = "Writing & Translation",
                             NameAr = "الكتابة والترجمة"
                         },
                         new
                         {
-                            Id = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1270),
+                            Id = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1630),
                             Icon = "video",
                             Name = "Video & Animation",
                             NameAr = "الفيديو والأنيميشن"
                         },
                         new
                         {
-                            Id = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1280),
+                            Id = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1640),
                             Icon = "business",
                             Name = "Business Services",
                             NameAr = "الخدمات التجارية"
                         },
                         new
                         {
-                            Id = new Guid("0b06a40e-42ae-4cda-aae7-3452c017e81e"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1280),
+                            Id = new Guid("01a3e221-575b-41c1-bef6-ea51510675d8"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1640),
                             Icon = "music_note",
                             Name = "Music & Audio",
                             NameAr = "الموسيقى والصوتيات"
                         },
                         new
                         {
-                            Id = new Guid("03a4f835-e02b-4ceb-a89c-faa19b6d93d5"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1290),
+                            Id = new Guid("f3ccf4c9-a49a-467a-91c3-8faebbaa9d3e"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1650),
                             Icon = "self_improvement",
                             Name = "Lifestyle & Coaching",
                             NameAr = "نمط الحياة والتدريب"
                         },
                         new
                         {
-                            Id = new Guid("ba081444-cea6-4151-a02d-52d87e13361c"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1290),
+                            Id = new Guid("952ff931-b0af-4b3e-95d5-e6b4fa25834f"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1650),
                             Name = "Logo Design",
                             NameAr = "تصميم الشعارات",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("f372c452-06bc-4f63-ab1b-4b8016d978bf"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1300),
+                            Id = new Guid("2ed31f34-0ef3-4546-8bc2-a49bc0c03208"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1660),
                             Name = "Brand Identity",
                             NameAr = "هوية العلامة التجارية",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("2014a4b4-9cc2-4719-880a-96cebf971837"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1300),
+                            Id = new Guid("dffa0d88-0cbb-44a7-a378-b5f9f98efa66"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1660),
                             Name = "Business Cards & Stationery",
                             NameAr = "بطاقات العمل والقرطاسية",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("125d5765-bd9c-4fde-a854-c9d2d4285380"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1310),
+                            Id = new Guid("62855717-995b-4b9d-892b-52976189c847"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1670),
                             Name = "Social Media Design",
                             NameAr = "تصميم وسائل التواصل الاجتماعي",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("7ea98fd2-a3f2-4fd8-b2ff-247188b405e9"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1320),
+                            Id = new Guid("3fd553bc-519b-47bc-80f7-3d9179df049b"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1680),
                             Name = "Packaging Design",
                             NameAr = "تصميم التغليف",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("7f39c79f-b679-4fe9-8cfe-f8293e5d87fc"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1320),
+                            Id = new Guid("6536eb2b-8e3c-481e-a9f0-3cccb546b3de"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1680),
                             Name = "Illustration",
                             NameAr = "الرسم التوضيحي",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("073a5048-fa25-4f74-b2e8-a2e8403484b9"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1330),
+                            Id = new Guid("27587cc3-7592-4aef-ad10-1aecb8f8d41d"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1690),
                             Name = "Book Cover Design",
                             NameAr = "تصميم أغلفة الكتب",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("57b6ffbd-a0fc-4475-b151-e40b2212215f"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1350),
+                            Id = new Guid("77edc9c0-c049-4f35-900b-9533d3dabfad"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1700),
                             Name = "UI/UX Design",
                             NameAr = "تصميم واجهة وتجربة المستخدم",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("34376c62-52ee-4395-a547-032d165171ac"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1360),
+                            Id = new Guid("eefcb683-c27e-483c-b169-7c4712d6e264"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1700),
                             Name = "3D Modeling",
                             NameAr = "النمذجة ثلاثية الأبعاد",
-                            ParentId = new Guid("9080bc68-1b22-490b-b203-d04854db01a9")
+                            ParentId = new Guid("00d77ed3-bfba-4c19-9e71-1e70ab3ba57d")
                         },
                         new
                         {
-                            Id = new Guid("c85350f5-1afb-4d83-b4d9-08fbbdd86b95"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1370),
+                            Id = new Guid("fc00136c-0dc4-418b-99b1-5c53d6c001c4"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1710),
                             Name = "Web Development",
                             NameAr = "تطوير المواقع",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("633023fb-8542-421b-9eb1-ede73049f152"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1370),
+                            Id = new Guid("e90d921f-84e6-4197-b65a-f581feb6657c"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1720),
                             Name = "Mobile App Development",
                             NameAr = "تطوير تطبيقات الجوال",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("0f512a8c-09c7-4520-acf8-22b53267cf30"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1380),
+                            Id = new Guid("8d63cb3e-216a-4236-ac08-e2d3d1141ead"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1720),
                             Name = "E-commerce Development",
                             NameAr = "تطوير التجارة الإلكترونية",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("bf659bb4-222b-4215-ac7e-b45314a0004f"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1390),
+                            Id = new Guid("a03830fa-4cd9-46cf-b50b-c41a0abf1997"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1730),
                             Name = "API Development",
                             NameAr = "تطوير واجهات برمجة التطبيقات",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("7bec9d14-7741-404d-8625-52ecee1f8f6c"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1390),
+                            Id = new Guid("077a6d57-d69d-4efb-a82d-64dde9de0877"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1740),
                             Name = "AI & Machine Learning",
                             NameAr = "الذكاء الاصطناعي والتعلم الآلي",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("e79c0230-328a-43e3-a53e-8e8ec51bad39"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1400),
+                            Id = new Guid("860a23ae-a4e4-43bc-980e-7f363a7477e7"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1740),
                             Name = "Automation & Bots",
                             NameAr = "الأتمتة والروبوتات",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("daf6415d-2b63-4097-9b46-a8081a595d00"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1410),
+                            Id = new Guid("157ac9e0-d00f-4a13-8ddf-585b14b5d97a"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1750),
                             Name = "DevOps & Cloud",
                             NameAr = "ديف أوبس والحوسبة السحابية",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("8cd75d1b-e5f6-410c-8cca-245cdc7e44df"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1410),
+                            Id = new Guid("ab8a6c68-41c4-445a-9d4e-73cb6fca4f18"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1760),
                             Name = "Cybersecurity",
                             NameAr = "الأمن السيبراني",
-                            ParentId = new Guid("c686dffb-8947-4d2e-b735-9b962ffb609c")
+                            ParentId = new Guid("4481aeb8-ad87-4d52-8a69-219bb844f2c4")
                         },
                         new
                         {
-                            Id = new Guid("f124f102-f34f-43b7-9900-b999eb52ca1e"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1420),
+                            Id = new Guid("a642c56d-1973-4459-89bc-9782410d4c05"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1770),
                             Name = "Social Media Marketing",
                             NameAr = "التسويق عبر وسائل التواصل الاجتماعي",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("ca485524-6dac-44c6-9290-8098669e2a9b"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1430),
+                            Id = new Guid("058eb4b6-31b4-49f7-a995-714014a8c5d2"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1770),
                             Name = "SEO",
                             NameAr = "تحسين محركات البحث",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("3b68d2f0-080a-48e2-8cf5-8f255d410eb8"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1440),
+                            Id = new Guid("d0b828b0-426c-4b82-8151-7d4aa6fe93ed"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1780),
                             Name = "Paid Ads (Google/Facebook/TikTok)",
                             NameAr = "الإعلانات المدفوعة",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("a9e7d8d7-5749-4177-925b-e10d2f101c28"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1440),
+                            Id = new Guid("ab9f7c34-2925-4464-8549-c34d564303ba"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1790),
                             Name = "Email Marketing",
                             NameAr = "التسويق عبر البريد الإلكتروني",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("dd52358c-4d91-4a50-bd47-d9e76b9807bb"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1450),
+                            Id = new Guid("17135922-edaa-47cb-bf63-d7e4f3b48c64"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1790),
                             Name = "Content Marketing",
                             NameAr = "تسويق المحتوى",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("7e82b61b-3129-48e9-8c94-e3a0dd9b0335"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1460),
+                            Id = new Guid("0311a6db-c13b-4295-a88a-1c714131ca37"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1800),
                             Name = "Marketing Strategy",
                             NameAr = "استراتيجية التسويق",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("db770a15-8254-49aa-b1b6-df4f3760b04b"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1460),
+                            Id = new Guid("1f26b9f3-e6d2-4049-a267-9b0af9d41976"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1810),
                             Name = "Influencer Marketing",
                             NameAr = "التسويق عبر المؤثرين",
-                            ParentId = new Guid("d63deff6-efd6-4e3b-9da0-677f1c3f4a6d")
+                            ParentId = new Guid("768acba4-7483-415f-9396-f4a4003b01c9")
                         },
                         new
                         {
-                            Id = new Guid("2d4da3b3-d7d4-4fcd-8c33-fc3ec580f262"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1470),
+                            Id = new Guid("f790c98e-b431-4f32-a161-a260b0aee170"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1820),
                             Name = "Blog Writing",
                             NameAr = "كتابة المدونات",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("960ff866-341a-416d-9480-f5af51e7338b"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1480),
+                            Id = new Guid("bf9df5d9-4140-4f17-81b0-8f4cb45327df"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1820),
                             Name = "Copywriting",
                             NameAr = "كتابة المحتوى الإعلاني",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("4ff53305-603d-474b-8bf8-d8019ec12465"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1490),
+                            Id = new Guid("7c68acc3-b84f-41c5-9bbd-bcb9644b482d"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1830),
                             Name = "Technical Writing",
                             NameAr = "الكتابة التقنية",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("f3f978e3-affb-4fb9-bca5-449a3e749937"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1490),
+                            Id = new Guid("cac018e6-c9e4-4c1a-bb86-360228c1f5d7"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1840),
                             Name = "Resume Writing",
                             NameAr = "كتابة السيرة الذاتية",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("7ea5571a-4243-4b5f-a28d-55acbf9b1cea"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1500),
+                            Id = new Guid("8a59f3cf-8276-486b-9c7b-88ad896e468b"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1840),
                             Name = "Translation",
                             NameAr = "الترجمة",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("179c772c-3bb1-4ce8-801f-2e3375bdda16"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1510),
+                            Id = new Guid("0811a81f-fb58-4b56-8d16-209a09708b41"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1850),
                             Name = "Proofreading",
                             NameAr = "التدقيق اللغوي",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("155b9949-0cce-405c-ba8d-140be1680a16"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1520),
+                            Id = new Guid("2e6b4d6c-569b-42d3-a2e3-7d2d1910ded7"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1860),
                             Name = "Academic Writing",
                             NameAr = "الكتابة الأكاديمية",
-                            ParentId = new Guid("2880f9d5-3214-48ad-aba8-303aa077f2ab")
+                            ParentId = new Guid("d2c9af66-b32e-4ffd-859d-c1f415fe6061")
                         },
                         new
                         {
-                            Id = new Guid("fa0afa93-dde0-41d6-bc15-e50e019190f8"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1520),
+                            Id = new Guid("c6a6cd78-d3b1-455c-aa4b-543f25bf8d2c"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1860),
                             Name = "Video Editing",
                             NameAr = "تحرير الفيديو",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("fdb12b5b-73bf-40bc-886b-34fe8f297fde"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1530),
+                            Id = new Guid("ab2f1e32-0ef4-448b-a81a-0dc65667866f"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1870),
                             Name = "Motion Graphics",
                             NameAr = "الرسوم المتحركة",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("6615c91b-98cc-4a13-a0b2-6a6cbc7c194c"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(1990),
+                            Id = new Guid("c0e179a2-5a8e-4965-814e-3b85e4668bc6"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1880),
                             Name = "Explainer Videos",
                             NameAr = "فيديوهات توضيحية",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("7e501853-bc4e-46d4-809c-a78168fed3c0"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2000),
+                            Id = new Guid("40b82e7c-42af-47ef-a13a-ab0b7c6e5a59"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1880),
                             Name = "2D Animation",
                             NameAr = "الرسوم المتحركة ثنائية الأبعاد",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("7b6affc6-2a53-43ba-b5cf-82cae54c52cb"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2000),
+                            Id = new Guid("27ee01d4-075a-4bdb-aa36-b535c34dcb85"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1890),
                             Name = "3D Animation",
                             NameAr = "الرسوم المتحركة ثلاثية الأبعاد",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("263a96b7-ed41-462a-a71f-16cad66b0dc6"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2010),
+                            Id = new Guid("fa3c4ce7-a263-47af-b478-9a1dbf566882"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1900),
                             Name = "YouTube Editing",
                             NameAr = "تحرير فيديوهات يوتيوب",
-                            ParentId = new Guid("e640fd1c-087b-4f0d-9f91-e88628b3b4df")
+                            ParentId = new Guid("b2b1b0c9-cdfe-476b-9e22-0a28ae17b9c8")
                         },
                         new
                         {
-                            Id = new Guid("cf17bee5-6aac-43cb-a974-d7c940b20c2c"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2020),
+                            Id = new Guid("b91362fd-f7c5-41f7-8cee-f81ac4d59efd"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1910),
                             Name = "Business Plans",
                             NameAr = "خطط الأعمال",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("6d7a2f25-b77c-4386-8e10-668fbce6cdcd"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2020),
+                            Id = new Guid("074ca8ea-0dc6-4742-a0c6-f30f1162c81c"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1910),
                             Name = "Market Research",
                             NameAr = "أبحاث السوق",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("5ff32357-ca9a-4672-950f-80aa1759d4ab"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2030),
+                            Id = new Guid("a72b84c6-14fc-43b9-88a0-f840ec2b8c24"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1920),
                             Name = "Virtual Assistant",
                             NameAr = "المساعد الافتراضي",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("d25a4a14-aa39-4190-8ee9-09ef35723629"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2040),
+                            Id = new Guid("2d19f988-fc5b-4075-ba5e-af0bec63e7ad"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1930),
                             Name = "Data Entry",
                             NameAr = "إدخال البيانات",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("03b3d125-bc7b-44e9-9d6e-35ff3d6e3465"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2050),
+                            Id = new Guid("6cfacf43-b793-44b1-b9e0-a12114e4f490"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1940),
                             Name = "Financial Consulting",
                             NameAr = "الاستشارات المالية",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("a9dfb6c1-8657-41b9-a505-40ba82f08590"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2050),
+                            Id = new Guid("92377ee9-f2ce-4bbc-a011-1157c8381951"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1940),
                             Name = "Accounting",
                             NameAr = "المحاسبة",
-                            ParentId = new Guid("9e89b99b-d7a3-43de-ae4c-ecf9df7302f2")
+                            ParentId = new Guid("15808ecd-2352-4fcb-9ca3-48bf4975dcca")
                         },
                         new
                         {
-                            Id = new Guid("6cdf0801-15dc-49e8-a320-3621a34d5c7a"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2060),
+                            Id = new Guid("5ff7395a-e65b-4f09-b3bf-7522e03d6bef"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1950),
                             Name = "Voice Over",
                             NameAr = "التعليق الصوتي",
-                            ParentId = new Guid("0b06a40e-42ae-4cda-aae7-3452c017e81e")
+                            ParentId = new Guid("01a3e221-575b-41c1-bef6-ea51510675d8")
                         },
                         new
                         {
-                            Id = new Guid("0257db02-8e1b-4c0e-90d5-78a85bdbbb94"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2070),
+                            Id = new Guid("a2e364bc-a984-40e2-8898-57c41be68dc8"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1960),
                             Name = "Podcast Editing",
                             NameAr = "تحرير البودكاست",
-                            ParentId = new Guid("0b06a40e-42ae-4cda-aae7-3452c017e81e")
+                            ParentId = new Guid("01a3e221-575b-41c1-bef6-ea51510675d8")
                         },
                         new
                         {
-                            Id = new Guid("c304bc46-caca-4f86-895e-e69754f6a8bc"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2070),
+                            Id = new Guid("db835309-8069-4c02-9f6a-df0e0f61b02c"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1960),
                             Name = "Audio Mixing",
                             NameAr = "مزج الصوت",
-                            ParentId = new Guid("0b06a40e-42ae-4cda-aae7-3452c017e81e")
+                            ParentId = new Guid("01a3e221-575b-41c1-bef6-ea51510675d8")
                         },
                         new
                         {
-                            Id = new Guid("b976ccb9-eee6-4487-8e3b-c70fa138307f"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2080),
+                            Id = new Guid("11a0ecc5-e038-439a-b511-57caea3ac8fe"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1970),
                             Name = "Music Production",
                             NameAr = "إنتاج الموسيقى",
-                            ParentId = new Guid("0b06a40e-42ae-4cda-aae7-3452c017e81e")
+                            ParentId = new Guid("01a3e221-575b-41c1-bef6-ea51510675d8")
                         },
                         new
                         {
-                            Id = new Guid("80f7bd1f-3eb1-449a-a4a2-cdb89001f744"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2090),
+                            Id = new Guid("fdce20e3-9a0c-4312-8564-5502eb7fa8e8"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1980),
                             Name = "Fitness Coaching",
                             NameAr = "التدريب على اللياقة البدنية",
-                            ParentId = new Guid("03a4f835-e02b-4ceb-a89c-faa19b6d93d5")
+                            ParentId = new Guid("f3ccf4c9-a49a-467a-91c3-8faebbaa9d3e")
                         },
                         new
                         {
-                            Id = new Guid("afdac5c8-9592-46f9-ab5e-5159175016f6"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2090),
+                            Id = new Guid("1216379d-2f7d-48eb-8df2-9f1b56d730ad"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1980),
                             Name = "Life Coaching",
                             NameAr = "تدريب الحياة",
-                            ParentId = new Guid("03a4f835-e02b-4ceb-a89c-faa19b6d93d5")
+                            ParentId = new Guid("f3ccf4c9-a49a-467a-91c3-8faebbaa9d3e")
                         },
                         new
                         {
-                            Id = new Guid("df66d258-7a4a-4ef2-be65-59735fb00d97"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2110),
+                            Id = new Guid("1389cf63-5b14-4741-a546-9e4bb4a95340"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(1990),
                             Name = "Career Coaching",
                             NameAr = "التدريب المهني",
-                            ParentId = new Guid("03a4f835-e02b-4ceb-a89c-faa19b6d93d5")
+                            ParentId = new Guid("f3ccf4c9-a49a-467a-91c3-8faebbaa9d3e")
                         },
                         new
                         {
-                            Id = new Guid("66bc3139-845a-46c3-85fe-4808ae86edaf"),
-                            CreatedAt = new DateTime(2026, 2, 22, 11, 35, 9, 981, DateTimeKind.Utc).AddTicks(2120),
+                            Id = new Guid("bc257127-937f-4894-8246-71f6b2f2a5f9"),
+                            CreatedAt = new DateTime(2026, 3, 5, 10, 44, 36, 476, DateTimeKind.Utc).AddTicks(2000),
                             Name = "Online Tutoring",
                             NameAr = "التدريس عبر الإنترنت",
-                            ParentId = new Guid("03a4f835-e02b-4ceb-a89c-faa19b6d93d5")
+                            ParentId = new Guid("f3ccf4c9-a49a-467a-91c3-8faebbaa9d3e")
                         });
                 });
 
@@ -1339,24 +1415,19 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("CustomOffers", (string)null);
+                    b.ToTable("CustomOffers");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Favorite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("GigId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("GigId1")
+                    b.Property<Guid>("GigId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
@@ -1364,11 +1435,11 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GigId1");
+                    b.HasIndex("GigId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favorites", (string)null);
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Gig", b =>
@@ -1429,7 +1500,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Gigs", (string)null);
+                    b.ToTable("Gigs");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Offer", b =>
@@ -1468,7 +1539,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("TaskerId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Order", b =>
@@ -1562,7 +1633,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Package", b =>
@@ -1603,7 +1674,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("GigId");
 
-                    b.ToTable("Packages", (string)null);
+                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.Review", b =>
@@ -1645,7 +1716,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.SearchAnalytics", b =>
@@ -1675,7 +1746,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SearchAnalytics", (string)null);
+                    b.ToTable("SearchAnalytics");
                 });
 
             modelBuilder.Entity("alina_backend.app.marketplace.UserTask", b =>
@@ -1738,7 +1809,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("PosterId");
 
-                    b.ToTable("UserTasks", (string)null);
+                    b.ToTable("UserTasks");
                 });
 
             modelBuilder.Entity("alina_backend.app.media.Media", b =>
@@ -1800,7 +1871,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserTaskId1");
 
-                    b.ToTable("Media", (string)null);
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("alina_backend.app.messaging.Conversation", b =>
@@ -1851,7 +1922,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("User2Id");
 
-                    b.ToTable("Conversations", (string)null);
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("alina_backend.app.messaging.Message", b =>
@@ -1925,7 +1996,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("alina_backend.app.notifications.Notification", b =>
@@ -1969,7 +2040,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("alina_backend.app.notifications.UserNotificationSettings", b =>
@@ -2006,7 +2077,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserNotificationSettings", (string)null);
+                    b.ToTable("UserNotificationSettings");
                 });
 
             modelBuilder.Entity("alina_backend.app.orders.Revision", b =>
@@ -2030,10 +2101,7 @@ namespace alina_backend.Migrations
                     b.Property<DateTime>("RequestedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("RequesterId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("RequesterId1")
+                    b.Property<Guid>("RequesterId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ResolutionAttachments")
@@ -2050,9 +2118,9 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RequesterId1");
+                    b.HasIndex("RequesterId");
 
-                    b.ToTable("Revisions", (string)null);
+                    b.ToTable("Revisions");
                 });
 
             modelBuilder.Entity("alina_backend.app.profiles.Language", b =>
@@ -2073,66 +2141,66 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("75687732-9593-476c-b83b-d68c930dd27d"),
+                            Id = new Guid("64b18ef6-8f21-40f4-b48d-d77e7d420107"),
                             Code = "en",
                             Name = "English"
                         },
                         new
                         {
-                            Id = new Guid("22d7a19b-3fae-4975-9f71-3580eba7b665"),
+                            Id = new Guid("73d7e9dd-d17d-40e0-8ac2-2d2826a2a3b1"),
                             Code = "ar",
                             Name = "Arabic"
                         },
                         new
                         {
-                            Id = new Guid("bcfed4d2-636f-499a-8209-c7addfba1aec"),
+                            Id = new Guid("8c8c18bb-9a8e-4ed5-8532-0a9b7a0e5fb0"),
                             Code = "es",
                             Name = "Spanish"
                         },
                         new
                         {
-                            Id = new Guid("7f729b1d-ce1c-411b-9253-39f54ad31203"),
+                            Id = new Guid("2d7ff158-99a7-448e-946d-a92c4e6f6c34"),
                             Code = "fr",
                             Name = "French"
                         },
                         new
                         {
-                            Id = new Guid("ddae022c-5aa5-41c1-a90c-5b48a73543db"),
+                            Id = new Guid("d9983742-d037-4c61-acf8-af5b447e26bd"),
                             Code = "de",
                             Name = "German"
                         },
                         new
                         {
-                            Id = new Guid("00133d77-b5a4-473d-b1af-3fd4e1ec35b1"),
+                            Id = new Guid("7d2a960e-105c-4955-a265-80bd56f79925"),
                             Code = "zh",
                             Name = "Chinese"
                         },
                         new
                         {
-                            Id = new Guid("8a97b3ad-8875-4cab-b0ca-e80668a4f156"),
+                            Id = new Guid("712da8ad-a323-411d-b247-1d7a40457d86"),
                             Code = "ja",
                             Name = "Japanese"
                         },
                         new
                         {
-                            Id = new Guid("4c721ad2-2ff8-4dae-8bc6-673e04057a13"),
+                            Id = new Guid("30769768-6849-4b51-b90a-5eeb7e1a8473"),
                             Code = "pt",
                             Name = "Portuguese"
                         },
                         new
                         {
-                            Id = new Guid("2deb350a-25f3-4ecd-8851-bdd7f7ec3df3"),
+                            Id = new Guid("34d12973-e2fc-41f7-b905-4c9099699508"),
                             Code = "ru",
                             Name = "Russian"
                         },
                         new
                         {
-                            Id = new Guid("17b7ee2e-ebd7-4ac3-a5f9-a53c5631dcb6"),
+                            Id = new Guid("32e64943-64d4-4e3e-9ed3-a3bc744d5dfe"),
                             Code = "hi",
                             Name = "Hindi"
                         });
@@ -2234,7 +2302,7 @@ namespace alina_backend.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Profiles", (string)null);
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("alina_backend.app.profiles.ProfileLanguage", b =>
@@ -2260,7 +2328,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("ProfileLanguages", (string)null);
+                    b.ToTable("ProfileLanguages");
                 });
 
             modelBuilder.Entity("alina_backend.app.profiles.ProfileSkill", b =>
@@ -2285,7 +2353,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("ProfileSkills", (string)null);
+                    b.ToTable("ProfileSkills");
                 });
 
             modelBuilder.Entity("alina_backend.app.profiles.Skill", b =>
@@ -2305,186 +2373,186 @@ namespace alina_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills", (string)null);
+                    b.ToTable("Skills");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8a1a2d14-2cf8-4145-ad5e-67a1927d907a"),
+                            Id = new Guid("3e101772-71e3-4ec4-bbaf-fdf5ecdbf27b"),
                             CategoryName = "Programming",
                             Name = "React"
                         },
                         new
                         {
-                            Id = new Guid("33438c7b-970d-45b1-8c38-7f9a141ad8cd"),
+                            Id = new Guid("f94540d4-2c94-4abf-b992-51f40c4d1dfa"),
                             CategoryName = "Programming",
                             Name = "Node.js"
                         },
                         new
                         {
-                            Id = new Guid("1743c431-10be-4925-ac04-a7c773cd8acd"),
+                            Id = new Guid("a2825b0b-ecf2-49f2-82c3-c3aec7393ed6"),
                             CategoryName = "Programming",
                             Name = "Python"
                         },
                         new
                         {
-                            Id = new Guid("2cf537b8-fac6-40a3-a22c-fca633f2e73f"),
+                            Id = new Guid("8038a4b3-8e7a-4e51-b6e0-ff6770e554ec"),
                             CategoryName = "Programming",
                             Name = "JavaScript"
                         },
                         new
                         {
-                            Id = new Guid("5be51824-6692-48e4-b15f-56eb877916cd"),
+                            Id = new Guid("7b3e7a0a-6f7c-4d46-be12-06e0f277c40b"),
                             CategoryName = "Programming",
                             Name = "TypeScript"
                         },
                         new
                         {
-                            Id = new Guid("2459e0d2-3755-4617-8c0e-64a9328a4d00"),
+                            Id = new Guid("5a7d9c78-7d00-44ed-8542-1609ccd15582"),
                             CategoryName = "Programming",
                             Name = "C#"
                         },
                         new
                         {
-                            Id = new Guid("921b8c7b-7cec-43a1-a517-dd7ebea4512c"),
+                            Id = new Guid("f5ebb989-b72d-43ca-899d-7bd33a3b62c2"),
                             CategoryName = "Programming",
                             Name = "Java"
                         },
                         new
                         {
-                            Id = new Guid("e3d801c6-dcca-4a3a-a1dc-b8c5e17878e7"),
+                            Id = new Guid("7c148b09-baea-4f2e-9fe4-99c7ddfaa6d9"),
                             CategoryName = "Programming",
                             Name = "Flutter"
                         },
                         new
                         {
-                            Id = new Guid("b8330b7c-15c3-4b12-8bd5-745f4a659b31"),
+                            Id = new Guid("c434e0b6-ae0e-40df-8d22-916e9a5d70cb"),
                             CategoryName = "Programming",
                             Name = "Swift"
                         },
                         new
                         {
-                            Id = new Guid("99e980d6-be12-4fc7-aa1f-2a844eb796fb"),
+                            Id = new Guid("fdfd315a-5640-4900-8055-b4addaa7200e"),
                             CategoryName = "Programming",
                             Name = "Kotlin"
                         },
                         new
                         {
-                            Id = new Guid("6f2bd0b5-9df1-4093-93da-4c4a55d2c33b"),
+                            Id = new Guid("b56ae3b2-e008-478f-b4af-4e33246be8b7"),
                             CategoryName = "Design",
                             Name = "UI/UX Design"
                         },
                         new
                         {
-                            Id = new Guid("f4ecad36-9380-413e-bf86-946ce509e7e2"),
+                            Id = new Guid("a0122dee-5a4a-4fdd-b444-c4023a52f6b7"),
                             CategoryName = "Design",
                             Name = "Figma"
                         },
                         new
                         {
-                            Id = new Guid("4c5aa0ba-1a46-4b7c-846b-7637d642a691"),
+                            Id = new Guid("a45816b5-de0f-4096-abc0-dafd80778da6"),
                             CategoryName = "Design",
                             Name = "Adobe Photoshop"
                         },
                         new
                         {
-                            Id = new Guid("c9a72c06-543b-4990-8b3a-73a65b954c22"),
+                            Id = new Guid("5273aa01-a444-4541-b6d3-b8224084ffb5"),
                             CategoryName = "Design",
                             Name = "Adobe Illustrator"
                         },
                         new
                         {
-                            Id = new Guid("c0db8a63-d7f4-42f2-bbb9-16e1f99dcf2b"),
+                            Id = new Guid("ce105a77-bc7c-4ee4-a370-c6d39c4d52bd"),
                             CategoryName = "Design",
                             Name = "Graphic Design"
                         },
                         new
                         {
-                            Id = new Guid("42e075b6-a176-4bd1-ba8c-8cdeb637afe4"),
+                            Id = new Guid("c4b35056-0be4-4170-8b9b-ec934c3672da"),
                             CategoryName = "Design",
                             Name = "Logo Design"
                         },
                         new
                         {
-                            Id = new Guid("0d3dfdb5-3298-4f9e-8753-28cd07f41346"),
+                            Id = new Guid("f093bde3-b8e9-4724-84e2-4a1cef5091d1"),
                             CategoryName = "Design",
                             Name = "3D Modeling"
                         },
                         new
                         {
-                            Id = new Guid("e77558ab-a2ca-406b-891e-7d2c0b618e27"),
+                            Id = new Guid("211d7131-f450-4b07-aedb-9474a7715cba"),
                             CategoryName = "Marketing",
                             Name = "SEO"
                         },
                         new
                         {
-                            Id = new Guid("ef1c390b-7bd4-4066-a3a1-c2ca64ad2982"),
+                            Id = new Guid("ee11583e-6bcb-4906-b389-5fdd086ee533"),
                             CategoryName = "Marketing",
                             Name = "Social Media Marketing"
                         },
                         new
                         {
-                            Id = new Guid("af9d353e-0e5b-4f11-afdb-12a897e491f7"),
+                            Id = new Guid("a7171cca-2452-4ccf-a870-75b0cb2350aa"),
                             CategoryName = "Marketing",
                             Name = "Content Writing"
                         },
                         new
                         {
-                            Id = new Guid("8bd6422d-efa0-45a2-9ed3-f4677b409589"),
+                            Id = new Guid("6d18143d-07de-4868-94f6-eac5da714d24"),
                             CategoryName = "Marketing",
                             Name = "Email Marketing"
                         },
                         new
                         {
-                            Id = new Guid("8fa40fc7-b97f-4a8d-a122-9b8f541932bc"),
+                            Id = new Guid("5547ee3a-7388-419d-9fd5-74aca2674409"),
                             CategoryName = "Marketing",
                             Name = "Digital Marketing"
                         },
                         new
                         {
-                            Id = new Guid("be01260c-d918-44c1-9361-c053dd458900"),
+                            Id = new Guid("17517908-434b-4a00-b462-9ca23ed7873b"),
                             CategoryName = "Video & Animation",
                             Name = "Video Editing"
                         },
                         new
                         {
-                            Id = new Guid("1b78eefa-3503-4469-ac26-28fb38ebc26b"),
+                            Id = new Guid("fd1905b2-b62f-4cbf-a0b6-8c94a611c9c3"),
                             CategoryName = "Video & Animation",
                             Name = "After Effects"
                         },
                         new
                         {
-                            Id = new Guid("ba8c40ea-1c9b-491f-be4f-8d656443beae"),
+                            Id = new Guid("595a83b9-2fc6-4e44-a438-6b0a1339f3e4"),
                             CategoryName = "Video & Animation",
                             Name = "Animation"
                         },
                         new
                         {
-                            Id = new Guid("5719028b-56c2-4031-8747-a8d4d4c4b1ca"),
+                            Id = new Guid("a538d5e6-43e1-4410-a9a2-b37763094646"),
                             CategoryName = "Writing",
                             Name = "Copywriting"
                         },
                         new
                         {
-                            Id = new Guid("71d2a014-d4bc-450d-a852-6803957cd971"),
+                            Id = new Guid("c28573da-f1c0-498a-af84-cad1e24c1fcf"),
                             CategoryName = "Writing",
                             Name = "Technical Writing"
                         },
                         new
                         {
-                            Id = new Guid("760e741a-1f6a-4ab2-a6f3-12dc952a1e93"),
+                            Id = new Guid("386925e3-5a37-43b3-82cc-e8e577cf5964"),
                             CategoryName = "Writing",
                             Name = "Translation"
                         },
                         new
                         {
-                            Id = new Guid("83189d3a-b49f-4d66-b926-6a4feacdded6"),
+                            Id = new Guid("e1075a59-b517-43aa-b7f6-cc61be73632a"),
                             CategoryName = "Business",
                             Name = "Data Analysis"
                         },
                         new
                         {
-                            Id = new Guid("e7d9ed9b-9a00-4419-b08a-07e293866ac9"),
+                            Id = new Guid("fc23e18a-90b1-4231-9839-698357dcea8e"),
                             CategoryName = "Business",
                             Name = "Business Consulting"
                         });
@@ -2581,7 +2649,112 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserNotificationPreferences", (string)null);
+                    b.ToTable("UserNotificationPreferences");
+                });
+
+            modelBuilder.Entity("alina_backend.app.settings.UserSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("ActivityStatus")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AutoRefreshDashboard")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("AutoRefreshInterval")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DashboardItemsPerPage")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DateFormat")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DefaultItemsPerPage")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DefaultSortBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DefaultView")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FontSize")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("HighContrast")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryColor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfileVisibility")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ReducedMotion")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SaveSearchHistory")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowCompletedOrders")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowEmail")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowLastSeen")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowLocation")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowPhone")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ThemeMode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TimeFormat")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Timezone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSettings");
                 });
 
             modelBuilder.Entity("alina_backend.app.support.SupportTicket", b =>
@@ -2618,7 +2791,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SupportTickets", (string)null);
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("alina_backend.app.users.RefreshToken", b =>
@@ -2647,7 +2820,7 @@ namespace alina_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("alina_backend.app.users.User", b =>
@@ -2677,9 +2850,12 @@ namespace alina_backend.Migrations
                     b.Property<string>("Provider")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("alina_backend.app.business.AvailabilitySetting", b =>
@@ -2858,7 +3034,9 @@ namespace alina_backend.Migrations
                 {
                     b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
                         .WithMany()
-                        .HasForeignKey("GigId1");
+                        .HasForeignKey("GigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("alina_backend.app.users.User", "User")
                         .WithMany()
@@ -3020,11 +3198,11 @@ namespace alina_backend.Migrations
 
             modelBuilder.Entity("alina_backend.app.media.Media", b =>
                 {
-                    b.HasOne("alina_backend.app.marketplace.CustomOffer", null)
+                    b.HasOne("alina_backend.app.marketplace.CustomOffer", "CustomOffer")
                         .WithMany("Attachments")
                         .HasForeignKey("CustomOfferId");
 
-                    b.HasOne("alina_backend.app.marketplace.Gig", null)
+                    b.HasOne("alina_backend.app.marketplace.Gig", "Gig")
                         .WithMany()
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -3037,7 +3215,7 @@ namespace alina_backend.Migrations
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
-                    b.HasOne("alina_backend.app.marketplace.UserTask", null)
+                    b.HasOne("alina_backend.app.marketplace.UserTask", "UserTask")
                         .WithMany()
                         .HasForeignKey("UserTaskId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -3046,7 +3224,13 @@ namespace alina_backend.Migrations
                         .WithMany("Attachments")
                         .HasForeignKey("UserTaskId1");
 
+                    b.Navigation("CustomOffer");
+
+                    b.Navigation("Gig");
+
                     b.Navigation("Owner");
+
+                    b.Navigation("UserTask");
                 });
 
             modelBuilder.Entity("alina_backend.app.messaging.Conversation", b =>
@@ -3127,7 +3311,9 @@ namespace alina_backend.Migrations
                 {
                     b.HasOne("alina_backend.app.users.User", "Requester")
                         .WithMany()
-                        .HasForeignKey("RequesterId1");
+                        .HasForeignKey("RequesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Requester");
                 });
@@ -3182,6 +3368,17 @@ namespace alina_backend.Migrations
                 });
 
             modelBuilder.Entity("alina_backend.app.settings.UserNotificationPreference", b =>
+                {
+                    b.HasOne("alina_backend.app.users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("alina_backend.app.settings.UserSettings", b =>
                 {
                     b.HasOne("alina_backend.app.users.User", "User")
                         .WithMany()

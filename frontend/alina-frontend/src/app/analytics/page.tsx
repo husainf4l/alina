@@ -39,7 +39,7 @@ export default function AnalyticsPage() {
   // Calculate totals
   const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0);
   const totalOrders = revenueData.reduce((sum, item) => sum + item.orders, 0);
-  const avgOrderValue = totalRevenue / totalOrders;
+  const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
   return (
     <ProtectedRoute>

@@ -52,7 +52,7 @@ export default function DepositPage() {
         });
       }
       
-      toast.success(`Successfully deposited $${depositAmount.toFixed(2)}`);
+      toast.success(`Successfully deposited $${Number(depositAmount || 0).toFixed(2)}`);
       setAmount('');
     } catch (error) {
       const errorMessage = getErrorMessage(error);

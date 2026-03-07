@@ -501,6 +501,7 @@ public class MarketplaceController : ControllerBase
     }
 
     [HttpGet("my-gigs")]
+    [HttpGet("gigs/me")] // Alias for frontend compatibility
     [Authorize]
     public async Task<ActionResult<PagedResponse<GigDto>>> GetMyGigs([FromQuery] PaginationParams pagination)
     {
