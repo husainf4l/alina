@@ -3,11 +3,20 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function HeroSection() {
   const t = useTranslations("Hero");
   const [searchQuery, setSearchQuery] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {});
+    }
+  }, []);
 
   const popularSearches = [
     { key: "websiteDesign", query: "website-design" },
@@ -33,10 +42,12 @@ export default function HeroSection() {
       {/* Video background — first in DOM so it's naturally behind all siblings */}
       <div className="pointer-events-none absolute inset-0">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
           className="h-full w-full object-cover object-[center_30%]"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />

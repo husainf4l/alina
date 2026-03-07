@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python virtual env (should not be here)
+.venv
+
+# vite cache (should not be here)
+.vite
