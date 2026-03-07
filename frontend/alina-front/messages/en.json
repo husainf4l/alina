@@ -9,12 +9,81 @@
     "closeMenu": "Close menu"
   },
   "Hero": {
-    "badge": "Welcome to Alina",
-    "title": "Build something",
-    "titleHighlight": "amazing",
-    "description": "A modern platform designed to help you create, collaborate, and ship faster than ever before.",
-    "ctaPrimary": "Get Started",
-    "ctaSecondary": "Learn More"
+    "heading": "Find the perfect",
+    "headingHighlight": "freelance",
+    "headingEnd": "services for your business",
+    "searchPlaceholder": "Search for any service...",
+    "searchButton": "Search",
+    "popularLabel": "Popular:",
+    "popularSearches": {
+      "websiteDesign": "Website Design",
+      "wordpress": "WordPress",
+      "logoDesign": "Logo Design",
+      "aiServices": "AI Services",
+      "videoEditing": "Video Editing",
+      "seo": "SEO",
+      "socialMedia": "Social Media",
+      "voiceOver": "Voice Over"
+    }
+  },
+  "About": {
+    "hero": {
+      "title": "Empowering Freelancers, Connecting Businesses",
+      "description": "ALINA is more than a marketplace. We're a global community where talent meets opportunity, and businesses find the perfect freelancers to bring their visions to life."
+    },
+    "stats": {
+      "freelancers": {
+        "number": "1M+",
+        "label": "Active Freelancers"
+      },
+      "projects": {
+        "number": "5M+",
+        "label": "Projects Completed"
+      },
+      "satisfaction": {
+        "number": "98%",
+        "label": "Client Satisfaction"
+      },
+      "countries": {
+        "number": "160+",
+        "label": "Countries Served"
+      }
+    },
+    "mission": {
+      "title": "Our Mission",
+      "paragraph1": "At ALINA, we believe in the power of human talent and the freedom of flexible work. Our mission is to create a thriving ecosystem where freelancers can showcase their skills and businesses can access top-tier talent from around the world.",
+      "paragraph2": "We're committed to building a platform that prioritizes trust, quality, and seamless collaboration. Every feature we develop, every policy we implement, is designed to make freelancing accessible, secure, and rewarding for everyone.",
+      "paragraph3": "Whether you're a creative designer, a skilled developer, a strategic marketer, or a business looking for expertise, ALINA is your partner in success.",
+      "tagline": "Connecting Talent with Opportunity"
+    },
+    "values": {
+      "title": "Our Core Values",
+      "description": "These principles guide everything we do at ALINA",
+      "items": {
+        "quality": {
+          "title": "Quality First",
+          "description": "We maintain the highest standards for both freelancers and projects, ensuring exceptional results every time."
+        },
+        "trust": {
+          "title": "Trust & Safety",
+          "description": "Your security is our priority. We've built robust systems to protect both clients and freelancers."
+        },
+        "innovation": {
+          "title": "Innovation",
+          "description": "We continuously evolve our platform with cutting-edge features to enhance your experience."
+        },
+        "global": {
+          "title": "Global Community",
+          "description": "We celebrate diversity and foster connections across borders, cultures, and industries."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "description": "Join thousands of businesses and freelancers who trust ALINA for their success",
+      "button1": "Join Now",
+      "button2": "Browse Services"
+    }
   },
   "LocaleSwitcher": {
     "label": "Language",

@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { key: "home", href: "/" },
@@ -20,6 +22,7 @@ export default function Navbar() {
   const t = useTranslations("Navbar");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { theme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-md">
@@ -28,9 +31,16 @@ export default function Navbar() {
         {/* Brand */}
         <Link
           href="/"
-          className="text-base font-bold tracking-tight text-foreground transition-opacity hover:opacity-70"
+          className="flex items-center transition-opacity hover:opacity-80"
         >
-          {t("brand")}
+          <Image
+            src={theme === "dark" ? "/logo/alina-logo-darkmode.png" : "/logo/alina-logo-lightmode.png"}
+            alt={t("brand")}
+            width={120}
+            height={40}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

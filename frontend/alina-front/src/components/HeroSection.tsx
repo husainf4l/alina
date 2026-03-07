@@ -2,101 +2,117 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
+import { Search } from "lucide-react";
+import { useState } from "react";
 
 export default function HeroSection() {
   const t = useTranslations("Hero");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const popularSearches = [
+    { key: "websiteDesign", query: "website-design" },
+    { key: "wordpress", query: "wordpress" },
+    { key: "logoDesign", query: "logo-design" },
+    { key: "aiServices", query: "ai-services" },
+    { key: "videoEditing", query: "video-editing" },
+    { key: "seo", query: "seo" },
+    { key: "socialMedia", query: "social-media" },
+    { key: "voiceOver", query: "voice-over" }
+  ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    }
+  };
 
   return (
-    <section className="relative flex h-[75svh] max-h-[75svh] flex-col items-center justify-center overflow-hidden px-6 py-16 text-center [isolation:isolate]">
+    <section className="relative isolate flex min-h-[600px] lg:min-h-[680px] flex-col items-start justify-center overflow-hidden px-6 lg:px-12 py-20 lg:py-24">
 
-      {/* ── Video background (first in DOM = lowest layer) ───────── */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        {/* Fallback dot grid — visible when video hasn't loaded yet */}
-        <div className="absolute inset-0 [background-image:radial-gradient(oklch(0.836_0_0/0.6)_1px,transparent_1px)] [background-size:28px_28px] dark:[background-image:radial-gradient(oklch(0.249_0_0/0.6)_1px,transparent_1px)]" />
+      {/* Video background */}
+      <div className="pointer-events-none absolute inset-0 z-0">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
-        {/* Theme-aware scrim: softens video in light mode, deepens in dark */}
-        <div className="absolute inset-0 bg-background/55 dark:bg-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 dark:from-black/80 dark:via-black/60 dark:to-black/40" />
       </div>
 
-      {/* ── Badge ────────────────────────────────────────────────── */}
-      <div
-        className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-1.5 text-xs font-medium tracking-widest uppercase text-muted-foreground shadow-sm backdrop-blur-sm"
-        style={{ animationDelay: "0ms" }}
-      >
-        <span className="size-1.5 rounded-full bg-muted-foreground/50" />
-        {t("badge")}
+      {/* Content Container */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <div className="max-w-2xl lg:max-w-3xl">
+          
+          {/* Main Heading */}
+          <h1
+            className="animate-fade-up text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white mb-8 lg:mb-10 leading-tight"
+            style={{ animationDelay: "0ms" }}
+          >
+            {t("heading")}{" "}
+            <span className="italic font-light">{t("headingHighlight")}</span>
+            <br />
+            {t("headingEnd")}
+          </h1>
+
+          {/* Search Bar */}
+          <form
+            onSubmit={handleSearch}
+            className="animate-fade-up mb-6"
+            style={{ animationDelay: "100ms" }}
+          >
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t("searchPlaceholder")}
+                  className="w-full h-14 pl-12 pr-4 rounded-lg sm:rounded-r-none bg-white dark:bg-card text-foreground placeholder:text-muted-foreground border-0 focus:outline-none focus:ring-2 focus:ring-[#E70E8A] text-base"
+                />
+              </div>
+              <button
+                type="submit"
+                className="h-14 px-8 bg-[#E70E8A] hover:bg-[#E70E8A]/90 text-white font-semibold rounded-lg sm:rounded-l-none transition-colors text-base whitespace-nowrap"
+              >
+                {t("searchButton")}
+              </button>
+            </div>
+          </form>
+
+          {/* Popular Searches */}
+          <div
+            className="animate-fade-up flex flex-wrap items-center gap-2 sm:gap-3"
+            style={{ animationDelay: "200ms" }}
+          >
+            <span className="text-white/90 font-medium text-sm sm:text-base">{t("popularLabel")}</span>
+            {popularSearches.map((search, index) => {
+              const isFirst = index === 0;
+              const baseClasses = "px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-colors text-xs sm:text-sm font-medium";
+              const pinkClasses = "bg-[#E70E8A] hover:bg-[#E70E8A]/90 text-white";
+              const defaultClasses = "border border-white/30 text-white hover:bg-white/10 backdrop-blur-sm";
+              
+              return (
+                <Link
+                  key={index}
+                  href={`/search?q=${search.query}`}
+                  className={`${baseClasses} ${isFirst ? pinkClasses : defaultClasses}`}
+                >
+                  {t(`popularSearches.${search.key}`)}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* ── Heading — Instrument Serif italic + Jakarta Sans light ── */}
-      <h1
-        className="animate-fade-up mx-auto max-w-4xl text-5xl tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-8xl"
-        style={{ animationDelay: "80ms" }}
-      >
-        <span className="font-[family-name:var(--font-display)] italic font-normal">
-          {t("title")}
-        </span>{" "}
-        <span className="font-light text-muted-foreground">
-          {t("titleHighlight")}
-        </span>
-      </h1>
-
-      {/* ── Editorial dot-rule separator ─────────────────────────── */}
-      <div
-        className="animate-fade-in mt-10 flex items-center justify-center gap-3"
-        style={{ animationDelay: "180ms" }}
-      >
-        <span className="size-1 rounded-full bg-border" />
-        <span className="h-px w-16 bg-border" />
-        <span className="size-1 rounded-full bg-border" />
-      </div>
-
-      {/* ── Description ──────────────────────────────────────────── */}
-      <p
-        className="animate-fade-up mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
-        style={{ animationDelay: "240ms" }}
-      >
-        {t("description")}
-      </p>
-
-      {/* ── CTA Buttons ──────────────────────────────────────────── */}
-      <div
-        className="animate-fade-up mt-12 flex flex-wrap items-center justify-center gap-3"
-        style={{ animationDelay: "340ms" }}
-      >
-        <Link
-          href="/get-started"
-          className={cn(
-            buttonVariants({ size: "lg" }),
-            "rounded-full px-8 gap-2 shadow-sm"
-          )}
-        >
-          {t("ctaPrimary")}
-          <ArrowRight className="size-4" />
-        </Link>
-        <Link
-          href="/learn"
-          className={cn(
-            buttonVariants({ variant: "outline", size: "lg" }),
-            "rounded-full px-8 bg-card/80 backdrop-blur-sm shadow-sm"
-          )}
-        >
-          {t("ctaSecondary")}
-        </Link>
-      </div>
-
-      {/* ── Bottom page-blend fade ───────────────────────────────── */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent z-20" />
     </section>
   );
 }
+

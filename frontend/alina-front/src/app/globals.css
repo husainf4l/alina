@@ -44,6 +44,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-pink-hover: var(--accent-pink-hover);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -61,6 +63,11 @@
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* ── Animation Utilities ──────────────────────────────────────────────── */
+.animation-delay-2000 {
+  animation-delay: 2s;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -97,6 +104,10 @@
 
   /* Semantic */
   --destructive:          oklch(0.626 0.239 22);  /* Apple red #ff3b30        */
+  
+  /* Accent Pink — Used sparingly (10%) for highlights and CTAs */
+  --accent-pink:          oklch(0.573 0.248 345); /* #E70E8A                  */
+  --accent-pink-hover:    oklch(0.513 0.248 345); /* Darker hover state       */
 
   /* Chrome — Apple systemGray4 light #d1d1d6                           */
   --border:               oklch(0.836 0 0);  /* #d1d1d6  systemGray4 light   */
@@ -157,6 +168,10 @@
 
   /* Semantic */
   --destructive:          oklch(0.656 0.239 22);  /* Apple dark red #ff453a  */
+  
+  /* Accent Pink — Used sparingly (10%) for highlights and CTAs */
+  --accent-pink:          oklch(0.573 0.248 345); /* #E70E8A                  */
+  --accent-pink-hover:    oklch(0.513 0.248 345); /* Darker hover state       */
 
   /* Chrome — Apple systemGray4 dark #3a3a3c                            */
   --border:               oklch(0.249 0 0);  /* #3a3a3c  systemGray4 dark    */
