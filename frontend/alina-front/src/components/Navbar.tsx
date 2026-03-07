@@ -34,7 +34,7 @@ export default function Navbar() {
           className="flex items-center transition-opacity hover:opacity-80"
         >
           <Image
-            src={theme === "dark" ? "/logo/alina-logo-darkmode.png" : "/logo/alina-logo-lightmode.png"}
+            src={theme === "dark" ? "/logo/alinalogodark.png" : "/logo/alinalogo-lighttheme.png"}
             alt={t("brand")}
             width={120}
             height={40}
