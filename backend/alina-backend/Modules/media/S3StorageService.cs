@@ -20,7 +20,20 @@ public class S3StorageService : IStorageService
 
     public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType)
     {
-        var key = $"{Guid.NewGuid()}-{fileName}";
+        // SEC-09: Never use the raw client-supplied filename in the S3 key.
+        // Derive a safe extension from the content type and use a GUID as the key.
+        var safeExtension = contentType switch
+        {
+            "image/jpeg"        => ".jpg",
+            "image/png"         => ".png",
+            "image/gif"         => ".gif",
+            "image/webp"        => ".webp",
+            "image/svg+xml"     => ".svg",
+            "application/pdf"   => ".pdf",
+            "video/mp4"         => ".mp4",
+            _                   => string.Empty
+        };
+        var key = $"{Guid.NewGuid()}{safeExtension}";
         
         var uploadRequest = new TransferUtilityUploadRequest
         {

@@ -53,11 +53,11 @@ public record GigDto(
     bool IsActive = true);
 
 public record CreateGigDto(
-    [Required] string Title,
-    [Required] string Description,
-    Guid CategoryId,
-    decimal StartingPrice,
-    int DeliveryTimeInDays,
+    [Required][StringLength(150, MinimumLength = 10)] string Title,
+    [Required][StringLength(5000, MinimumLength = 30)] string Description,
+    [Required] Guid CategoryId,
+    [Range(0.01, 999999.99)] decimal StartingPrice,
+    [Range(1, 365)] int DeliveryTimeInDays,
     string? MainImage,
     List<string>? GalleryImages);
 

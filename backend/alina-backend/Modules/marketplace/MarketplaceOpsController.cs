@@ -375,6 +375,9 @@ public class MarketplaceOpsController : ControllerBase
                 
                 // 2. Add seller earnings (amount - commission) to seller available balance
                 sellerWallet.AvailableBalance += sellerAmount;
+                // BUG-02: Deduct the pending escrow credit from the seller wallet
+                if (sellerWallet.EscrowBalance >= order.Amount)
+                    sellerWallet.EscrowBalance -= order.Amount;
                 sellerWallet.UpdatedAt = DateTime.UtcNow;
 
                 // 3. Get or create platform wallet and add commission
@@ -837,6 +840,7 @@ public class MarketplaceOpsController : ControllerBase
         try
         {
             var buyerWallet = await _context.Wallets.FirstOrDefaultAsync(w => w.ProfileId == order.BuyerId);
+            var sellerWallet = await _context.Wallets.FirstOrDefaultAsync(w => w.ProfileId == order.SellerId);
 
             if (buyerWallet == null)
             {
@@ -859,6 +863,13 @@ public class MarketplaceOpsController : ControllerBase
             buyerWallet.EscrowBalance -= order.Amount;
             buyerWallet.AvailableBalance += refundAmount;
             buyerWallet.UpdatedAt = DateTime.UtcNow;
+
+            // BUG-02: Deduct the pending escrow credit from the seller wallet
+            if (sellerWallet != null && sellerWallet.EscrowBalance >= order.Amount)
+            {
+                sellerWallet.EscrowBalance -= order.Amount;
+                sellerWallet.UpdatedAt = DateTime.UtcNow;
+            }
 
             // Update order status
             order.Status = OrderStatus.Cancelled;

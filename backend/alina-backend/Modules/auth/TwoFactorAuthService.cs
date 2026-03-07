@@ -31,7 +31,7 @@ public class TwoFactorAuthService
     /// <summary>
     /// Generate and send 2FA code via SMS/Email
     /// </summary>
-    public async Task<(bool Success, string Message)> SendVerificationCodeAsync(Guid userId, string method = "email")
+    public async Task<(bool Success, string Message)> SendVerificationCodeAsync(Guid userId, string method = "email", string purpose = "login")
     {
         try
         {
@@ -43,7 +43,7 @@ public class TwoFactorAuthService
             var verification = new TwoFactorVerification
             {
                 UserId = userId,
-                CodeHash = HashCode(code),
+                CodeHash = ComputeCodeHash(code),
                 Method = method,
                 Purpose = purpose,   // Purpose locked at generation time
                 ExpiresAt = expiresAt,
@@ -83,7 +83,7 @@ _logger.LogInformation("2FA code generated for user {UserId} via email", userId)
     {
         try
         {
-            var codeHash = HashCode(code);
+            var codeHash = ComputeCodeHash(code);
 
             var verification = await _context.TwoFactorVerifications
                 .Where(v => v.UserId == userId &&
@@ -194,6 +194,15 @@ _logger.LogInformation("2FA code generated for user {UserId} via email", userId)
             _logger.LogError(ex, "Error verifying TOTP for user {UserId}", userId);
             return false;
         }
+    }
+
+    /// <summary>Compute HMACSHA256 hash of an OTP code using a fixed app-level key.</summary>
+    private string ComputeCodeHash(string code)
+    {
+        var keyBytes = Encoding.UTF8.GetBytes(_configuration["TwoFactor:HmacKey"] ?? "default-hmac-key-change-in-prod");
+        using var hmac = new HMACSHA256(keyBytes);
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(code));
+        return Convert.ToHexString(hash);
     }
 
     private string GenerateNumericCode(int length)

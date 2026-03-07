@@ -42,6 +42,15 @@ public class CustomOffersController : ControllerBase
     {
         var senderId = GetCurrentUserId();
 
+        // VAL-06: Verify the recipient profile actually exists
+        var recipientExists = await _context.Profiles.AnyAsync(p => p.Id == request.RecipientId);
+        if (!recipientExists)
+            return NotFound(new { error = "Recipient profile not found." });
+
+        // Prevent sending an offer to yourself
+        if (request.RecipientId == senderId)
+            return BadRequest(new { error = "Cannot send an offer to yourself." });
+
         var customOffer = new CustomOffer
         {
             SenderId = senderId,

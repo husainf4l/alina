@@ -147,7 +147,17 @@ public class ProfileController : ControllerBase
             profile.TimeZone = request.TimeZone;
 
         if (request.UserRole != null && IsValidUserRole(request.UserRole))
+        {
+            // VAL-07: Gate seller/tasker role upgrade — require a minimum completed profile.
+            var isUpgradingToSeller = (request.UserRole == "seller" || request.UserRole == "tasker" || request.UserRole == "both")
+                && profile.UserRole == "buyer";
+            if (isUpgradingToSeller)
+            {
+                if (string.IsNullOrWhiteSpace(profile.DisplayName) || string.IsNullOrWhiteSpace(profile.Bio))
+                    return BadRequest(new { error = "Complete your display name and bio before becoming a seller." });
+            }
             profile.UserRole = request.UserRole;
+        }
 
         if (request.WebsiteUrl != null)
             profile.WebsiteUrl = request.WebsiteUrl;

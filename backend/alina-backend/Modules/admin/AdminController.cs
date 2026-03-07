@@ -215,9 +215,10 @@ public class AdminController : ControllerBase
             .Where(t => t.Type == TransactionType.PlatformFee && t.ProcessedAt >= thisMonth)
             .SumAsync(t => t.Amount);
 
+        // BUG-15: AverageAsync throws InvalidOperationException on empty set — use nullable overload with ?? 0
         var averageCommissionRate = await _context.Orders
             .Where(o => o.CommissionAmount.HasValue && o.PlatformFeePercentage.HasValue)
-            .AverageAsync(o => o.PlatformFeePercentage.Value);
+            .AverageAsync(o => (decimal?)o.PlatformFeePercentage!.Value) ?? 0m;
 
         return Ok(new PlatformStatsDto(
             totalUsers,

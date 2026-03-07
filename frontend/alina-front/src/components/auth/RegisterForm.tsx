@@ -39,7 +39,7 @@ export default function RegisterForm() {
       if (result.isNewUser || result.user.profileCompletionPercentage < 50) {
         router.push("/onboarding");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (err: unknown) {
       const data = (err as { response?: { data?: { error_description?: string; message?: string } } })?.response?.data;
@@ -58,7 +58,7 @@ export default function RegisterForm() {
       if (result.isNewUser || result.user.profileCompletionPercentage < 50) {
         router.push("/onboarding");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch {
       setError(t("errorGeneric"));

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Security.Cryptography;
 using alina_backend;
 using alina_backend.Modules.auth;
@@ -69,6 +71,23 @@ builder.Services.AddSignalR();
 // Add memory cache for rate limiting
 builder.Services.AddMemoryCache();
 
+// SEC-10: Configure ForwardedHeaders to only trust X-Forwarded-For from known/trusted proxies.
+// After UseForwardedHeaders(), context.Connection.RemoteIpAddress will be the real client IP.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+    // Trust requests from the configured trusted proxy ranges (e.g. internal load balancer).
+    // Add real proxy IPs here; leave empty to only trust RemoteIpAddress (no proxy).
+    var trustedProxies = builder.Configuration.GetSection("RateLimit:TrustedProxies").Get<string[]>() ?? [];
+    foreach (var proxy in trustedProxies)
+    {
+        if (IPAddress.TryParse(proxy, out var ip))
+            options.KnownProxies.Add(ip);
+    }
+});
+
 // Configure JWT Authentication — use RsaKeyService as single RSA source of truth
 var privateKeyPath = builder.Configuration["RSA_PRIVATE_KEY_PATH"];
 if (!string.IsNullOrEmpty(privateKeyPath))
@@ -91,25 +110,15 @@ if (!string.IsNullOrEmpty(privateKeyPath))
                 ClockSkew = TimeSpan.Zero // Remove default 5 minute clock skew
             };
             
-            // Allow reading JWT from cookies for web clients
+            // Allow reading JWT from query string for SignalR
             options.Events = new JwtBearerEvents
             {
                 OnMessageReceived = context =>
                 {
-                    // Check cookie if no Authorization header is present
-                    if (string.IsNullOrEmpty(context.Token))
+                    var accessToken = context.Request.Query["access_token"];
+                    if (!string.IsNullOrEmpty(accessToken))
                     {
-                        context.Token = context.Request.Cookies["access_token"];
-                    }
-                    
-                    // For SignalR, also check query string
-                    if (string.IsNullOrEmpty(context.Token))
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-                        if (!string.IsNullOrEmpty(accessToken))
-                        {
-                            context.Token = accessToken;
-                        }
+                        context.Token = accessToken;
                     }
                     
                     return Task.CompletedTask;
@@ -141,6 +150,9 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigins");
+
+// SEC-10: Process forwarded headers from trusted proxies only — must run before rate limiting
+app.UseForwardedHeaders();
 
 // Use custom middleware
 app.UseRateLimiting();  // Rate limiting before authentication

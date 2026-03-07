@@ -16,7 +16,7 @@ public record MessageDto(
 
 public record SendMessageDto(
     [Required] Guid ReceiverId,
-    [Required] string Content,
+    [Required][MaxLength(2000)] string Content,
     string? AttachmentUrl);
 
 public record ChatSummaryDto(

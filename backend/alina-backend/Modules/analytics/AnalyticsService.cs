@@ -17,22 +17,23 @@ public class AnalyticsService
     public async Task<PlatformMetricsDto> GetPlatformMetricsAsync()
     {
         var today = DateTime.UtcNow.Date;
+        var tomorrow = today.AddDays(1);
         var sevenDaysAgo = today.AddDays(-7);
         var thirtyDaysAgo = today.AddDays(-30);
 
         // Daily GMV (Gross Marketplace Volume) - total order amounts today
         var dailyGMV = await _context.Orders
-            .Where(o => o.CreatedAt.Date == today)
+            .Where(o => o.CreatedAt >= today && o.CreatedAt < tomorrow)
             .SumAsync(o => o.Amount);
 
         // Daily Revenue (platform commission) - commissions from completed orders today
         var dailyRevenue = await _context.Orders
-            .Where(o => o.Status == OrderStatus.Completed && o.CompletedAt.HasValue && o.CompletedAt.Value.Date == today)
+            .Where(o => o.Status == OrderStatus.Completed && o.CompletedAt.HasValue && o.CompletedAt.Value >= today && o.CompletedAt.Value < tomorrow)
             .SumAsync(o => o.CommissionAmount ?? 0);
 
         // New users today
         var newUsersToday = await _context.Users
-            .CountAsync(u => u.CreatedAt.Date == today);
+            .CountAsync(u => u.CreatedAt >= today && u.CreatedAt < tomorrow);
 
         // Active users (7 days) - users who have created orders or profiles recently
         var activeUsers7Days = await _context.Users
@@ -52,11 +53,11 @@ public class AnalyticsService
 
         // Orders created today
         var ordersToday = await _context.Orders
-            .CountAsync(o => o.CreatedAt.Date == today);
+            .CountAsync(o => o.CreatedAt >= today && o.CreatedAt < tomorrow);
 
         // Orders completed today
         var completedToday = await _context.Orders
-            .CountAsync(o => o.Status == OrderStatus.Completed && o.CompletedAt.HasValue && o.CompletedAt.Value.Date == today);
+            .CountAsync(o => o.Status == OrderStatus.Completed && o.CompletedAt.HasValue && o.CompletedAt.Value >= today && o.CompletedAt.Value < tomorrow);
 
         // Cancellation rate (last 30 days)
         var totalOrders30Days = await _context.Orders
@@ -213,44 +214,38 @@ public class AnalyticsService
     public async Task<CustomerInsightsDto> GetSellerCustomerInsightsAsync(Guid sellerId)
     {
         var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
-
-        // Get all completed orders for this seller in the last 30 days
-        var recentOrders = await _context.Orders
-            .Where(o => o.SellerId == sellerId && o.Status == OrderStatus.Completed && o.CompletedAt >= thirtyDaysAgo)
-            .Include(o => o.Buyer)
-            .ToListAsync();
-
-        var totalCustomers = recentOrders.Select(o => o.BuyerId).Distinct().Count();
-
-        // Repeat customers (customers with more than one order)
-        var customerOrderCounts = recentOrders
-            .GroupBy(o => o.BuyerId)
-            .Select(g => g.Count())
-            .ToList();
-
-        var repeatCustomers = customerOrderCounts.Count(c => c > 1);
-
-        // Average order value
-        var averageOrderValue = recentOrders.Any() ? recentOrders.Average(o => o.Amount) : 0;
-
-        // Customer retention rate (simplified - customers who ordered in last 15 days out of those who ordered in last 30 days)
         var fifteenDaysAgo = DateTime.UtcNow.AddDays(-15);
-        var recentCustomers = recentOrders
+
+        // PERF-06: Use DB aggregation instead of materialising all orders
+        var baseQuery = _context.Orders
+            .Where(o => o.SellerId == sellerId && o.Status == OrderStatus.Completed && o.CompletedAt >= thirtyDaysAgo);
+
+        var totalCustomers = await baseQuery.Select(o => o.BuyerId).Distinct().CountAsync();
+
+        // Repeat customers via DB grouping
+        var repeatCustomers = await baseQuery
+            .GroupBy(o => o.BuyerId)
+            .CountAsync(g => g.Count() > 1);
+
+        // Average order value via DB
+        var averageOrderValue = (double)(await baseQuery.AverageAsync(o => (decimal?)o.Amount) ?? 0m);
+
+        // Customer retention: distinct buyers in last 15 days
+        var recentCustomers = await baseQuery
             .Where(o => o.CompletedAt >= fifteenDaysAgo)
             .Select(o => o.BuyerId)
             .Distinct()
-            .Count();
+            .CountAsync();
 
         var customerRetentionRate = totalCustomers > 0 ? (double)recentCustomers / totalCustomers * 100 : 0;
 
-        // Top customer locations (simplified - would need location data in profiles)
         var topCustomerLocations = new List<string> { "Local", "Regional", "International" }; // Placeholder
 
         return new CustomerInsightsDto
         {
             TotalCustomers = totalCustomers,
             RepeatCustomers = repeatCustomers,
-            AverageOrderValue = (double)averageOrderValue,
+            AverageOrderValue = averageOrderValue,
             CustomerRetentionRate = customerRetentionRate,
             TopCustomerLocations = topCustomerLocations
         };

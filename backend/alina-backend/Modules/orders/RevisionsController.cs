@@ -85,7 +85,7 @@ public class RevisionsController : ControllerBase
     /// Respond to a revision request (accept/reject/complete)
     /// </summary>
     [HttpPost("{revisionId}/respond")]
-    public async Task<IActionResult> RespondToRevision(int revisionId, [FromBody] RespondToRevisionRequest request)
+    public async Task<IActionResult> RespondToRevision(Guid revisionId, [FromBody] RespondToRevisionRequest request)
     {
         var userId = GetCurrentUserId();
 
@@ -159,7 +159,7 @@ public class RevisionsController : ControllerBase
     /// Get a specific revision by ID
     /// </summary>
     [HttpGet("{revisionId}")]
-    public async Task<IActionResult> GetRevisionById(int revisionId)
+    public async Task<IActionResult> GetRevisionById(Guid revisionId)
     {
         var userId = GetCurrentUserId();
 

@@ -54,27 +54,49 @@ public class MessagingController : ControllerBase
         return Ok(summaries);
     }
 
+    /// <summary>Get paginated chat history. Use beforeId for cursor pagination (pass last message ID to load older messages).</summary>
     [HttpGet("messages/{otherUserId}")]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetChatHistory(Guid otherUserId)
+    public async Task<ActionResult<IEnumerable<MessageDto>>> GetChatHistory(
+        Guid otherUserId,
+        [Microsoft.AspNetCore.Mvc.FromQuery] Guid? beforeId = null,
+        [Microsoft.AspNetCore.Mvc.FromQuery] int pageSize = 50)
     {
         var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
 
+        // PERF-03/BUG-12: Never load all messages. Default 50, hard cap 100.
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         if (profile == null) return BadRequest("Profile not found");
 
-        var messages = await _context.Messages
-            .Include(m => m.Sender)
-            .Include(m => m.Receiver)
-            .Where(m => (m.SenderId == profile.Id && m.ReceiverId == otherUserId) || 
-                        (m.SenderId == otherUserId && m.ReceiverId == profile.Id))
-            .OrderBy(m => m.CreatedAt)
+        // Resolve the cursor (beforeId) to a CreatedAt timestamp for efficient keyset pagination
+        DateTime? beforeDate = null;
+        if (beforeId.HasValue)
+        {
+            var cursor = await _context.Messages.Where(m => m.Id == beforeId.Value).Select(m => (DateTime?)m.CreatedAt).FirstOrDefaultAsync();
+            beforeDate = cursor;
+        }
+
+        var query = _context.Messages
+            .Where(m => (m.SenderId == profile.Id && m.ReceiverId == otherUserId) ||
+                        (m.SenderId == otherUserId && m.ReceiverId == profile.Id));
+
+        if (beforeDate.HasValue)
+            query = query.Where(m => m.CreatedAt < beforeDate.Value);
+
+        var messages = await query
+            .OrderByDescending(m => m.CreatedAt)
+            .Take(pageSize)
             .Select(m => new MessageDto(
-                m.Id, m.SenderId, m.Sender.DisplayName ?? "", 
-                m.ReceiverId, m.Receiver.DisplayName ?? "", 
+                m.Id, m.SenderId, m.Sender!.DisplayName ?? "",
+                m.ReceiverId, m.Receiver!.DisplayName ?? "",
                 m.Content, m.AttachmentUrl, m.IsRead, m.ReadAt, m.CreatedAt
             ))
             .ToListAsync();
+
+        // Return in chronological order (oldest first)
+        messages.Reverse();
 
         // Mark as read
         var unread = await _context.Messages

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using alina_backend.Modules.users;
 using alina_backend.Modules.profiles;
+using alina_backend.Modules.validation;
 using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,19 +22,22 @@ public class AuthController : ControllerBase
     private readonly RsaKeyService _rsaKeyService;
     private readonly ILogger<AuthController> _logger;
     private readonly GoogleAuthService _googleAuthService;
+    private readonly EmailValidationService _emailValidationService;
 
     public AuthController(
         AppDbContext context, 
         IConfiguration configuration, 
         RsaKeyService rsaKeyService,
         ILogger<AuthController> logger,
-        GoogleAuthService googleAuthService)
+        GoogleAuthService googleAuthService,
+        EmailValidationService emailValidationService)
     {
         _context = context;
         _configuration = configuration;
         _rsaKeyService = rsaKeyService;
         _logger = logger;
         _googleAuthService = googleAuthService;
+        _emailValidationService = emailValidationService;
     }
 
     /// <summary>
@@ -42,6 +46,11 @@ public class AuthController : ControllerBase
     [HttpPost("mobile/register")]
     public async Task<IActionResult> MobileRegister([FromBody] RegisterRequest request)
     {
+        // VAL-01: Validate email format and domain before processing
+        var emailValidation = await _emailValidationService.ValidateEmailAsync(request.Email);
+        if (!emailValidation.IsValid)
+            return BadRequest(new { error = "invalid_request", error_description = string.Join("; ", emailValidation.Errors) });
+
         if (await _context.Users.AnyAsync(u => u.Email == request.Email))
         {
             return BadRequest(new { error = "invalid_request", error_description = "An account with this email already exists" });
@@ -93,6 +102,11 @@ public class AuthController : ControllerBase
     [HttpPost("web/register")]
     public async Task<IActionResult> WebRegister([FromBody] RegisterRequest request)
     {
+        // VAL-01: Validate email format and domain before processing
+        var emailValidation = await _emailValidationService.ValidateEmailAsync(request.Email);
+        if (!emailValidation.IsValid)
+            return BadRequest(new { error = "invalid_request", error_description = string.Join("; ", emailValidation.Errors) });
+
         if (await _context.Users.AnyAsync(u => u.Email == request.Email))
         {
             return BadRequest(new { error = "invalid_request", error_description = "An account with this email already exists" });
@@ -123,11 +137,14 @@ public class AuthController : ControllerBase
         var accessToken = GenerateAccessToken(user, profile);
         var refreshToken = await GenerateAndStoreRefreshToken(user.Id);
 
-        // Set HTTP-only cookies
-        SetAuthCookies(accessToken, refreshToken);
+        // Set HTTP-only cookie for refresh token
+        SetRefreshTokenCookie(refreshToken);
 
         return Ok(new
         {
+            access_token = accessToken,
+            token_type = "Bearer",
+            expires_in = 3600, // 1 hour
             user_id = user.Id,
             user_full_name = user.FullName,
             user_email = user.Email,
@@ -203,11 +220,14 @@ public class AuthController : ControllerBase
         var accessToken = GenerateAccessToken(user, profile);
         var refreshToken = await GenerateAndStoreRefreshToken(user.Id);
 
-        // Set HTTP-only cookies
-        SetAuthCookies(accessToken, refreshToken);
+        // Set HTTP-only cookie for refresh token
+        SetRefreshTokenCookie(refreshToken);
 
         return Ok(new
         {
+            access_token = accessToken,
+            token_type = "Bearer",
+            expires_in = 3600, // 1 hour
             user_id = user.Id,
             user_full_name = user.FullName,
             user_email = user.Email,
@@ -269,16 +289,8 @@ public class AuthController : ControllerBase
         return refreshToken.Token;
     }
 
-    private void SetAuthCookies(string accessToken, string refreshToken)
+    private void SetRefreshTokenCookie(string refreshToken)
     {
-        var accessCookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true, // HTTPS only
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddHours(1)
-        };
-
         var refreshCookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -287,7 +299,6 @@ public class AuthController : ControllerBase
             Expires = DateTime.UtcNow.AddDays(7)
         };
 
-        Response.Cookies.Append("access_token", accessToken, accessCookieOptions);
         Response.Cookies.Append("refresh_token", refreshToken, refreshCookieOptions);
     }
 
@@ -355,12 +366,18 @@ public class AuthController : ControllerBase
         var newRefreshToken = await GenerateAndStoreRefreshToken(storedToken.UserId);
         await _context.SaveChangesAsync();
 
-        // Update cookies
-        SetAuthCookies(accessToken, newRefreshToken);
+        // Update cookie
+        SetRefreshTokenCookie(newRefreshToken);
 
         _logger.LogInformation("Web tokens refreshed successfully for user {Email}", storedToken.User.Email);
 
-        return Ok(new { message = "Tokens refreshed successfully" });
+        return Ok(new 
+        { 
+            access_token = accessToken,
+            token_type = "Bearer",
+            expires_in = 3600, // 1 hour
+            message = "Tokens refreshed successfully" 
+        });
     }
 
     /// <summary>
@@ -394,7 +411,6 @@ public class AuthController : ControllerBase
                 await _context.SaveChangesAsync();
             }
 
-            Response.Cookies.Delete("access_token");
             Response.Cookies.Delete("refresh_token");
         }
 
@@ -512,11 +528,11 @@ public class AuthController : ControllerBase
             _logger.LogInformation("New user created via Google Sign-In (web): {Email}", user.Email);
         }
 
-        // Generate tokens and set cookies (with role)
+        // Generate tokens and set cookie (with role)
         var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
         var accessToken = GenerateAccessToken(user, profile);
         var refreshToken = await GenerateAndStoreRefreshToken(user.Id);
-        SetAuthCookies(accessToken, refreshToken);
+        SetRefreshTokenCookie(refreshToken);
 
         _logger.LogInformation("User authenticated via Google (web): {Email}", user.Email);
 
@@ -524,6 +540,9 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
+            access_token = accessToken,
+            token_type = "Bearer",
+            expires_in = 3600, // 1 hour
             user_id = user.Id,
             user_full_name = user.FullName,
             user_email = user.Email,

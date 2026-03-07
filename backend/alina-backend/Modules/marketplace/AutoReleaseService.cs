@@ -89,9 +89,19 @@ public class AutoReleaseService : BackgroundService
                     continue;
                 }
 
+                // BUG-07: Never fall back to order.Amount — that would skip the 15% commission.
+                // Calculate seller payout explicitly if SellerAmount was not stored.
+                const decimal commissionRate = 0.15m;
+                var sellerPayout = order.SellerAmount.HasValue
+                    ? order.SellerAmount.Value
+                    : order.Amount * (1m - commissionRate);
+
                 // Atomic escrow release
                 buyerWallet.EscrowBalance -= order.Amount;
-                sellerWallet.AvailableBalance += order.SellerAmount ?? order.Amount;
+                sellerWallet.AvailableBalance += sellerPayout;
+                // BUG-02: Deduct seller escrow credit added at order creation
+                if (sellerWallet.EscrowBalance >= order.Amount)
+                    sellerWallet.EscrowBalance -= order.Amount;
                 buyerWallet.UpdatedAt = DateTime.UtcNow;
                 sellerWallet.UpdatedAt = DateTime.UtcNow;
 
@@ -105,7 +115,7 @@ public class AutoReleaseService : BackgroundService
                 var releaseTransaction = new Transaction
                 {
                     WalletId = sellerWallet.Id,
-                    Amount = order.SellerAmount ?? order.Amount,
+                    Amount = sellerPayout,
                     Type = TransactionType.Release,
                     Status = TransactionStatus.Completed,
                     OrderId = order.Id,
@@ -118,7 +128,7 @@ public class AutoReleaseService : BackgroundService
                 await transaction.CommitAsync();
 
                 _logger.LogInformation("Auto-released escrow for order {OrderId}: {Amount} to seller {SellerId}",
-                    order.Id, order.SellerAmount ?? order.Amount, order.SellerId);
+                    order.Id, sellerPayout, order.SellerId);
             }
             catch (Exception ex)
             {
