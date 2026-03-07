@@ -45,10 +45,6 @@ const notoSansArabic = Noto_Sans_Arabic({
 export const metadata: Metadata = {
   title: "ALINA - Freelance Services Marketplace",
   description: "Find the perfect freelance services for your business. Browse through millions of gigs from talented freelancers.",
-  icons: {
-    icon: "/logo/alinalogo-lighttheme.png",
-    apple: "/logo/alinalogo-lighttheme.png",
-  },
 };
 
 // Statically generate all locale routes at build time

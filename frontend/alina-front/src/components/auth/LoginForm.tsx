@@ -25,13 +25,8 @@ export default function LoginForm() {
     setError(null);
     setLoading(true);
     try {
-      const result = await login(email, password);
-      // If profile is incomplete (<50%), guide them through onboarding
-      if (result.user.profileCompletionPercentage < 50) {
-        router.push("/onboarding");
-      } else {
-        router.push("/dashboard");
-      }
+      await login(email, password);
+      router.push("/dashboard");
     } catch (err: unknown) {
       const data = (err as { response?: { data?: { error_description?: string; message?: string } } })?.response?.data;
       setError(data?.error_description ?? data?.message ?? t("errorGeneric"));
@@ -45,12 +40,8 @@ export default function LoginForm() {
     setError(null);
     setLoading(true);
     try {
-      const result = await loginWithGoogle(credentialResponse.credential);
-      if (result.user.profileCompletionPercentage < 50) {
-        router.push("/onboarding");
-      } else {
-        router.push("/dashboard");
-      }
+      await loginWithGoogle(credentialResponse.credential);
+      router.push("/dashboard");
     } catch {
       setError(t("errorGeneric"));
     } finally {

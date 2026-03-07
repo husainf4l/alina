@@ -10,9 +10,12 @@ export const setAccessToken = (token: string | null) => {
 export const getAccessToken = () => accessToken;
 
 // ─── Axios instance ────────────────────────────────────────────────────────────
+// baseURL is intentionally empty — requests go to the same origin.
+// Next.js rewrites in next.config.ts proxy /api/* → backend server.
+// This ensures the HttpOnly refresh-token cookie is always same-origin
+// and the browser sends it correctly (no SameSite/cross-origin issues).
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://192.168.1.66:5602",
-  withCredentials: true, // CRITICAL: sends the HttpOnly refresh cookie
+  withCredentials: true,
 });
 
 // ─── Request interceptor: attach Bearer token ─────────────────────────────────

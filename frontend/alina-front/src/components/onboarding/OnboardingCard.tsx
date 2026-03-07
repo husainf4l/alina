@@ -8,7 +8,6 @@ import { User, FileText, ShoppingBag, Briefcase, Layers, ImagePlus } from "lucid
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import apiClient from "@/lib/apiClient";
-import Image from "next/image";
 
 // Role selection is Step 1 (the decision gate).
 // Buyer → immediate save → /dashboard (no more steps needed).
@@ -75,6 +74,11 @@ export default function OnboardingCard() {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName.trim()) return;
+    // Backend VAL-07: bio is required for seller / both roles
+    if (!bio.trim()) {
+      setError(t("errorBioRequired"));
+      return;
+    }
     setError(null);
     setLoading(true);
     try {
@@ -108,17 +112,26 @@ export default function OnboardingCard() {
     setError(null);
     setLoading(true);
     try {
-      const fd = new FormData();
-      if (avatarFile) fd.append("avatar", avatarFile);
-      if (coverFile) fd.append("cover", coverFile);
-      await apiClient.post("/api/auth/me/avatar", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      router.push("/dashboard");
-    } catch (err) {
-      setError(apiError(err));
+      // Each endpoint expects the field name to be exactly "file" ([FromForm] IFormFile file)
+      if (avatarFile) {
+        const fd = new FormData();
+        fd.append("file", avatarFile);
+        await apiClient.post("/api/auth/me/avatar", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      if (coverFile) {
+        const fd = new FormData();
+        fd.append("file", coverFile);
+        await apiClient.post("/api/auth/me/cover", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+    } catch {
+      // Upload failed — non-blocking, user can update photos from their profile later
     } finally {
       setLoading(false);
+      router.push("/dashboard");
     }
   };
 
@@ -234,7 +247,7 @@ export default function OnboardingCard() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground">
-              {t("bioLabel")} <span className="text-muted-foreground font-normal">{t("bioOptional")}</span>
+              {t("bioLabel")}
             </label>
             <div className="relative">
               <FileText className="pointer-events-none absolute start-3 top-3 size-4 text-muted-foreground" />
@@ -243,6 +256,7 @@ export default function OnboardingCard() {
                 onChange={(e) => setBio(e.target.value)}
                 placeholder={t("bioPlaceholder")}
                 rows={3}
+                required
                 className={cn(
                   "w-full rounded-xl border border-border bg-background ps-10 pe-4 py-2.5",
                   "text-sm text-foreground placeholder:text-muted-foreground/60 resize-none",
@@ -306,11 +320,10 @@ export default function OnboardingCard() {
               )}
             >
               {avatarPreview ? (
-                <Image
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={avatarPreview}
                   alt="Avatar preview"
-                  width={56}
-                  height={56}
                   className="rounded-full object-cover size-14 shrink-0"
                 />
               ) : (
@@ -347,7 +360,8 @@ export default function OnboardingCard() {
               )}
             >
               {coverPreview ? (
-                <Image src={coverPreview} alt="Cover preview" fill className="object-cover" />
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={coverPreview} alt="Cover preview" className="absolute inset-0 size-full object-cover" />
               ) : (
                 <>
                   <ImagePlus className="size-5 text-muted-foreground" />

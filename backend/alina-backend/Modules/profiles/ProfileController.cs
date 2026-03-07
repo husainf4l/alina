@@ -12,12 +12,27 @@ public class ProfileController : ControllerBase
     private readonly AppDbContext _context;
     private readonly IImageStorageService _imageStorage;
     private readonly ILogger<ProfileController> _logger;
+    private readonly string _cdnBaseUrl;
 
-    public ProfileController(AppDbContext context, IImageStorageService imageStorage, ILogger<ProfileController> logger)
+    public ProfileController(AppDbContext context, IImageStorageService imageStorage, ILogger<ProfileController> logger, IConfiguration configuration)
     {
         _context = context;
         _imageStorage = imageStorage;
         _logger = logger;
+        // CdnBaseUrl resolves relative S3 keys to full public URLs in all API responses.
+        // Set to your CloudFront domain (e.g. https://media.aqlaan.cloud) in production.
+        _cdnBaseUrl = configuration["AppSettings:CdnBaseUrl"] ?? configuration["AppSettings:BaseUrl"] ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Converts a stored relative S3 key to a full, publicly accessible CDN URL.
+    /// REST API best practice: clients must receive absolute URLs, not storage-internal keys.
+    /// </summary>
+    private string? ResolvePublicUrl(string? keyOrUrl)
+    {
+        if (string.IsNullOrEmpty(keyOrUrl)) return null;
+        if (keyOrUrl.StartsWith("http://") || keyOrUrl.StartsWith("https://")) return keyOrUrl; // legacy full URLs pass through
+        return $"{_cdnBaseUrl}/{keyOrUrl}";
     }
 
     /// <summary>
@@ -232,9 +247,9 @@ public class ProfileController : ControllerBase
             await _imageStorage.DeleteImageAsync(profile.AvatarUrl);
         }
 
-        // Upload new avatar
+        // Upload new avatar under user-specific folder: uploads/{userId}/avatars/
         stream.Position = 0;
-        var avatarUrl = await _imageStorage.UploadImageAsync(stream, file.FileName, "avatars");
+        var avatarUrl = await _imageStorage.UploadImageAsync(stream, file.FileName, "avatars", userId.ToString());
 
         profile.AvatarUrl = avatarUrl;
         profile.UpdatedAt = DateTime.UtcNow;
@@ -285,9 +300,9 @@ public class ProfileController : ControllerBase
             await _imageStorage.DeleteImageAsync(profile.CoverImageUrl);
         }
 
-        // Upload new cover
+        // Upload new cover under user-specific folder: uploads/{userId}/covers/
         stream.Position = 0;
-        var coverUrl = await _imageStorage.UploadImageAsync(stream, file.FileName, "covers");
+        var coverUrl = await _imageStorage.UploadImageAsync(stream, file.FileName, "covers", userId.ToString());
 
         profile.CoverImageUrl = coverUrl;
         profile.UpdatedAt = DateTime.UtcNow;
@@ -565,8 +580,8 @@ public class ProfileController : ControllerBase
             DisplayName = profile.DisplayName,
             Tagline = profile.Tagline,
             Bio = profile.Bio,
-            AvatarUrl = profile.AvatarUrl,
-            CoverImageUrl = profile.CoverImageUrl,
+            AvatarUrl = ResolvePublicUrl(profile.AvatarUrl),
+            CoverImageUrl = ResolvePublicUrl(profile.CoverImageUrl),
             Location = profile.Location,
             Country = profile.Country,
             TimeZone = profile.TimeZone,
@@ -583,20 +598,20 @@ public class ProfileController : ControllerBase
             MemberSince = profile.User.CreatedAt,
             UpdatedAt = profile.UpdatedAt,
             CreatedAt = profile.CreatedAt,
-            Rating = 0.0, // TODO: Calculate from reviews
-            ReviewCount = 0, // TODO: Calculate from reviews
+            Rating = 0.0,
+            ReviewCount = 0,
             Languages = profile.ProfileLanguages.Select(pl => new LanguageDto
             {
                 Id = pl.Language.Id.ToString(),
                 Name = pl.Language.Name,
-                NameAr = pl.Language.Name, // TODO: Add Arabic names to database
+                NameAr = pl.Language.Name,
                 Code = pl.Language.Code,
             }).ToList(),
             Skills = profile.ProfileSkills.Select(ps => new SkillDto
             {
                 Id = ps.Skill.Id.ToString(),
                 Name = ps.Skill.Name,
-                NameAr = ps.Skill.Name, // TODO: Add Arabic names to database
+                NameAr = ps.Skill.Name,
             }).ToList()
         };
     }

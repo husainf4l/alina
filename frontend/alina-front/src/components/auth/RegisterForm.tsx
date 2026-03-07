@@ -35,8 +35,8 @@ export default function RegisterForm() {
     setLoading(true);
     try {
       const result = await register(`${firstName} ${lastName}`.trim(), email, password);
-      // New users always go to onboarding (profile is 0% on first registration)
-      if (result.isNewUser || result.user.profileCompletionPercentage < 50) {
+      // Only brand-new users go through onboarding to pick their role
+      if (result.isNewUser) {
         router.push("/onboarding");
       } else {
         router.push("/dashboard");
@@ -55,7 +55,7 @@ export default function RegisterForm() {
     setLoading(true);
     try {
       const result = await loginWithGoogle(credentialResponse.credential);
-      if (result.isNewUser || result.user.profileCompletionPercentage < 50) {
+      if (result.isNewUser) {
         router.push("/onboarding");
       } else {
         router.push("/dashboard");

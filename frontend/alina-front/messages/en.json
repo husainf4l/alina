@@ -204,6 +204,44 @@
     "backButton": "Back",
     "finishButton": "Get started",
     "saving": "Saving...",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorBioRequired": "Please add a short bio - it's required to become a seller."
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's what's happening."
+  },
+  "DashboardNav": {
+    "overview": "Overview",
+    "orders": "Orders",
+    "gigs": "My Gigs",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "wallet": "Wallet",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "DashboardHeader": {
+    "searchPlaceholder": "Search...",
+    "logout": "Log out"
+  },
+  "Profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information and how others see you.",
+    "emailLabel": "Email address",
+    "displayNameLabel": "Display name",
+    "displayNamePlaceholder": "How you appear on Alina",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "Tell us a little about yourself...",
+    "roleLabel": "I am a",
+    "role_buyer": "Buyer",
+    "role_seller": "Seller",
+    "role_both": "Both",
+    "changeCover": "Change cover",
+    "uploading": "Uploading...",
+    "saveButton": "Save changes",
+    "saving": "Saving...",
+    "saveSuccess": "Profile updated successfully!",
     "errorGeneric": "Something went wrong. Please try again."
   },
   "Contact": {
@@ -258,5 +296,67 @@
       "description": "Check out our FAQ section for quick solutions to common questions.",
       "link": "Visit FAQ"
     }
+  },
+  "AiChat": {
+    "title": "Alina AI",
+    "subtitle": "Your freelance assistant",
+    "clearChat": "Clear conversation",
+    "welcomeTitle": "How can I help you?",
+    "welcomeBody": "Hi {name}! I can help you grow your freelance business, write proposals, optimize your profile, and more.",
+    "suggestions": "Try asking",
+    "inputPlaceholder": "Ask anything...",
+    "disclaimer": "AI can make mistakes. Verify important info.",
+    "errorMessage": "Sorry, I couldn't connect right now. Please try again."
+  },
+  "Gigs": {
+    "pageTitle": "My Gigs",
+    "pageSubtitle": "Manage your services and offers",
+    "createButton": "Create Gig",
+    "emptyTitle": "No gigs yet",
+    "emptyBody": "Create your first gig to start selling your services on Alina.",
+    "active": "Active",
+    "paused": "Paused",
+    "activate": "Activate",
+    "pause": "Pause",
+    "notSellerTitle": "Seller account required",
+    "notSellerBody": "You need a seller account to manage gigs. Update your role in your profile.",
+    "notSellerCta": "Go to Profile"
+  },
+  "CreateGig": {
+    "stepBasics": "Basics",
+    "stepDetails": "Details",
+    "stepMedia": "Media",
+    "stepBasicsTitle": "What's your gig about?",
+    "stepBasicsSubtitle": "Give your gig a title and pick the right category.",
+    "stepDetailsTitle": "Set your terms",
+    "stepDetailsSubtitle": "Describe your service, set your price and delivery time.",
+    "stepMediaTitle": "Add images",
+    "stepMediaSubtitle": "Visuals help buyers understand your service better.",
+    "titleLabel": "Gig Title",
+    "titlePlaceholder": "e.g. I will design a modern logo for your brand",
+    "titleHint": "{count}/150 characters",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category",
+    "loadingCategories": "Loading categories…",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe what you'll deliver, your process, and what makes your service unique…",
+    "descriptionHint": "{count}/5000 characters",
+    "priceLabel": "Starting Price (USD)",
+    "deliveryLabel": "Delivery Time",
+    "days": "days",
+    "mainImageLabel": "Main Image URL",
+    "mainImagePlaceholder": "https://…",
+    "galleryLabel": "Gallery Images",
+    "galleryPlaceholder": "Paste an image URL and press Enter",
+    "optional": "Optional",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "publish": "Publish Gig",
+    "publishing": "Publishing…",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "notSellerTitle": "Seller account required",
+    "notSellerBody": "You need a seller or combined account to create gigs. Update your role in profile settings.",
+    "notSellerCta": "Go to Profile"
   }
 }

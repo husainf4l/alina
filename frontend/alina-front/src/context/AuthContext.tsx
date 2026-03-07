@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { setAccessToken } from "@/lib/apiClient";
 import apiClient from "@/lib/apiClient";
 
@@ -10,6 +10,25 @@ export interface AuthUser {
   email: string;
   role: string;
   profileCompletionPercentage: number;
+  displayName?: string;
+  bio?: string;
+  avatarUrl?: string;
+  coverUrl?: string;
+}
+
+/** Maps a raw /api/auth/me profile response onto AuthUser */
+function mapProfile(profile: Record<string, unknown>): Partial<AuthUser> {
+  return {
+    profileCompletionPercentage: (profile.profileCompletionPercentage as number) ?? 0,
+    displayName: profile.displayName as string | undefined,
+    bio: profile.bio as string | undefined,
+    avatarUrl: profile.avatarUrl as string | undefined,
+    // backend returns coverImageUrl
+    coverUrl: (profile.coverImageUrl ?? profile.coverUrl) as string | undefined,
+    role: (profile.userRole ?? profile.role) as string | undefined,
+    fullName: profile.fullName as string | undefined,
+    email: profile.email as string | undefined,
+  };
 }
 
 export interface AuthResult {
@@ -20,16 +39,51 @@ export interface AuthResult {
 
 interface AuthContextValue {
   user: AuthUser | null;
+  /** true once the silent session-restore check on mount has finished */
+  isInitialized: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (fullName: string, email: string, password: string) => Promise<AuthResult>;
   loginWithGoogle: (idToken: string) => Promise<AuthResult>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Silently restore session on mount using the HttpOnly refresh-token cookie
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiClient.post("/api/auth/web/refresh");
+        if (data?.access_token) {
+          setAccessToken(data.access_token);
+          // Fetch full profile
+          const { data: profile } = await apiClient.get("/api/auth/me");
+          const mapped = mapProfile(profile);
+          setUser({
+            id: data.user_id ?? profile.userId ?? profile.id,
+            fullName: mapped.fullName ?? data.user_full_name,
+            email: mapped.email ?? data.user_email,
+            role: mapped.role ?? data.user_role,
+            profileCompletionPercentage: mapped.profileCompletionPercentage ?? 0,
+            displayName: mapped.displayName,
+            bio: mapped.bio,
+            avatarUrl: mapped.avatarUrl,
+            coverUrl: mapped.coverUrl,
+          });
+        }
+      } catch {
+        // No valid session — user stays null, they'll be redirected to /auth
+      } finally {
+        setIsInitialized(true);
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAuthResponse = useCallback(async (data: {
     access_token: string;
@@ -41,21 +95,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }): Promise<AuthResult> => {
     setAccessToken(data.access_token);
 
-    // Fetch full profile to get completion percentage
-    let profileCompletionPercentage = 0;
+    // Fetch full profile to get completion percentage + avatar
+    let mapped: Partial<AuthUser> = {};
     try {
       const { data: profile } = await apiClient.get("/api/auth/me");
-      profileCompletionPercentage = profile.profileCompletionPercentage ?? 0;
+      mapped = mapProfile(profile);
     } catch {
-      // non-blocking — continue with 0
+      // non-blocking — continue with defaults
     }
 
     const authUser: AuthUser = {
       id: data.user_id,
       fullName: data.user_full_name,
       email: data.user_email,
-      role: data.user_role,
-      profileCompletionPercentage,
+      role: mapped.role ?? data.user_role,
+      profileCompletionPercentage: mapped.profileCompletionPercentage ?? 0,
+      displayName: mapped.displayName,
+      bio: mapped.bio,
+      avatarUrl: mapped.avatarUrl,
+      coverUrl: mapped.coverUrl,
     };
     setUser(authUser);
 
@@ -89,8 +147,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const { data: profile } = await apiClient.get("/api/auth/me");
+      const mapped = mapProfile(profile);
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              profileCompletionPercentage: mapped.profileCompletionPercentage ?? prev.profileCompletionPercentage,
+              displayName: mapped.displayName,
+              bio: mapped.bio,
+              avatarUrl: mapped.avatarUrl,
+              coverUrl: mapped.coverUrl,
+              fullName: mapped.fullName ?? prev.fullName,
+              role: mapped.role ?? prev.role,
+            }
+          : prev
+      );
+    } catch {
+      // ignore
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, register, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, isInitialized, login, register, loginWithGoogle, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

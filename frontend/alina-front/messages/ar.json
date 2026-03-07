@@ -204,6 +204,44 @@
     "backButton": "رجوع",
     "finishButton": "ابدأ الآن",
     "saving": "جارٍ الحفظ...",
+    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "errorBioRequired": "يرجى إضافة نبذة قصيرة - هي مطلوبة لتصبح بائعاً."
+  },
+  "Dashboard": {
+    "title": "لوحة التحكم",
+    "subtitle": "مرحباً بعودتك! إليك آخر التحديثات."
+  },
+  "DashboardNav": {
+    "overview": "نظرة عامة",
+    "orders": "الطلبات",
+    "gigs": "خدماتي",
+    "messages": "الرسائل",
+    "notifications": "الإشعارات",
+    "wallet": "المحفظة",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات"
+  },
+  "DashboardHeader": {
+    "searchPlaceholder": "بحث...",
+    "logout": "تسجيل الخروج"
+  },
+  "Profile": {
+    "title": "ملفي الشخصي",
+    "subtitle": "إدارة معلوماتك الشخصية وكيف يراك الآخرون.",
+    "emailLabel": "البريد الإلكتروني",
+    "displayNameLabel": "اسم العرض",
+    "displayNamePlaceholder": "كيف تظهر على ألينا",
+    "bioLabel": "نبذة عنك",
+    "bioPlaceholder": "أخبرنا قليلاً عن نفسك...",
+    "roleLabel": "أنا",
+    "role_buyer": "مشتري",
+    "role_seller": "بائع",
+    "role_both": "كلاهما",
+    "changeCover": "تغيير الغلاف",
+    "uploading": "جارٍ الرفع...",
+    "saveButton": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ...",
+    "saveSuccess": "تم تحديث الملف الشخصي بنجاح!",
     "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
   },
   "Contact": {
@@ -258,5 +296,67 @@
       "description": "راجع قسم الأسئلة الشائعة للحصول على حلول سريعة للأسئلة الشائعة.",
       "link": "زيارة الأسئلة الشائعة"
     }
+  },
+  "AiChat": {
+    "title": "ألينا AI",
+    "subtitle": "مساعدك في العمل الحر",
+    "clearChat": "مسح المحادثة",
+    "welcomeTitle": "كيف يمكنني مساعدتك؟",
+    "welcomeBody": "مرحباً {name}! يمكنني مساعدتك في تنمية أعمالك الحرة، وكتابة العروض، وتحسين ملفك الشخصي، والمزيد.",
+    "suggestions": "جرب أن تسأل",
+    "inputPlaceholder": "اسأل أي شيء...",
+    "disclaimer": "قد يُخطئ الذكاء الاصطناعي. تحقق من المعلومات المهمة.",
+    "errorMessage": "عذراً، لم أتمكن من الاتصال الآن. حاول مرة أخرى."
+  },
+  "Gigs": {
+    "pageTitle": "خدماتي",
+    "pageSubtitle": "أدر خدماتك وعروضك",
+    "createButton": "إنشاء خدمة",
+    "emptyTitle": "لا توجد خدمات بعد",
+    "emptyBody": "أنشئ خدمتك الأولى للبدء في بيع خدماتك على ألينا.",
+    "active": "نشط",
+    "paused": "موقوف",
+    "activate": "تفعيل",
+    "pause": "إيقاف مؤقت",
+    "notSellerTitle": "مطلوب حساب بائع",
+    "notSellerBody": "تحتاج إلى حساب بائع لإدارة الخدمات. حدّث دورك في ملفك الشخصي.",
+    "notSellerCta": "الذهاب إلى الملف الشخصي"
+  },
+  "CreateGig": {
+    "stepBasics": "الأساسيات",
+    "stepDetails": "التفاصيل",
+    "stepMedia": "الوسائط",
+    "stepBasicsTitle": "ما الذي تقدمه؟",
+    "stepBasicsSubtitle": "أعط خدمتك عنواناً واختر الفئة المناسبة.",
+    "stepDetailsTitle": "حدد شروطك",
+    "stepDetailsSubtitle": "صف خدمتك وحدد سعرك ومدة التسليم.",
+    "stepMediaTitle": "أضف صوراً",
+    "stepMediaSubtitle": "الصور تساعد المشترين على فهم خدمتك بشكل أفضل.",
+    "titleLabel": "عنوان الخدمة",
+    "titlePlaceholder": "مثال: سأصمم شعاراً احترافياً لعلامتك التجارية",
+    "titleHint": "{count}/150 حرف",
+    "categoryLabel": "الفئة",
+    "categoryPlaceholder": "اختر فئة",
+    "loadingCategories": "جارٍ تحميل الفئات…",
+    "descriptionLabel": "الوصف",
+    "descriptionPlaceholder": "صف ما ستقدمه، وأسلوب عملك، وما يميز خدمتك…",
+    "descriptionHint": "{count}/5000 حرف",
+    "priceLabel": "السعر الابتدائي (دولار)",
+    "deliveryLabel": "مدة التسليم",
+    "days": "يوم",
+    "mainImageLabel": "رابط الصورة الرئيسية",
+    "mainImagePlaceholder": "https://…",
+    "galleryLabel": "صور المعرض",
+    "galleryPlaceholder": "الصق رابط صورة ثم اضغط Enter",
+    "optional": "اختياري",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي",
+    "publish": "نشر الخدمة",
+    "publishing": "جارٍ النشر…",
+    "errorGeneric": "حدث خطأ ما. حاول مرة أخرى.",
+    "notSellerTitle": "مطلوب حساب بائع",
+    "notSellerBody": "تحتاج إلى حساب بائع أو مشترك لإنشاء الخدمات. حدّث دورك في إعدادات الملف الشخصي.",
+    "notSellerCta": "الذهاب إلى الملف الشخصي"
   }
 }
