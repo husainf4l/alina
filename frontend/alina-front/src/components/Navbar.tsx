@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 
 const NAV_LINKS = [
@@ -22,10 +21,6 @@ export default function Navbar() {
   const t = useTranslations("Navbar");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme } = useTheme();
-
-  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-card/80 backdrop-blur-md">
@@ -37,12 +32,20 @@ export default function Navbar() {
           className="flex items-center transition-opacity hover:opacity-80"
         >
           <Image
-            src={mounted && resolvedTheme === "dark" ? "/logo/alinalogodark.png" : "/logo/alinalogo-lighttheme.png"}
+            src="/logo/alinalogo-lighttheme.png"
             alt={t("brand")}
             width={120}
             height={40}
             priority
-            style={{ height: "40px", width: "auto" }}
+            className="block dark:hidden"
+          />
+          <Image
+            src="/logo/alinalogodark.png"
+            alt={t("brand")}
+            width={120}
+            height={40}
+            priority
+            className="hidden dark:block"
           />
         </Link>
 
