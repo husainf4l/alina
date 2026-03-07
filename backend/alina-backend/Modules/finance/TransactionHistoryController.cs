@@ -40,9 +40,15 @@ public class TransactionHistoryController : ControllerBase
 
         try
         {
+            // Resolve wallet IDs (transactions are linked by WalletId, not UserId)
+            var walletIds = await _context.Wallets
+                .Where(w => w.Profile != null && w.Profile.UserId == userId)
+                .Select(w => w.Id)
+                .ToListAsync();
+
             // Build query
             var query = _context.Transactions
-                .Where(t => t.UserId == userId || t.RecipientId == userId);
+                .Where(t => t.WalletId.HasValue && walletIds.Contains(t.WalletId.Value));
 
             // Apply filters
             if (!string.IsNullOrEmpty(type))
@@ -98,17 +104,25 @@ public class TransactionHistoryController : ControllerBase
                     t.Description,
                     t.CreatedAt,
                     t.CompletedAt,
-                    t.RecipientId == userId
+                    t.Type == TransactionType.Release ||
+                    t.Type == TransactionType.Refund ||
+                    t.Type == TransactionType.Deposit
                 ))
                 .ToListAsync();
 
             // Calculate summary statistics
             var totalIncoming = await _context.Transactions
-                .Where(t => t.RecipientId == userId && t.Status == TransactionStatus.Completed)
+                .Where(t => t.WalletId.HasValue && walletIds.Contains(t.WalletId.Value) &&
+                            t.Status == TransactionStatus.Completed &&
+                            (t.Type == TransactionType.Release ||
+                             t.Type == TransactionType.Refund ||
+                             t.Type == TransactionType.Deposit))
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
 
             var totalOutgoing = await _context.Transactions
-                .Where(t => t.UserId == userId && t.Status == TransactionStatus.Completed)
+                .Where(t => t.WalletId.HasValue && walletIds.Contains(t.WalletId.Value) &&
+                            t.Status == TransactionStatus.Completed &&
+                            t.Type == TransactionType.Payment)
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
 
             return Ok(new TransactionHistoryResponse(
@@ -145,8 +159,13 @@ public class TransactionHistoryController : ControllerBase
 
         try
         {
+            var txWalletIds = await _context.Wallets
+                .Where(w => w.Profile != null && w.Profile.UserId == userId)
+                .Select(w => w.Id)
+                .ToListAsync();
+
             var transaction = await _context.Transactions
-                .Where(t => t.Id == id && (t.UserId == userId || t.RecipientId == userId))
+                .Where(t => t.Id == id && t.WalletId.HasValue && txWalletIds.Contains(t.WalletId.Value))
                 .Select(t => new TransactionDetailDto(
                     t.Id,
                     t.Type.ToString(),
@@ -156,7 +175,7 @@ public class TransactionHistoryController : ControllerBase
                     t.Description,
                     t.CreatedAt,
                     t.CompletedAt,
-                    t.RecipientId == userId,
+                    t.Type == TransactionType.Release || t.Type == TransactionType.Refund || t.Type == TransactionType.Deposit,
                     t.Metadata
                 ))
                 .FirstOrDefaultAsync();
@@ -191,8 +210,13 @@ public class TransactionHistoryController : ControllerBase
 
         try
         {
+            var exportWalletIds = await _context.Wallets
+                .Where(w => w.Profile != null && w.Profile.UserId == userId)
+                .Select(w => w.Id)
+                .ToListAsync();
+
             var query = _context.Transactions
-                .Where(t => t.UserId == userId || t.RecipientId == userId);
+                .Where(t => t.WalletId.HasValue && exportWalletIds.Contains(t.WalletId.Value));
 
             if (startDate.HasValue)
             {

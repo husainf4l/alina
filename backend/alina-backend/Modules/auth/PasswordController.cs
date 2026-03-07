@@ -194,7 +194,6 @@ public class PasswordController : ControllerBase
                     System.Text.Encoding.UTF8.GetBytes(dto.Token)));
 
             var tokenRecord = await _context.PasswordResetTokens
-                .Include(t => t.User)
                 .FirstOrDefaultAsync(t =>
                     t.TokenHash == tokenHash &&
                     !t.IsUsed &&
@@ -248,3 +247,4 @@ public class PasswordController : ControllerBase
 // DTOs
 public record ChangePasswordDto(string CurrentPassword, string NewPassword);
 public record ForgotPasswordDto(string Email);
+public record ResetPasswordDto(string Token, string NewPassword);

@@ -176,4 +176,14 @@ public class EmailService
             return false;
         }
     }
+    /// <summary>
+    /// Send a password reset link to the user's email
+    /// </summary>
+    public async Task SendPasswordResetEmailAsync(string email, string name, string resetLink)
+    {
+        _logger.LogInformation("Sending password reset email to {Email}", email);
+        // TODO: implement email delivery via SMTP or SendGrid
+        await Task.CompletedTask;
+    }
+
 }

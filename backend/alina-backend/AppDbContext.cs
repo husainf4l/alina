@@ -401,6 +401,23 @@ public class AppDbContext : DbContext
             .HasForeignKey(gp => gp.GoalId)
             .OnDelete(DeleteBehavior.Cascade);
 
+
+        // PasswordResetToken: FK to User
+        modelBuilder.Entity<PasswordResetToken>()
+            .HasIndex(t => t.UserId)
+            .HasDatabaseName("IX_PasswordResetTokens_UserId");
+
+        modelBuilder.Entity<PasswordResetToken>()
+            .HasIndex(t => t.TokenHash)
+            .HasDatabaseName("IX_PasswordResetTokens_TokenHash");
+
+        // Message.ConversationId FK (partial class adds this property)
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.Conversation)
+            .WithMany(c => c.Messages)
+            .HasForeignKey(m => m.ConversationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         // Seed Currency Rates (Approximate GCC rates relative to 1 USD)
         modelBuilder.Entity<CurrencyRate>().HasData(
             new CurrencyRate { Code = "USD", Rate = 1.0000m },

@@ -49,7 +49,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register services
-builder.Services.AddSingleton<RsaKeyService>();
 builder.Services.AddScoped<GoogleAuthService>();
 builder.Services.AddScoped<TwoFactorAuthService>();
 builder.Services.AddScoped<WebhookVerificationService>();
@@ -70,13 +69,12 @@ builder.Services.AddSignalR();
 // Add memory cache for rate limiting
 builder.Services.AddMemoryCache();
 
-// Configure JWT Authentication
+// Configure JWT Authentication — use RsaKeyService as single RSA source of truth
 var privateKeyPath = builder.Configuration["RSA_PRIVATE_KEY_PATH"];
 if (!string.IsNullOrEmpty(privateKeyPath))
 {
-    var privateKey = File.ReadAllText(privateKeyPath);
-    var rsa = RSA.Create();
-    rsa.ImportFromPem(privateKey);
+    var rsaKeyService = new RsaKeyService(builder.Configuration);
+    builder.Services.AddSingleton(rsaKeyService);
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -89,7 +87,7 @@ if (!string.IsNullOrEmpty(privateKeyPath))
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
-                IssuerSigningKey = new RsaSecurityKey(rsa),
+                IssuerSigningKey = rsaKeyService.GetSecurityKey(),
                 ClockSkew = TimeSpan.Zero // Remove default 5 minute clock skew
             };
             
