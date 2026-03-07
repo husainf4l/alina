@@ -1,0 +1,24 @@
+{
+  "Navbar": {
+    "brand": "Alina",
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "Hero": {
+    "badge": "Welcome to Alina",
+    "title": "Build something",
+    "titleHighlight": "amazing",
+    "description": "A modern platform designed to help you create, collaborate, and ship faster than ever before.",
+    "ctaPrimary": "Get Started",
+    "ctaSecondary": "Learn More"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "ar": "Arabic"
+  }
+}

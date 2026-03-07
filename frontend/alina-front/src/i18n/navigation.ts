@@ -1,0 +1,7 @@
+import { createNavigation } from "next-intl/navigation";
+import { routing } from "./routing";
+
+// Locale-aware navigation helpers
+// Use these instead of Next.js built-ins (Link, redirect, useRouter, usePathname)
+export const { Link, redirect, usePathname, useRouter, getPathname } =
+  createNavigation(routing);
