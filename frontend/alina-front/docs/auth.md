@@ -209,6 +209,43 @@ await apiClient.put('/api/auth/me', {
 ```
 *(Note: You can combine Step 1 and Step 2 into a single API call if you have all the data at once).*
 
+### Onboarding Flow Best Practices
+
+When building the frontend, you need a strategy for **when** to show the onboarding screens. Here is the recommended SPA approach:
+
+1. **Lazy Onboarding (Recommended)**: 
+   Do not force users through onboarding immediately after they sign up. Let them browse the platform as a `buyer` (which is the default role).
+   - **Trigger**: Only navigate them to the `/onboarding` route when they attempt to perform a seller action (e.g., clicking "Become a Seller" or "Create a Gig").
+   
+2. **Post-Login Routing Logic**:
+   If you want to force onboarding, you must check their profile completion percentage right after a successful login/register.
+   
+```javascript
+// Example Next.js/React Router logic after successful login
+const handleLoginSuccess = async (data) => {
+  setAccessToken(data.access_token);
+  
+  // Fetch the full profile to check completion
+  const profileResponse = await apiClient.get('/api/auth/me');
+  const profile = profileResponse.data;
+
+  // If they want to be a seller but haven't finished their profile
+  if (profile.profileCompletionPercentage < 50 && /* some condition */) {
+    router.push('/onboarding');
+  } else {
+    router.push('/dashboard');
+  }
+};
+```
+
+3. **Progressive Profiling**:
+   Break the onboarding into steps:
+   - **Step 1**: Basic Info (Name, Bio) -> Required for `VAL-07` validation.
+   - **Step 2**: Avatar/Cover Image Upload (`POST /api/auth/me/avatar`).
+   - **Step 3**: Skills & Languages (`POST /api/auth/me/skills`).
+   
+   Once Step 1 is done, you can safely send `{"userRole": "seller"}`.
+
 ---
 
 ## 5. Logout

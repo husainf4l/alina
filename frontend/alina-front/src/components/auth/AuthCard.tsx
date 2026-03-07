@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
@@ -10,7 +11,13 @@ type Tab = "login" | "register";
 
 export default function AuthCard() {
   const t = useTranslations("Auth");
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>("login");
+
+  // Respect ?mode=register from navbar "Join" link
+  useEffect(() => {
+    if (searchParams.get("mode") === "register") setTab("register");
+  }, [searchParams]);
 
   const isLogin = tab === "login";
 

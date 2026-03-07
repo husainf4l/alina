@@ -124,6 +124,34 @@
     "termsText": "بإنشاء حساب فأنت توافق على",
     "termsLink": "شروط الخدمة",
     "andText": "و",
-    "privacyLink": "سياسة الخصوصية"
+    "privacyLink": "سياسة الخصوصية",
+    "loading": "يرجى الانتظار...",
+    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "errorPasswordMismatch": "كلمتا المرور غير متطابقتين."
+  },
+  "Onboarding": {
+    "profileTitle": "أكمل",
+    "profileTitleEnd": "ملفك الشخصي",
+    "profileSubtitle": "ساعد الآخرين على معرفة من أنت.",
+    "displayNameLabel": "الاسم المعروض",
+    "displayNamePlaceholder": "كيف ستظهر على ألينا",
+    "bioLabel": "نبذة عنك",
+    "bioOptional": "(اختياري)",
+    "bioPlaceholder": "أخبرنا قليلاً عن نفسك...",
+    "nextButton": "التالي",
+    "skipButton": "تخطي الآن",
+    "roleTitle": "كيف ستستخدم",
+    "roleTitleEnd": "ألينا؟",
+    "roleSubtitle": "يمكنك تغيير هذا لاحقاً.",
+    "role_buyer_title": "أنا مشتري",
+    "role_buyer_desc": "أريد توظيف مستقلين لمشاريعي.",
+    "role_seller_title": "أنا بائع",
+    "role_seller_desc": "أريد تقديم خدماتي وكسب المال.",
+    "role_both_title": "كلاهما",
+    "role_both_desc": "أريد التوظيف وتقديم الخدمات.",
+    "backButton": "رجوع",
+    "finishButton": "ابدأ الآن",
+    "saving": "جارٍ الحفظ...",
+    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
   }
 }

@@ -124,6 +124,34 @@
     "termsText": "By creating an account you agree to our",
     "termsLink": "Terms of Service",
     "andText": "and",
-    "privacyLink": "Privacy Policy"
+    "privacyLink": "Privacy Policy",
+    "loading": "Please wait...",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorPasswordMismatch": "Passwords do not match."
+  },
+  "Onboarding": {
+    "profileTitle": "Complete your",
+    "profileTitleEnd": "profile",
+    "profileSubtitle": "Help others know who you are.",
+    "displayNameLabel": "Display name",
+    "displayNamePlaceholder": "How you'll appear on Alina",
+    "bioLabel": "Bio",
+    "bioOptional": "(optional)",
+    "bioPlaceholder": "Tell us a little about yourself...",
+    "nextButton": "Next",
+    "skipButton": "Skip for now",
+    "roleTitle": "How will you",
+    "roleTitleEnd": "use Alina?",
+    "roleSubtitle": "You can always change this later.",
+    "role_buyer_title": "I'm a Buyer",
+    "role_buyer_desc": "I want to hire freelancers for my projects.",
+    "role_seller_title": "I'm a Seller",
+    "role_seller_desc": "I want to offer my services and earn money.",
+    "role_both_title": "Both",
+    "role_both_desc": "I want to hire and offer services.",
+    "backButton": "Back",
+    "finishButton": "Get started",
+    "saving": "Saving...",
+    "errorGeneric": "Something went wrong. Please try again."
   }
 }
