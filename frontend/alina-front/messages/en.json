@@ -85,6 +85,50 @@
       "description": "Join thousands of businesses and freelancers who trust ALINA for their success",
       "button1": "Join Now",
       "button2": "Browse Services"
+    },
+    "howWeHelp": {
+      "title": "How We Help You Succeed",
+      "description": "Tailored solutions for everyone in our community",
+      "items": {
+        "freelancers": {
+          "title": "For Freelancers",
+          "description": "Build your career on your terms. Get access to thousands of projects, set your own rates, and work with clients worldwide while we handle payments and security."
+        },
+        "businesses": {
+          "title": "For Businesses",
+          "description": "Find the perfect talent for any project. Browse verified professionals, compare proposals, and manage projects seamlessly with our intuitive platform."
+        },
+        "quality": {
+          "title": "Quality Assurance",
+          "description": "Every freelancer goes through our rigorous verification process. We ensure skill validation, portfolio review, and continuous performance monitoring for your peace of mind."
+        },
+        "community": {
+          "title": "Vibrant Community",
+          "description": "Join a supportive network of professionals. Access resources, share knowledge, get help when you need it, and grow together with fellow creators and entrepreneurs."
+        }
+      }
+    },
+    "benefits": {
+      "title": "Why Choose ALINA",
+      "description": "Experience the difference that sets us apart",
+      "items": {
+        "verified": {
+          "title": "Verified Experts",
+          "description": "All freelancers undergo thorough verification to ensure authenticity and skill quality."
+        },
+        "fast": {
+          "title": "Quick Turnaround",
+          "description": "Get matched with the right talent in minutes and start your project immediately."
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Our dedicated team is always here to help you succeed, day or night."
+        },
+        "secure": {
+          "title": "Secure Payments",
+          "description": "Bank-level encryption and escrow protection for every transaction."
+        }
+      }
     }
   },
   "LocaleSwitcher": {

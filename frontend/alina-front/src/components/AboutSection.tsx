@@ -1,13 +1,47 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Users, Target, Award, Globe, ArrowRight, Sparkles } from "lucide-react";
+import { 
+  Users, Target, Award, Globe, ArrowRight, Sparkles, 
+  Shield, Zap, Heart, CheckCircle2, TrendingUp, 
+  Clock, DollarSign, Search, MessageSquare, Star
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+// Animated counter hook
+function useCountUp(end: number, duration: number = 2000, isVisible: boolean) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    let startTime: number;
+    let animationFrame: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      
+      setCount(Math.floor(progress * end));
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration, isVisible]);
+
+  return count;
+}
 
 export default function AboutSection() {
   const t = useTranslations("About");
   const [isVisible, setIsVisible] = useState(false);
+  const [statsVisible, setStatsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,11 +62,30 @@ export default function AboutSection() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setStatsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const stats = [
-    { key: "freelancers", icon: Users, color: "#B05088" },
-    { key: "projects", icon: Target, color: "#3E9666" },
-    { key: "satisfaction", icon: Award, color: "#B05088" },
-    { key: "countries", icon: Globe, color: "#3E9666" }
+    { key: "freelancers", icon: Users, color: "#B05088", target: 50000, suffix: "K+" },
+    { key: "projects", icon: Target, color: "#3E9666", target: 100000, suffix: "K+" },
+    { key: "satisfaction", icon: Award, color: "#B05088", target: 98, suffix: "%" },
+    { key: "countries", icon: Globe, color: "#3E9666", target: 150, suffix: "+" }
   ];
 
   const values = [
@@ -40,6 +93,20 @@ export default function AboutSection() {
     { key: "trust", icon: Users },
     { key: "innovation", icon: Sparkles },
     { key: "global", icon: Globe }
+  ];
+
+  const benefits = [
+    { key: "verified", icon: Shield, color: "#3E9666" },
+    { key: "fast", icon: Zap, color: "#B05088" },
+    { key: "support", icon: Heart, color: "#3E9666" },
+    { key: "secure", icon: CheckCircle2, color: "#B05088" }
+  ];
+
+  const howWeHelp = [
+    { key: "freelancers", icon: TrendingUp },
+    { key: "businesses", icon: Search },
+    { key: "quality", icon: Star },
+    { key: "community", icon: MessageSquare }
   ];
 
   return (
@@ -69,17 +136,22 @@ export default function AboutSection() {
         </div>
       </section>
 
-      {/* Stats Section - Glassmorphism Cards */}
-      <section ref={sectionRef} className="py-20 lg:py-32 relative">
+      {/* Stats Section - Glassmorphism Cards with Animated Counters */}
+      <section ref={statsRef} className="py-20 lg:py-32 relative">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
+              const count = useCountUp(stat.target, 2000, statsVisible);
+              const displayValue = stat.key === "satisfaction" ? count : 
+                                  stat.key === "countries" ? count :
+                                  Math.floor(count / 1000);
+              
               return (
                 <div
                   key={stat.key}
                   className={`group relative overflow-hidden rounded-3xl bg-card/50 backdrop-blur-xl border border-border/50 p-8 hover:bg-card/80 transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                   }`}
                   style={{
                     transitionDelay: `${index * 100}ms`,
@@ -89,14 +161,14 @@ export default function AboutSection() {
                   
                   <div className="relative z-10 space-y-4">
                     <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
                       style={{ backgroundColor: `${stat.color}15` }}
                     >
                       <Icon className="size-7" style={{ color: stat.color }} />
                     </div>
                     
                     <div className="text-4xl lg:text-5xl font-bold tracking-tight">
-                      {t(`stats.${stat.key}.number`)}
+                      {displayValue}{stat.suffix}
                     </div>
                     
                     <div className="text-sm text-muted-foreground font-medium">
@@ -193,6 +265,116 @@ export default function AboutSection() {
                         {t(`values.items.${value.key}.description`)}
                       </p>
                     </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section - Dual Column Feature Cards */}
+      <section ref={sectionRef} className="py-20 lg:py-32 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-6 lg:px-12">
+          <div className="text-center mb-16 lg:mb-20 space-y-4">
+            <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight">
+              {t("howWeHelp.title")}
+            </h2>
+            <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto font-light">
+              {t("howWeHelp.description")}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {howWeHelp.map((item, index) => {
+              const Icon = item.icon;
+              const isLeft = index % 2 === 0;
+              
+              return (
+                <div 
+                  key={item.key}
+                  className={`group relative overflow-hidden rounded-3xl bg-card border border-border p-10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 ${
+                    isVisible ? 'opacity-100 translate-x-0' : `opacity-0 ${isLeft ? '-translate-x-10' : 'translate-x-10'}`
+                  }`}
+                  style={{
+                    transitionDelay: `${index * 150}ms`,
+                  }}
+                >
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: `linear-gradient(135deg, ${index % 2 === 0 ? '#3E9666' : '#B05088'}05, ${index % 2 === 0 ? '#3E9666' : '#B05088'}10)`
+                    }}
+                  />
+                  
+                  <div className="relative z-10 flex gap-6">
+                    <div 
+                      className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
+                      style={{ backgroundColor: index % 2 === 0 ? "#3E966615" : "#B0508815" }}
+                    >
+                      <Icon 
+                        className="size-8"
+                        style={{ color: index % 2 === 0 ? "#3E9666" : "#B05088" }}
+                      />
+                    </div>
+                    
+                    <div className="space-y-3 flex-1">
+                      <h3 className="text-2xl font-semibold">
+                        {t(`howWeHelp.items.${item.key}.title`)}
+                      </h3>
+                      <p className="text-base text-muted-foreground leading-relaxed">
+                        {t(`howWeHelp.items.${item.key}.description`)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section - Icon Grid */}
+      <section className="py-20 lg:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-12">
+          <div className="text-center mb-16 lg:mb-20 space-y-4">
+            <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight">
+              {t("benefits.title")}
+            </h2>
+            <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto font-light">
+              {t("benefits.description")}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((benefit, index) => {
+              const Icon = benefit.icon;
+              
+              return (
+                <div 
+                  key={benefit.key}
+                  className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-card to-muted/30 border border-border p-8 transition-all duration-500 hover:shadow-2xl hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                    style={{
+                      background: `linear-gradient(135deg, ${benefit.color}, ${benefit.color}90)`
+                    }}
+                  />
+                  
+                  <div className="relative z-10 text-center space-y-4">
+                    <div 
+                      className="mx-auto w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                      style={{ backgroundColor: `${benefit.color}15` }}
+                    >
+                      <Icon className="size-10" style={{ color: benefit.color }} />
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold">
+                      {t(`benefits.items.${benefit.key}.title`)}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {t(`benefits.items.${benefit.key}.description`)}
+                    </p>
                   </div>
                 </div>
               );

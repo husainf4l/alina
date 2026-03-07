@@ -30,7 +30,7 @@ export default function LocaleSwitcher() {
           disabled={isPending}
           className="rounded-full"
         >
-          {t(l)}
+          {l.toUpperCase()}
         </Button>
       ))}
     </div>

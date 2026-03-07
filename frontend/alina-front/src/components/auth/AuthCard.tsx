@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
@@ -12,12 +12,28 @@ type Tab = "login" | "register";
 export default function AuthCard() {
   const t = useTranslations("Auth");
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState<Tab>("login");
+  const router = useRouter();
+  const mode = searchParams.get("mode");
+  const [tab, setTab] = useState<Tab>(mode === "register" ? "register" : "login");
 
-  // Respect ?mode=register from navbar "Join" link
+  // Respond to URL changes
   useEffect(() => {
-    if (searchParams.get("mode") === "register") setTab("register");
-  }, [searchParams]);
+    if (mode === "register") {
+      setTab("register");
+    } else {
+      setTab("login");
+    }
+  }, [mode]);
+
+  const handleTabChange = (newTab: Tab) => {
+    setTab(newTab);
+    // Update URL to match the selected tab
+    if (newTab === "register") {
+      router.push("/auth?mode=register");
+    } else {
+      router.push("/auth");
+    }
+  };
 
   const isLogin = tab === "login";
 
@@ -32,7 +48,7 @@ export default function AuthCard() {
           <button
             key={t_key}
             type="button"
-            onClick={() => setTab(t_key)}
+            onClick={() => handleTabChange(t_key)}
             className={cn(
               "flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200",
               tab === t_key
@@ -68,7 +84,7 @@ export default function AuthCard() {
         {isLogin ? t("loginFooter") : t("registerFooter")}{" "}
         <button
           type="button"
-          onClick={() => setTab(isLogin ? "register" : "login")}
+          onClick={() => handleTabChange(isLogin ? "register" : "login")}
           className="font-medium text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity"
         >
           {isLogin ? t("switchToRegister") : t("switchToLogin")}
