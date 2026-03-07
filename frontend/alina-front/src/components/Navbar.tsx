@@ -80,7 +80,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/auth?mode=register"
-            className="px-4 py-1.5 text-sm font-semibold rounded-full bg-[#B05088] hover:bg-[#B05088]/90 text-white transition-colors"
+            className="px-4 py-1.5 text-sm font-semibold rounded-full bg-[#c71463] hover:bg-[#c71463]/90 text-white transition-colors"
           >
             {t("register")}
           </Link>
@@ -134,7 +134,7 @@ export default function Navbar() {
             <Link
               href="/auth?mode=register"
               onClick={() => setIsOpen(false)}
-              className="block text-center px-3 py-2.5 text-sm font-semibold rounded-full bg-[#B05088] hover:bg-[#B05088]/90 text-white transition-colors"
+              className="block text-center px-3 py-2.5 text-sm font-semibold rounded-full bg-[#c71463] hover:bg-[#c71463]/90 text-white transition-colors"
             >
               {t("register")}
             </Link>

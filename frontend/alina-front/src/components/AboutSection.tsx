@@ -82,9 +82,9 @@ export default function AboutSection() {
   }, []);
 
   const stats = [
-    { key: "freelancers", icon: Users, color: "#B05088", target: 50000, suffix: "K+" },
+    { key: "freelancers", icon: Users, color: "#c71463", target: 50000, suffix: "K+" },
     { key: "projects", icon: Target, color: "#3E9666", target: 100000, suffix: "K+" },
-    { key: "satisfaction", icon: Award, color: "#B05088", target: 98, suffix: "%" },
+    { key: "satisfaction", icon: Award, color: "#c71463", target: 98, suffix: "%" },
     { key: "countries", icon: Globe, color: "#3E9666", target: 150, suffix: "+" }
   ];
 
@@ -97,9 +97,9 @@ export default function AboutSection() {
 
   const benefits = [
     { key: "verified", icon: Shield, color: "#3E9666" },
-    { key: "fast", icon: Zap, color: "#B05088" },
+    { key: "fast", icon: Zap, color: "#c71463" },
     { key: "support", icon: Heart, color: "#3E9666" },
-    { key: "secure", icon: CheckCircle2, color: "#B05088" }
+    { key: "secure", icon: CheckCircle2, color: "#c71463" }
   ];
 
   const howWeHelp = [
@@ -116,7 +116,7 @@ export default function AboutSection() {
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background">
           <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#B05088]/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#c71463]/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#3E9666]/20 rounded-full blur-3xl animate-pulse animation-delay-2000" />
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function AboutSection() {
                 <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-tight">
                   {t("mission.title")}
                 </h2>
-                <div className="h-1 w-20 bg-gradient-to-r from-[#B05088] to-[#3E9666] rounded-full" />
+                <div className="h-1 w-20 bg-gradient-to-r from-[#c71463] to-[#3E9666] rounded-full" />
               </div>
               
               <div className="space-y-6 text-base lg:text-lg text-muted-foreground leading-relaxed font-light">
@@ -202,11 +202,11 @@ export default function AboutSection() {
             </div>
             
             <div className="relative">
-              <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-gradient-to-br from-[#B05088]/10 via-background to-[#3E9666]/10 p-12 flex items-center justify-center backdrop-blur-xl border border-border/50">
+              <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-gradient-to-br from-[#c71463]/10 via-background to-[#3E9666]/10 p-12 flex items-center justify-center backdrop-blur-xl border border-border/50">
                 <div className="text-center space-y-6">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-[#B05088]/20 rounded-full blur-3xl" />
-                    <Target className="relative size-32 mx-auto text-[#B05088]" />
+                    <div className="absolute inset-0 bg-[#c71463]/20 rounded-full blur-3xl" />
+                    <Target className="relative size-32 mx-auto text-[#c71463]" />
                   </div>
                   <p className="text-2xl lg:text-3xl font-semibold leading-tight">
                     {t("mission.tagline")}
@@ -242,18 +242,18 @@ export default function AboutSection() {
                   <div 
                     className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      background: `linear-gradient(135deg, ${isEven ? '#B05088' : '#3E9666'}05, ${isEven ? '#B05088' : '#3E9666'}15)`
+                      background: `linear-gradient(135deg, ${isEven ? '#c71463' : '#3E9666'}05, ${isEven ? '#c71463' : '#3E9666'}15)`
                     }}
                   />
                   
                   <div className="relative z-10 space-y-6">
                     <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                      style={{ backgroundColor: isEven ? "#B0508815" : "#3E966615" }}
+                      style={{ backgroundColor: isEven ? "#c7146315" : "#3E966615" }}
                     >
                       <Icon 
                         className="size-8 transition-transform duration-500 group-hover:scale-110"
-                        style={{ color: isEven ? "#B05088" : "#3E9666" }}
+                        style={{ color: isEven ? "#c71463" : "#3E9666" }}
                       />
                     </div>
                     
@@ -303,18 +303,18 @@ export default function AboutSection() {
                   <div 
                     className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      background: `linear-gradient(135deg, ${index % 2 === 0 ? '#3E9666' : '#B05088'}05, ${index % 2 === 0 ? '#3E9666' : '#B05088'}10)`
+                      background: `linear-gradient(135deg, ${index % 2 === 0 ? '#3E9666' : '#c71463'}05, ${index % 2 === 0 ? '#3E9666' : '#c71463'}10)`
                     }}
                   />
                   
                   <div className="relative z-10 flex gap-6">
                     <div 
                       className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
-                      style={{ backgroundColor: index % 2 === 0 ? "#3E966615" : "#B0508815" }}
+                      style={{ backgroundColor: index % 2 === 0 ? "#3E966615" : "#c7146315" }}
                     >
                       <Icon 
                         className="size-8"
-                        style={{ color: index % 2 === 0 ? "#3E9666" : "#B05088" }}
+                        style={{ color: index % 2 === 0 ? "#3E9666" : "#c71463" }}
                       />
                     </div>
                     
@@ -386,7 +386,7 @@ export default function AboutSection() {
       {/* CTA Section - Apple-style Elevated Card */}
       <section className="py-20 lg:py-32 bg-muted/30">
         <div className="mx-auto max-w-5xl px-6 lg:px-12">
-          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#B05088] via-[#B05088]/90 to-[#3E9666] p-12 lg:p-16 text-center text-white shadow-2xl">
+          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#c71463] via-[#c71463]/90 to-[#3E9666] p-12 lg:p-16 text-center text-white shadow-2xl">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl" />
@@ -404,7 +404,7 @@ export default function AboutSection() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <a
                   href="/signup"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#B05088] font-semibold rounded-full hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#c71463] font-semibold rounded-full hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   {t("cta.button1")}
                   <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />

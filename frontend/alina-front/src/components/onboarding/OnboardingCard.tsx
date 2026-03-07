@@ -136,9 +136,9 @@ export default function OnboardingCard() {
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
                 step === s
-                  ? "w-8 bg-[#B05088]"
+                  ? "w-8 bg-[#c71463]"
                   : step === "avatar" && s === "profile"
-                  ? "w-2 bg-[#B05088]/50"
+                  ? "w-2 bg-[#c71463]/50"
                   : "w-2 bg-border"
               )}
             />
@@ -174,7 +174,7 @@ export default function OnboardingCard() {
                   onClick={() => handleRoleSelect(r)}
                   className={cn(
                     "flex items-start gap-4 rounded-2xl border p-4 text-start transition-all",
-                    "hover:border-[#B05088]/60 hover:bg-[#B05088]/5",
+                    "hover:border-[#c71463]/60 hover:bg-[#c71463]/5",
                     "disabled:pointer-events-none disabled:opacity-60"
                   )}
                 >
@@ -301,8 +301,8 @@ export default function OnboardingCard() {
               onClick={() => avatarInputRef.current?.click()}
               className={cn(
                 "flex items-center gap-4 rounded-2xl border-2 border-dashed p-4 transition-colors",
-                "hover:border-[#B05088]/60 hover:bg-[#B05088]/5",
-                avatarPreview ? "border-[#B05088]/40" : "border-border"
+                "hover:border-[#c71463]/60 hover:bg-[#c71463]/5",
+                avatarPreview ? "border-[#c71463]/40" : "border-border"
               )}
             >
               {avatarPreview ? (
@@ -342,8 +342,8 @@ export default function OnboardingCard() {
               onClick={() => coverInputRef.current?.click()}
               className={cn(
                 "relative flex h-24 w-full items-center justify-center gap-3 rounded-2xl border-2 border-dashed transition-colors overflow-hidden",
-                "hover:border-[#B05088]/60 hover:bg-[#B05088]/5",
-                coverPreview ? "border-[#B05088]/40" : "border-border"
+                "hover:border-[#c71463]/60 hover:bg-[#c71463]/5",
+                coverPreview ? "border-[#c71463]/40" : "border-border"
               )}
             >
               {coverPreview ? (
