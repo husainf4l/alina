@@ -109,7 +109,8 @@
       }
     },
     "benefits": {
-      "title": "Why Choose ALINA",
+      "title": "Why Choose",
+      "titleBrand": "Alina",
       "description": "Experience the difference that sets us apart",
       "items": {
         "verified": {

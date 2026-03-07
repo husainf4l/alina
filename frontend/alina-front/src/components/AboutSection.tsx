@@ -1,6 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
+import Image from "next/image";
 import { 
   Users, Target, Award, Globe, ArrowRight, Sparkles, 
   Shield, Zap, Heart, CheckCircle2, TrendingUp, 
@@ -38,6 +40,7 @@ function useCountUp(end: number, duration: number = 2000, isVisible: boolean) {
 
 export default function AboutSection() {
   const t = useTranslations("About");
+  const locale = useLocale();
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -125,12 +128,20 @@ export default function AboutSection() {
           <div className="space-y-8">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1]">
               <span className="bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
-                {t("hero.title")}
+                {locale === "en" ? (
+                  <>Empowering <span className="text-[#c71463]">Freelancers</span>, Connecting <span className="text-[#c71463]">Businesses</span></>
+                ) : (
+                  <>تمكين <span className="text-[#c71463]">المستقلين</span>، وربط <span className="text-[#c71463]">الأعمال</span></>
+                )}
               </span>
             </h1>
             
             <p className="mx-auto max-w-3xl text-lg sm:text-xl lg:text-2xl text-muted-foreground leading-relaxed font-light">
-              {t("hero.description")}
+              {locale === "en" ? (
+                <><span className="text-[#c71463] font-medium">ALINA</span> is more than a marketplace. We're a <span className="text-[#c71463]">global community</span> where <span className="text-[#c71463]">talent meets opportunity</span>, and businesses find the <span className="text-[#c71463]">perfect freelancers</span> to bring their visions to life.</>
+              ) : (
+                <><span className="text-[#c71463] font-medium">ألينا</span> أكثر من مجرد سوق. نحن <span className="text-[#c71463]">مجتمع عالمي</span> يلتقي فيه <span className="text-[#c71463]">الموهبة مع الفرصة</span>، وتجد الشركات <span className="text-[#c71463]">المستقلين المثاليين</span> لتحقيق رؤاهم.</>
+              )}
             </p>
           </div>
         </div>
@@ -338,8 +349,24 @@ export default function AboutSection() {
       <section className="py-20 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div className="text-center mb-16 lg:mb-20 space-y-4">
-            <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight">
-              {t("benefits.title")}
+            <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight flex items-center justify-center gap-3 flex-wrap">
+              <span>{t("benefits.title")}</span>
+              <span className="inline-block">
+                <Image
+                  src="/logo/alinalogo-lighttheme.png"
+                  alt="Alina"
+                  width={140}
+                  height={46}
+                  className="block dark:hidden"
+                />
+                <Image
+                  src="/logo/alinalogodark.png"
+                  alt="Alina"
+                  width={140}
+                  height={46}
+                  className="hidden dark:block"
+                />
+              </span>
             </h2>
             <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto font-light">
               {t("benefits.description")}

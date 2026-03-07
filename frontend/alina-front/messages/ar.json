@@ -103,7 +103,8 @@
       }
     },
     "benefits": {
-      "title": "لماذا تختار ألينا",
+      "title": "لماذا تختار",
+      "titleBrand": "ألينا",
       "description": "المنصة المصممة لنجاحك",
       "items": {
         "verified": {
