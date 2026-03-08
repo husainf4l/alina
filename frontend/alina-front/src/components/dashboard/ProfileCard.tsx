@@ -59,9 +59,7 @@ export default function ProfileCard() {
       try {
         const fd = new FormData();
         fd.append("file", file);
-        await apiClient.post("/api/auth/me/avatar", fd, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await apiClient.post("/api/auth/me/avatar", fd);
         await refreshUser();
       } catch (err) {
         setError(apiError(err));
@@ -74,9 +72,7 @@ export default function ProfileCard() {
       try {
         const fd = new FormData();
         fd.append("file", file);
-        await apiClient.post("/api/auth/me/cover", fd, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await apiClient.post("/api/auth/me/cover", fd);
         await refreshUser();
       } catch (err) {
         setError(apiError(err));

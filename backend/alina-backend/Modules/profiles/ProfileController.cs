@@ -12,27 +12,21 @@ public class ProfileController : ControllerBase
     private readonly AppDbContext _context;
     private readonly IImageStorageService _imageStorage;
     private readonly ILogger<ProfileController> _logger;
-    private readonly string _cdnBaseUrl;
-
     public ProfileController(AppDbContext context, IImageStorageService imageStorage, ILogger<ProfileController> logger, IConfiguration configuration)
     {
         _context = context;
         _imageStorage = imageStorage;
         _logger = logger;
-        // CdnBaseUrl resolves relative S3 keys to full public URLs in all API responses.
-        // Set to your CloudFront domain (e.g. https://media.aqlaan.cloud) in production.
-        _cdnBaseUrl = configuration["AppSettings:CdnBaseUrl"] ?? configuration["AppSettings:BaseUrl"] ?? string.Empty;
     }
 
     /// <summary>
-    /// Converts a stored relative S3 key to a full, publicly accessible CDN URL.
-    /// REST API best practice: clients must receive absolute URLs, not storage-internal keys.
+    /// Returns the permanent CDN URL for a stored key.
+    /// Synchronous — no AWS calls, no expiry, SEO-friendly.
     /// </summary>
-    private string? ResolvePublicUrl(string? keyOrUrl)
+    private string? ResolvePublicUrl(string? key)
     {
-        if (string.IsNullOrEmpty(keyOrUrl)) return null;
-        if (keyOrUrl.StartsWith("http://") || keyOrUrl.StartsWith("https://")) return keyOrUrl; // legacy full URLs pass through
-        return $"{_cdnBaseUrl}/{keyOrUrl}";
+        if (string.IsNullOrEmpty(key)) return null;
+        return _imageStorage.GetPublicUrl(key);
     }
 
     /// <summary>
@@ -259,7 +253,7 @@ public class ProfileController : ControllerBase
 
         _logger.LogInformation("Avatar uploaded for user {UserId}", userId);
 
-        return Ok(new { avatar_url = avatarUrl });
+        return Ok(new { avatar_url = _imageStorage.GetPublicUrl(avatarUrl) });
     }
 
     /// <summary>
@@ -311,7 +305,7 @@ public class ProfileController : ControllerBase
 
         _logger.LogInformation("Cover image uploaded for user {UserId}", userId);
 
-        return Ok(new { cover_url = coverUrl });
+        return Ok(new { cover_url = _imageStorage.GetPublicUrl(coverUrl) });
     }
 
     /// <summary>

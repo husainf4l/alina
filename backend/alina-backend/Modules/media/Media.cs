@@ -12,7 +12,7 @@ public class Media
     [Required, StringLength(1000)]
     public string Url { get; set; } = string.Empty;
 
-    [Required, StringLength(100)]
+    [Required, StringLength(255)]
     public string FileName { get; set; } = string.Empty;
 
     [StringLength(50)]

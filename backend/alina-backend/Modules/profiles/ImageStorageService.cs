@@ -2,20 +2,25 @@ namespace alina_backend.Modules.profiles;
 
 public interface IImageStorageService
 {
+    /// <summary>
+    /// Uploads a profile image (avatar, cover) and returns its relative storage key.
+    /// Profile images are always PUBLIC — served via CDN with permanent clean URLs.
+    /// </summary>
     Task<string> UploadImageAsync(Stream imageStream, string fileName, string folder, string? userId = null);
+
     Task DeleteImageAsync(string imageKeyOrUrl);
-    Task<bool> ValidateImageAsync(Stream imageStream, long maxSizeBytes = 5242880); // 5MB default
+    Task<bool> ValidateImageAsync(Stream imageStream, long maxSizeBytes = 5242880);
 
     /// <summary>
-    /// Returns a usable URL for the given key.
-    /// Local: returns a direct HTTP URL. S3: returns a short-lived pre-signed URL.
+    /// Returns the public URL for a stored key.
+    /// Local dev: direct HTTP URL. Production: permanent CDN URL (media.aqlaan.cloud).
+    /// This is synchronous — no presigned URLs, no expiry, no async needed.
     /// </summary>
-    Task<string> GetPresignedUrlAsync(string key, int expiryMinutes = 60);
+    string GetPublicUrl(string key);
 }
 
 // ---------------------------------------------------------------------------
-// Local file storage implementation (for development)
-// In production, IImageStorageService is resolved to S3ImageStorageService.
+// Local file storage (development only)
 // ---------------------------------------------------------------------------
 public class LocalImageStorageService : IImageStorageService
 {
@@ -26,7 +31,8 @@ public class LocalImageStorageService : IImageStorageService
     public LocalImageStorageService(IWebHostEnvironment env, IConfiguration configuration, ILogger<LocalImageStorageService> logger)
     {
         _uploadPath = Path.Combine(env.ContentRootPath, "uploads");
-        _baseUrl = configuration["AppSettings:BaseUrl"] ?? "http://localhost:5602";
+        // Prefer CdnBaseUrl so dev machines pointing at real S3 get correct CDN URLs
+        _baseUrl = (configuration["AppSettings:CdnBaseUrl"] ?? configuration["AppSettings:BaseUrl"] ?? "http://localhost:5602").TrimEnd('/');
         _logger = logger;
 
         if (!Directory.Exists(_uploadPath))
@@ -50,10 +56,9 @@ public class LocalImageStorageService : IImageStorageService
             using (var fileStream = new FileStream(filePath, FileMode.Create))
                 await imageStream.CopyToAsync(fileStream);
 
-            // Return relative key (same pattern as S3)
             var key = userId != null
-                ? $"uploads/{userId}/{folder}/{uniqueFileName}"
-                : $"uploads/{folder}/{uniqueFileName}";
+                ? $"public/{userId}/{folder}/{uniqueFileName}"
+                : $"public/{folder}/{uniqueFileName}";
 
             _logger.LogInformation("Local image saved: {Key}", key);
             return key;
@@ -73,11 +78,11 @@ public class LocalImageStorageService : IImageStorageService
             if (imageKeyOrUrl.StartsWith("http://") || imageKeyOrUrl.StartsWith("https://"))
             {
                 var uri = new Uri(imageKeyOrUrl);
-                relativePath = uri.AbsolutePath.TrimStart('/').Replace("uploads/", "");
+                relativePath = uri.AbsolutePath.TrimStart('/').Replace("public/", "");
             }
             else
             {
-                relativePath = imageKeyOrUrl.Replace("uploads/", "");
+                relativePath = imageKeyOrUrl.Replace("public/", "");
             }
 
             var filePath = Path.Combine(_uploadPath, relativePath);
@@ -105,7 +110,7 @@ public class LocalImageStorageService : IImageStorageService
 
         imageStream.Position = 0;
         var buffer = new byte[8];
-        await imageStream.ReadAsync(buffer, 0, 8);
+        await imageStream.ReadAsync(buffer.AsMemory(0, 8));
         imageStream.Position = 0;
 
         if (buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF) return true; // JPEG
@@ -117,29 +122,30 @@ public class LocalImageStorageService : IImageStorageService
         return false;
     }
 
-    public Task<string> GetPresignedUrlAsync(string key, int expiryMinutes = 60)
+    // Local dev: serve directly from the backend's static files
+    public string GetPublicUrl(string key)
     {
-        // Local dev: just return the base URL + key as a direct URL
-        var url = key.StartsWith("http") ? key : $"{_baseUrl}/{key}";
-        return Task.FromResult(url);
+        if (key.StartsWith("http://") || key.StartsWith("https://")) return key;
+        return $"{_baseUrl}/{key}";
     }
 }
 
 // ---------------------------------------------------------------------------
-// S3-backed image storage service (Production)
+// S3-backed image storage (production)
+// Profile images are public — stored under "public/" prefix, served via CloudFront.
 // ---------------------------------------------------------------------------
 public class S3ImageStorageService : IImageStorageService
 {
     private readonly Amazon.S3.IAmazonS3 _s3Client;
     private readonly string _bucketName;
-    private readonly string _region;
+    private readonly string _cdnBaseUrl;
     private readonly ILogger<S3ImageStorageService> _logger;
 
     public S3ImageStorageService(Amazon.S3.IAmazonS3 s3Client, IConfiguration configuration, ILogger<S3ImageStorageService> logger)
     {
         _s3Client = s3Client;
         _bucketName = configuration["AWS:BucketName"] ?? throw new ArgumentNullException("AWS:BucketName not configured");
-        _region = configuration["AWS:Region"] ?? "me-central-1";
+        _cdnBaseUrl = (configuration["AppSettings:CdnBaseUrl"] ?? throw new ArgumentNullException("AppSettings:CdnBaseUrl not configured")).TrimEnd('/');
         _logger = logger;
     }
 
@@ -150,10 +156,10 @@ public class S3ImageStorageService : IImageStorageService
             var extension = Path.GetExtension(fileName).ToLowerInvariant();
             var safeExtension = extension is ".jpg" or ".jpeg" or ".png" or ".gif" or ".webp" ? extension : ".jpg";
 
-            // Organized S3 key: uploads/{userId}/{folder}/{uuid}.ext
+            // Always stored under "public/" — CloudFront serves this prefix
             var key = userId != null
-                ? $"uploads/{userId}/{folder}/{Guid.NewGuid()}{safeExtension}"
-                : $"uploads/{folder}/{Guid.NewGuid()}{safeExtension}";
+                ? $"public/{userId}/{folder}/{Guid.NewGuid()}{safeExtension}"
+                : $"public/{folder}/{Guid.NewGuid()}{safeExtension}";
 
             var request = new Amazon.S3.Model.PutObjectRequest
             {
@@ -168,14 +174,11 @@ public class S3ImageStorageService : IImageStorageService
                     ".webp"           => "image/webp",
                     _                 => "application/octet-stream"
                 }
-                // No CannedACL — public access is managed via the bucket policy
+                // No CannedACL — bucket policy grants CloudFront OAC read access to public/ prefix
             };
 
             await _s3Client.PutObjectAsync(request);
-
-            // Return only the relative key — not the full URL.
-            // The frontend requests /api/media/image?key={key} which generates a pre-signed URL.
-            _logger.LogInformation("S3 image uploaded: {Key}", key);
+            _logger.LogInformation("S3 public image uploaded: {Key}", key);
             return key;
         }
         catch (Exception ex)
@@ -189,16 +192,9 @@ public class S3ImageStorageService : IImageStorageService
     {
         try
         {
-            string key;
-            if (imageKeyOrUrl.StartsWith("http://") || imageKeyOrUrl.StartsWith("https://"))
-            {
-                var uri = new Uri(imageKeyOrUrl);
-                key = uri.AbsolutePath.TrimStart('/');
-            }
-            else
-            {
-                key = imageKeyOrUrl;
-            }
+            var key = imageKeyOrUrl.StartsWith("http://") || imageKeyOrUrl.StartsWith("https://")
+                ? new Uri(imageKeyOrUrl).AbsolutePath.TrimStart('/')
+                : imageKeyOrUrl;
 
             await _s3Client.DeleteObjectAsync(_bucketName, key);
             _logger.LogInformation("S3 image deleted: {Key}", key);
@@ -219,7 +215,7 @@ public class S3ImageStorageService : IImageStorageService
 
         imageStream.Position = 0;
         var buffer = new byte[8];
-        await imageStream.ReadAsync(buffer, 0, 8);
+        await imageStream.ReadAsync(buffer.AsMemory(0, 8));
         imageStream.Position = 0;
 
         if (buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF) return true; // JPEG
@@ -231,18 +227,13 @@ public class S3ImageStorageService : IImageStorageService
         return false;
     }
 
-    public Task<string> GetPresignedUrlAsync(string key, int expiryMinutes = 60)
+    /// <summary>
+    /// Returns the permanent CDN URL — no AWS calls, no expiry, no async.
+    /// Example: "public/uuid/avatars/abc.jpg" → "https://media.aqlaan.cloud/public/uuid/avatars/abc.jpg"
+    /// </summary>
+    public string GetPublicUrl(string key)
     {
-        var request = new Amazon.S3.Model.GetPreSignedUrlRequest
-        {
-            BucketName = _bucketName,
-            Key = key,
-            Expires = DateTime.UtcNow.AddMinutes(expiryMinutes),
-            Verb = Amazon.S3.HttpVerb.GET
-        };
-
-        var url = _s3Client.GetPreSignedURL(request);
-        _logger.LogInformation("Pre-signed URL generated for key: {Key}", key);
-        return Task.FromResult(url);
+        if (key.StartsWith("http://") || key.StartsWith("https://")) return key; // legacy pass-through
+        return $"{_cdnBaseUrl}/{key}";
     }
 }

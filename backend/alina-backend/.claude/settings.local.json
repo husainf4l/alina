@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build --no-restore)",
+      "Bash(for d in /Users/alhussein/repos/alina/frontend/*/)",
+      "Bash(do echo \"=== $d ===\")",
+      "Read(//Users/alhussein/repos/alina/backend/alina-backend/$d/**)",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(p.get\\(''name'',''?''\\), p.get\\(''version'',''?''\\)\\)\")",
+      "Bash(done)"
+    ]
+  }
+}

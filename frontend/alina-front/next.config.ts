@@ -9,23 +9,10 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        // Local dev — backend serves images directly
-        protocol: "http",
-        hostname: "192.168.1.66",
-        port: "5602",
-        pathname: "/uploads/**",
-      },
-      {
-        // Production CDN (CloudFront in front of S3)
+        // CDN — public files (avatars, covers, gig images)
         protocol: "https",
-        hostname: "media.aqlaan.cloud",
-        pathname: "/uploads/**",
-      },
-      {
-        // S3 bucket direct access (used during dev/staging)
-        protocol: "https",
-        hostname: "*.s3.*.amazonaws.com",
-        pathname: "/uploads/**",
+        hostname: "media.aqlaan.com",
+        pathname: "/public/**",
       },
     ],
   },

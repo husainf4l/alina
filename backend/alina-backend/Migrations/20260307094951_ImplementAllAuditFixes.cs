@@ -574,22 +574,10 @@ namespace alina_backend.Migrations
                 oldClrType: typeof(Guid),
                 oldType: "uuid");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "OrderId",
-                table: "Revisions",
-                type: "uuid",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "integer");
+            migrationBuilder.Sql(@"ALTER TABLE ""Revisions"" ALTER COLUMN ""OrderId"" TYPE uuid USING NULL::uuid;");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Id",
-                table: "Revisions",
-                type: "uuid",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "integer")
-                .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+            migrationBuilder.Sql(@"ALTER TABLE ""Revisions"" ALTER COLUMN ""Id"" DROP IDENTITY IF EXISTS;");
+            migrationBuilder.Sql(@"ALTER TABLE ""Revisions"" ALTER COLUMN ""Id"" TYPE uuid USING NULL::uuid;");
 
             migrationBuilder.CreateTable(
                 name: "PasswordResetTokens",

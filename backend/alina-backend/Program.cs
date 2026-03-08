@@ -56,7 +56,9 @@ builder.Services.AddScoped<TwoFactorAuthService>();
 builder.Services.AddScoped<WebhookVerificationService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<EmailValidationService>();
-builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
+// Always use S3 — CdnBaseUrl is configured in appsettings.json for all environments.
+// LocalImageStorageService exists only for fully offline development without AWS credentials.
+builder.Services.AddScoped<IImageStorageService, S3ImageStorageService>();
 builder.Services.AddScoped<alina_backend.Modules.finance.ICurrencyService, alina_backend.Modules.finance.CurrencyService>();
 builder.Services.AddScoped<alina_backend.Modules.notifications.NotificationService>();
 builder.Services.AddScoped<alina_backend.Modules.analytics.AnalyticsService>();
