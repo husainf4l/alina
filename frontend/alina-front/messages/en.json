@@ -358,5 +358,138 @@
     "notSellerTitle": "Seller account required",
     "notSellerBody": "You need a seller or combined account to create gigs. Update your role in profile settings.",
     "notSellerCta": "Go to Profile"
+  },
+  "Services": {
+    "hero": {
+      "description": "Browse thousands of professional services and connect with expert freelancers ready to bring your projects to life.",
+      "searchPlaceholder": "Search for any service...",
+      "searchButton": "Search"
+    },
+    "categories": {
+      "title": "Explore Service Categories",
+      "subtitle": "Find the perfect freelancer for every project need",
+      "items": {
+        "webDev": {
+          "title": "Web Development",
+          "description": "Full-stack developers, WordPress experts, and more",
+          "count": "12,500+ freelancers"
+        },
+        "graphicDesign": {
+          "title": "Graphic Design",
+          "description": "Logo design, branding, illustrations, and graphics",
+          "count": "18,200+ freelancers"
+        },
+        "writing": {
+          "title": "Writing & Translation",
+          "description": "Content writers, copywriters, translators",
+          "count": "15,800+ freelancers"
+        },
+        "mobileApps": {
+          "title": "Mobile Apps",
+          "description": "iOS, Android, React Native developers",
+          "count": "8,400+ freelancers"
+        },
+        "videoAnimation": {
+          "title": "Video & Animation",
+          "description": "Video editing, motion graphics, 3D animation",
+          "count": "9,600+ freelancers"
+        },
+        "musicAudio": {
+          "title": "Music & Audio",
+          "description": "Voice overs, music production, sound design",
+          "count": "6,200+ freelancers"
+        },
+        "digitalMarketing": {
+          "title": "Digital Marketing",
+          "description": "SEO, social media, email marketing specialists",
+          "count": "11,300+ freelancers"
+        },
+        "businessConsulting": {
+          "title": "Business Consulting",
+          "description": "Strategy, finance, operations consultants",
+          "count": "7,900+ freelancers"
+        },
+        "aiServices": {
+          "title": "AI Services",
+          "description": "Machine learning, ChatGPT, AI integration",
+          "count": "5,100+ freelancers"
+        },
+        "photography": {
+          "title": "Photography",
+          "description": "Product photography, photo editing, retouching",
+          "count": "10,400+ freelancers"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to get your project started",
+      "steps": {
+        "browse": {
+          "title": "Browse & Choose",
+          "description": "Explore thousands of services and find the perfect match for your project needs."
+        },
+        "work": {
+          "title": "Work Together",
+          "description": "Collaborate with talented freelancers through our seamless communication platform."
+        },
+        "pay": {
+          "title": "Pay Securely",
+          "description": "Release payment only when you're 100% satisfied with the delivered work."
+        }
+      }
+    },
+    "budget": {
+      "title": "Browse by Budget",
+      "subtitle": "Find services that fit your budget perfectly",
+      "ranges": {
+        "entry": {
+          "title": "Entry Level",
+          "description": "Great for small tasks and quick projects"
+        },
+        "mid": {
+          "title": "Mid Range",
+          "description": "Perfect for professional quality work"
+        },
+        "premium": {
+          "title": "Premium",
+          "description": "Top-tier experts for complex projects"
+        }
+      },
+      "browseButton": "Browse Services"
+    },
+    "guarantees": {
+      "title": "Our Service Guarantees",
+      "subtitle": "Your success is guaranteed with every project",
+      "items": {
+        "quality": {
+          "title": "Quality Assured",
+          "description": "Every freelancer is vetted and reviewed by our community"
+        },
+        "secure": {
+          "title": "Secure Payments",
+          "description": "Your money is safe with our escrow protection system"
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Our team is always here to help resolve any issues"
+        },
+        "fast": {
+          "title": "Fast Delivery",
+          "description": "Get your projects completed on time, every time"
+        }
+      }
+    },
+    "metrics": {
+      "servicesDelivered": "Services Delivered",
+      "averageRating": "Average Rating",
+      "responseTime": "Average Response Time"
+    },
+    "cta": {
+      "title": "Ready to Start Your Project?",
+      "description": "Join thousands of satisfied clients who trust ALINA for their freelance needs",
+      "button1": "Get Started",
+      "button2": "Explore All Services"
+    }
   }
 }

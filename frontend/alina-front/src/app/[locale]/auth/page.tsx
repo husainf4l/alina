@@ -6,37 +6,37 @@ export default function AuthPage() {
   const images = [
     {
       id: "1",
-      src: "/logo/signin1.webp",
+      src: "/logo/signin1.jpg",
       alt: "ALINA Platform",
       rotation: -10,
     },
     {
       id: "2",
-      src: "/logo/signin2.webp",
+      src: "/logo/signin2.jpg",
       alt: "ALINA Platform",
       rotation: 5,
     },
     {
       id: "3",
-      src: "/logo/sign3.webp",
+      src: "/logo/sign3.jpg",
       alt: "ALINA Platform",
       rotation: 12,
     },
     {
       id: "4",
-      src: "/logo/sign4.webp",
+      src: "/logo/sign4.jpg",
       alt: "ALINA Platform",
       rotation: -8,
     },
     {
       id: "5",
-      src: "/logo/signin5.webp",
+      src: "/logo/signin5.jpg",
       alt: "ALINA Platform",
       rotation: 3,
     },
     {
       id: "6",
-      src: "/logo/signin6.webp",
+      src: "/logo/signin6.jpg",
       alt: "ALINA Platform",
       rotation: -15,
     },
