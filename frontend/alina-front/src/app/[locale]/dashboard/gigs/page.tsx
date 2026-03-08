@@ -168,7 +168,7 @@ export default function GigsPage() {
                         <Pencil className="size-3" />{t("editButton")}
                       </button>
                     </Link>
-                    <a
+                    <Link
                       href={`/services/${gig.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -176,7 +176,7 @@ export default function GigsPage() {
                       className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
                     >
                       <ExternalLink className="size-3" />{t("viewButton")}
-                    </a>
+                    </Link>
                     <button
                       onClick={() => toggleStatus(gig)}
                       title={gig.isActive ? t("pause") : t("activate")}
