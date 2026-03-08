@@ -63,6 +63,8 @@ export default function CreateGigForm() {
   const [error, setError] = useState<string | null>(null);
   const [uploadingMainImage, setUploadingMainImage] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [mainImagePreview, setMainImagePreview] = useState("");
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const mainImageRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
 
@@ -102,8 +104,15 @@ export default function CreateGigForm() {
     file: File,
     type: "main" | "gallery"
   ): Promise<void> => {
-    if (type === "main") setUploadingMainImage(true);
-    else setUploadingGallery(true);
+    // Show local blob preview immediately — no waiting for upload
+    const blobUrl = URL.createObjectURL(file);
+    if (type === "main") {
+      setMainImagePreview(blobUrl);
+      setUploadingMainImage(true);
+    } else {
+      setGalleryPreviews((prev) => [...prev, blobUrl]);
+      setUploadingGallery(true);
+    }
     try {
       const fd = new FormData();
       fd.append("file", file);
@@ -115,6 +124,9 @@ export default function CreateGigForm() {
         set("galleryImages", [...form.galleryImages, url]);
       }
     } catch (err: unknown) {
+      // Remove optimistic preview on failure
+      if (type === "main") setMainImagePreview("");
+      else setGalleryPreviews((prev) => prev.filter((u) => u !== blobUrl));
       const d = (err as { response?: { data?: { message?: string; error_description?: string } } })?.response?.data;
       setError(d?.message ?? d?.error_description ?? t("errorGeneric"));
     } finally {
@@ -123,8 +135,10 @@ export default function CreateGigForm() {
     }
   };
 
-  const removeGalleryImage = (idx: number) =>
+  const removeGalleryImage = (idx: number) => {
+    setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
     set("galleryImages", form.galleryImages.filter((_, i) => i !== idx));
+  };
 
   const canProceed = () => {
     if (step === "basics")
@@ -468,14 +482,13 @@ export default function CreateGigForm() {
                       e.target.value = "";
                     }}
                   />
-                  {form.mainImage ? (
+                  {(mainImagePreview || form.mainImage) ? (
                     <div className="group relative rounded-2xl overflow-hidden border border-border bg-muted">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={form.mainImage}
+                        src={mainImagePreview || form.mainImage}
                         alt="Main image preview"
                         className="h-56 w-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
                         <button
@@ -487,7 +500,7 @@ export default function CreateGigForm() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => set("mainImage", "")}
+                          onClick={() => { setMainImagePreview(""); set("mainImage", ""); }}
                           className="flex items-center gap-1.5 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-medium hover:bg-white/30 transition-colors"
                         >
                           <X className="size-4" /> {t("removeImage")}
@@ -522,29 +535,31 @@ export default function CreateGigForm() {
                 </Field>
 
                 {/* Gallery */}
-                <Field label={t("galleryLabel")} hint={`${form.galleryImages.length}/5 · ${t("optional")}`}>
+                <Field label={t("galleryLabel")} hint={`${Math.max(galleryPreviews.length, form.galleryImages.length)}/5 · ${t("optional")}`}>
                   <input
                     ref={galleryRef}
                     type="file"
                     accept="image/jpeg,image/png,image/gif,image/webp"
+                    multiple
                     className="hidden"
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleMediaUpload(file, "gallery");
+                      const files = Array.from(e.target.files ?? []);
+                      const currentCount = Math.max(galleryPreviews.length, form.galleryImages.length);
+                      const slots = 5 - currentCount;
+                      files.slice(0, slots).forEach((file) => handleMediaUpload(file, "gallery"));
                       e.target.value = "";
                     }}
                   />
 
                   <div className="grid grid-cols-4 gap-3">
                     {/* Existing gallery images */}
-                    {form.galleryImages.map((url, i) => (
+                    {(galleryPreviews.length > 0 ? galleryPreviews : form.galleryImages).map((url, i) => (
                       <div key={i} className="group relative aspect-square rounded-xl overflow-hidden border border-border bg-muted">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={url}
                           alt={`Gallery ${i + 1}`}
                           className="h-full w-full object-cover"
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                         />
                         <button
                           type="button"
@@ -557,7 +572,7 @@ export default function CreateGigForm() {
                     ))}
 
                     {/* Add button */}
-                    {form.galleryImages.length < 5 && (
+                    {Math.max(galleryPreviews.length, form.galleryImages.length) < 5 && (
                       <button
                         type="button"
                         onClick={() => galleryRef.current?.click()}
@@ -648,13 +663,12 @@ export default function CreateGigForm() {
             <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
               {/* Thumbnail */}
               <div className="relative h-44 bg-gradient-to-br from-muted to-muted/60 flex items-center justify-center overflow-hidden">
-                {form.mainImage ? (
+                {(mainImagePreview || form.mainImage) ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={form.mainImage}
+                    src={mainImagePreview || form.mainImage}
                     alt="Preview"
                     className="h-full w-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-muted-foreground/40">
