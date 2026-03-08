@@ -25,3 +25,9 @@ appsettings.Development.json
 appsettings.Local.json
 *secrets.json
 .claude/
+
+# Dependencies
+node_modules/
+.next/
+dist/
+build/
