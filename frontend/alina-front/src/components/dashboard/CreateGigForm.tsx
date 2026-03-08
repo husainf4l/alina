@@ -120,8 +120,11 @@ export default function CreateGigForm() {
       const url = normalizeImageUrl(data.url) ?? data.url;
       if (type === "main") {
         set("mainImage", url);
-      } else if (form.galleryImages.length < 5) {
-        set("galleryImages", [...form.galleryImages, url]);
+      } else {
+        setForm((prev) => {
+          if (prev.galleryImages.length >= 5) return prev;
+          return { ...prev, galleryImages: [...prev.galleryImages, url] };
+        });
       }
     } catch (err: unknown) {
       // Remove optimistic preview on failure
@@ -135,9 +138,54 @@ export default function CreateGigForm() {
     }
   };
 
+  /**
+   * Upload multiple gallery images in a single batch request.
+   * Uses POST /api/Media/upload/batch which accepts multiple "files" fields
+   * and returns { urls: string[] } or string[].
+   */
+  const handleGalleryBatchUpload = async (files: File[]): Promise<void> => {
+    if (!files.length) return;
+    // Optimistic blob previews immediately
+    const blobUrls = files.map((f) => URL.createObjectURL(f));
+    setGalleryPreviews((prev) => [...prev, ...blobUrls]);
+    setUploadingGallery(true);
+    try {
+      const fd = new FormData();
+      files.forEach((f) => fd.append("files", f));
+      const { data } = await apiClient.post<{
+        succeeded: { url: string }[];
+        failed: { fileName: string; reason: string }[];
+      }>("/api/Media/upload/batch", fd);
+      const normalized = (data.succeeded ?? []).map((m) => normalizeImageUrl(m.url) ?? m.url);
+      // Use functional update to avoid stale closure over form.galleryImages
+      setForm((prev) => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, ...normalized].slice(0, 5),
+      }));
+      // Remove blob previews for any files that failed, and surface reasons
+      if (data.failed?.length) {
+        const failedNames = new Set(data.failed.map((f) => f.fileName));
+        setGalleryPreviews((prev) =>
+          prev.filter((u) => {
+            const matchIdx = blobUrls.indexOf(u);
+            return matchIdx === -1 || !failedNames.has(files[matchIdx]?.name);
+          })
+        );
+        setError(data.failed.map((f) => `${f.fileName}: ${f.reason}`).join(" · "));
+      }
+    } catch (err: unknown) {
+      // Roll back all optimistic previews on hard failure
+      setGalleryPreviews((prev) => prev.filter((u) => !blobUrls.includes(u)));
+      const d = (err as { response?: { data?: { message?: string; error_description?: string } } })?.response?.data;
+      setError(d?.message ?? d?.error_description ?? t("errorGeneric"));
+    } finally {
+      setUploadingGallery(false);
+    }
+  };
+
   const removeGalleryImage = (idx: number) => {
     setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
-    set("galleryImages", form.galleryImages.filter((_, i) => i !== idx));
+    setForm((prev) => ({ ...prev, galleryImages: prev.galleryImages.filter((_, i) => i !== idx) }));
   };
 
   const canProceed = () => {
@@ -546,7 +594,8 @@ export default function CreateGigForm() {
                       const files = Array.from(e.target.files ?? []);
                       const currentCount = Math.max(galleryPreviews.length, form.galleryImages.length);
                       const slots = 5 - currentCount;
-                      files.slice(0, slots).forEach((file) => handleMediaUpload(file, "gallery"));
+                      const toUpload = files.slice(0, slots);
+                      if (toUpload.length) handleGalleryBatchUpload(toUpload);
                       e.target.value = "";
                     }}
                   />

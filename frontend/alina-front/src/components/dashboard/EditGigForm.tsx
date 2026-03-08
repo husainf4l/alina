@@ -100,10 +100,10 @@ export default function EditGigForm({ gigId }: { gigId: string }) {
           startingPrice: data.startingPrice != null ? String(data.startingPrice) : "",
           deliveryTimeInDays: data.deliveryTimeInDays != null ? String(data.deliveryTimeInDays) : "7",
           mainImage: data.mainImage ?? "",
-          galleryImages: data.gallery ?? [],
+          galleryImages: data.galleryImages ?? [],
         });
         if (data.mainImage) setMainImagePreview(normalizeImageUrl(data.mainImage) ?? data.mainImage);
-        if (data.gallery?.length) setGalleryPreviews(data.gallery.map((u: string) => normalizeImageUrl(u) ?? u));
+        if (data.galleryImages?.length) setGalleryPreviews(data.galleryImages.map((u: string) => normalizeImageUrl(u) ?? u));
       })
       .catch(() => setError("Failed to load gig"))
       .finally(() => setLoadingGig(false));
@@ -171,6 +171,45 @@ export default function EditGigForm({ gigId }: { gigId: string }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.mainImage]);
+
+  const handleGalleryBatchUpload = async (files: File[]): Promise<void> => {
+    if (!files.length) return;
+    const blobUrls = files.map((f) => URL.createObjectURL(f));
+    setGalleryPreviews((prev) => [...prev, ...blobUrls]);
+    setUploadingGallery(true);
+    try {
+      const fd = new FormData();
+      files.forEach((f) => fd.append("files", f));
+      // Pass gigId so the backend attaches uploaded media to this gig
+      const qs = gigId ? `?gigId=${gigId}` : "";
+      const { data } = await apiClient.post<{
+        succeeded: { url: string }[];
+        failed: { fileName: string; reason: string }[];
+      }>(`/api/Media/upload/batch${qs}`, fd);
+      const normalized = (data.succeeded ?? []).map((m) => normalizeImageUrl(m.url) ?? m.url);
+      setForm((prev) => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, ...normalized].slice(0, 5),
+      }));
+      // Remove blob previews for any files that failed, and surface reasons
+      if (data.failed?.length) {
+        const failedNames = new Set(data.failed.map((f) => f.fileName));
+        setGalleryPreviews((prev) =>
+          prev.filter((u) => {
+            const matchIdx = blobUrls.indexOf(u);
+            return matchIdx === -1 || !failedNames.has(files[matchIdx]?.name);
+          })
+        );
+        setError(data.failed.map((f) => `${f.fileName}: ${f.reason}`).join(" · "));
+      }
+    } catch (err: unknown) {
+      setGalleryPreviews((prev) => prev.filter((u) => !blobUrls.includes(u)));
+      const d = (err as { response?: { data?: { message?: string; error_description?: string } } })?.response?.data;
+      setError(d?.message ?? d?.error_description ?? t("errorGeneric"));
+    } finally {
+      setUploadingGallery(false);
+    }
+  };
 
   const removeGalleryImage = (idx: number) => {
     setGalleryPreviews((prev) => prev.filter((_, i) => i !== idx));
@@ -507,7 +546,8 @@ export default function EditGigForm({ gigId }: { gigId: string }) {
                       const files = Array.from(e.target.files ?? []);
                       const currentCount = Math.max(galleryPreviews.length, form.galleryImages.length);
                       const slots = 5 - currentCount;
-                      files.slice(0, slots).forEach((file) => handleMediaUpload(file, "gallery"));
+                      const toUpload = files.slice(0, slots);
+                      if (toUpload.length) handleGalleryBatchUpload(toUpload);
                       e.target.value = "";
                     }} />
                   <div className="grid grid-cols-4 gap-3">
