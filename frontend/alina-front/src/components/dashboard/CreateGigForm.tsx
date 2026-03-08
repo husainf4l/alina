@@ -58,6 +58,7 @@ export default function CreateGigForm() {
   const [step, setStep] = useState<Step>("basics");
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [selectedParentId, setSelectedParentId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadingMainImage, setUploadingMainImage] = useState(false);
@@ -85,6 +86,17 @@ export default function CreateGigForm() {
 
   const set = (key: keyof GigFormData, value: string | string[]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+
+  const handleParentChange = (parentId: string) => {
+    setSelectedParentId(parentId);
+    const parent = categories.find((c) => c.id === parentId);
+    // If no subcategories, the parent itself is the selectable category
+    if (parent && (!parent.subCategories || parent.subCategories.length === 0)) {
+      set("categoryId", parentId);
+    } else {
+      set("categoryId", "");
+    }
+  };
 
   const handleMediaUpload = async (
     file: File,
@@ -299,32 +311,45 @@ export default function CreateGigForm() {
                     </div>
                   ) : (
                     <select
-                      value={form.categoryId}
-                      onChange={(e) => set("categoryId", e.target.value)}
+                      value={selectedParentId}
+                      onChange={(e) => handleParentChange(e.target.value)}
                       className={inputCls}
                     >
                       <option value="">{t("categoryPlaceholder")}</option>
                       {categories.map((parent) => (
-                        <optgroup key={parent.id} label={parent.name}>
-                          {(parent.subCategories ?? []).length > 0 ? (
-                            (parent.subCategories ?? []).map((sub) => (
-                              <option key={sub.id} value={sub.id}>{sub.name}</option>
-                            ))
-                          ) : (
-                            <option value={parent.id}>{parent.name}</option>
-                          )}
-                        </optgroup>
+                        <option key={parent.id} value={parent.id}>{parent.name}</option>
                       ))}
                     </select>
                   )}
-                  {selectedCategory && (
-                    <div className="mt-2 flex items-center gap-1.5">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#B05088]/10 px-3 py-1 text-xs font-medium text-[#B05088]">
-                        <Check className="size-3" /> {selectedCategory.name}
-                      </span>
-                    </div>
-                  )}
                 </Field>
+
+                {/* Sub-category — shown only when a parent with subs is selected */}
+                {(() => {
+                  const parent = categories.find((c) => c.id === selectedParentId);
+                  const subs = parent?.subCategories ?? [];
+                  if (!selectedParentId || subs.length === 0) return null;
+                  return (
+                    <Field label={t("subCategoryLabel")}>
+                      <select
+                        value={form.categoryId}
+                        onChange={(e) => set("categoryId", e.target.value)}
+                        className={inputCls}
+                      >
+                        <option value="">{t("subCategoryPlaceholder")}</option>
+                        {subs.map((sub) => (
+                          <option key={sub.id} value={sub.id}>{sub.name}</option>
+                        ))}
+                      </select>
+                      {selectedCategory && (
+                        <div className="mt-2 flex items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#B05088]/10 px-3 py-1 text-xs font-medium text-[#B05088]">
+                            <Check className="size-3" /> {selectedCategory.name}
+                          </span>
+                        </div>
+                      )}
+                    </Field>
+                  );
+                })()}
               </div>
             )}
 

@@ -337,6 +337,8 @@
     "titleHint": "{count}/150 characters",
     "categoryLabel": "Category",
     "categoryPlaceholder": "Select a category",
+    "subCategoryLabel": "Sub-category",
+    "subCategoryPlaceholder": "Select a sub-category",
     "loadingCategories": "Loading categories…",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Describe what you'll deliver, your process, and what makes your service unique…",

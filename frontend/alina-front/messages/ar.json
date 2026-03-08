@@ -335,6 +335,8 @@
     "titleHint": "{count}/150 حرف",
     "categoryLabel": "الفئة",
     "categoryPlaceholder": "اختر فئة",
+    "subCategoryLabel": "الفئة الفرعية",
+    "subCategoryPlaceholder": "اختر الفئة الفرعية",
     "loadingCategories": "جارٍ تحميل الفئات…",
     "descriptionLabel": "الوصف",
     "descriptionPlaceholder": "صف ما ستقدمه، وأسلوب عملك، وما يميز خدمتك…",
