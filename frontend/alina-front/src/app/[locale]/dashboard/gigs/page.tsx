@@ -23,20 +23,21 @@ interface Gig {
 
 export default function GigsPage() {
   const t = useTranslations("Gigs");
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
   const isSeller = user?.role === "seller" || user?.role === "both";
 
   const [gigs, setGigs] = useState<Gig[]>([]);
-  const [loading, setLoading] = useState(isSeller);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isSeller) return;
+    if (!isInitialized) return;
+    if (!isSeller) { setLoading(false); return; }
     apiClient
       .get("/api/marketplace/gigs/my")
       .then(({ data }) => setGigs(data?.items ?? data ?? []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [isSeller]);
+  }, [isInitialized, isSeller]);
 
   const toggleStatus = async (gig: Gig) => {
     try {
