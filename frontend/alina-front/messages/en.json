@@ -237,6 +237,7 @@
     "role_buyer": "Buyer",
     "role_seller": "Seller",
     "role_both": "Both",
+    "changeAvatar": "Change avatar",
     "changeCover": "Change cover",
     "uploading": "Uploading...",
     "saveButton": "Save changes",

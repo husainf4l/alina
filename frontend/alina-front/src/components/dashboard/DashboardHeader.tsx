@@ -20,6 +20,10 @@ export default function DashboardHeader({ aiOpen, onAiToggle }: DashboardHeaderP
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
+
+  // Reset load-error whenever the avatar URL changes (e.g. after upload)
+  useEffect(() => { setAvatarLoadError(false); }, [user?.avatarUrl]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -104,13 +108,13 @@ export default function DashboardHeader({ aiOpen, onAiToggle }: DashboardHeaderP
           >
             {/* Avatar circle */}
             <div className="relative size-8 shrink-0 overflow-hidden rounded-full bg-[#B05088]/15">
-              {user?.avatarUrl ? (
+              {user?.avatarUrl && !avatarLoadError ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={normalizeImageUrl(user.avatarUrl)!}
                   alt={user.fullName}
                   className="size-full object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  onError={() => setAvatarLoadError(true)}
                 />
               ) : (
                 <span className="flex size-full items-center justify-center text-[#B05088] text-xs font-semibold select-none">
