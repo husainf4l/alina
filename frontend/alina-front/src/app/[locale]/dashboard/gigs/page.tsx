@@ -28,14 +28,19 @@ export default function GigsPage() {
 
   const [gigs, setGigs] = useState<Gig[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isInitialized) return;
     if (!isSeller) { setLoading(false); return; }
+    setFetchError(null);
     apiClient
-      .get("/api/marketplace/gigs/my")
+      .get("/api/Marketplace/gigs/my")
       .then(({ data }) => setGigs(data?.items ?? data ?? []))
-      .catch(() => {})
+      .catch((err) => {
+        const msg = err?.response?.data?.message ?? err?.response?.data?.error_description ?? err?.message ?? "Failed to load gigs";
+        setFetchError(`${err?.response?.status ?? ""} ${msg}`);
+      })
       .finally(() => setLoading(false));
   }, [isInitialized, isSeller]);
 
@@ -80,6 +85,11 @@ export default function GigsPage() {
       </div>
 
       {/* Content */}
+      {fetchError && (
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive font-mono">
+          {fetchError}
+        </div>
+      )}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="size-8 animate-spin text-muted-foreground" />
