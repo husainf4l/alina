@@ -321,7 +321,15 @@
     "pause": "Pause",
     "notSellerTitle": "Seller account required",
     "notSellerBody": "You need a seller account to manage gigs. Update your role in your profile.",
-    "notSellerCta": "Go to Profile"
+    "notSellerCta": "Go to Profile",
+    "editButton": "Edit",
+    "viewButton": "View",
+    "editPageTitle": "Edit Gig",
+    "editPageSubtitle": "Update your gig details",
+    "saveButton": "Save Changes",
+    "saving": "Saving…",
+    "loadingGig": "Loading gig…",
+    "gigNotFound": "Gig not found"
   },
   "CreateGig": {
     "stepBasics": "Basics",
