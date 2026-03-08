@@ -352,6 +352,7 @@ public class MarketplaceController : ControllerBase
         [FromQuery] decimal? maxPrice,
         [FromQuery] int? deliveryTime,
         [FromQuery] double? minRating,
+        [FromQuery] Guid? sellerUserId,
         [FromQuery] PaginationParams pagination)
     {
         var query = _context.Gigs
@@ -369,6 +370,14 @@ public class MarketplaceController : ControllerBase
                 .ToListAsync();
                 
             query = query.Where(g => categoryIds.Contains(g.CategoryId));
+        }
+
+        if (sellerUserId.HasValue)
+        {
+            var sellerProfile = await _context.Profiles
+                .FirstOrDefaultAsync(p => p.UserId == sellerUserId.Value);
+            if (sellerProfile == null) return new PagedResponse<GigDto>([], 0, pagination.PageNumber, pagination.PageSize);
+            query = query.Where(g => g.SellerId == sellerProfile.Id);
         }
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -823,5 +832,154 @@ public class MarketplaceController : ControllerBase
                 await _context.SaveChangesAsync();
             }
         }
+    }
+
+    // ─── Package Management ──────────────────────────────────────────────────
+
+    /// <summary>
+    /// List all packages for a gig.
+    /// </summary>
+    [HttpGet("gigs/{gigId}/packages")]
+    public async Task<ActionResult<IEnumerable<PackageDto>>> GetGigPackages(Guid gigId)
+    {
+        var gig = await _context.Gigs
+            .Include(g => g.Packages)
+            .FirstOrDefaultAsync(g => g.Id == gigId && !g.IsDeleted);
+
+        if (gig == null) return NotFound();
+
+        var packages = gig.Packages.Select(p => new PackageDto(
+            p.Id, p.Name, p.Description,
+            new Money(p.Price, p.Currency),
+            p.DeliveryTimeInDays)).ToList();
+
+        return Ok(packages);
+    }
+
+    /// <summary>
+    /// Add a package tier to a gig. Only the gig owner can call this.
+    /// </summary>
+    [HttpPost("gigs/{gigId}/packages")]
+    [Authorize]
+    public async Task<ActionResult<PackageDto>> CreatePackage(Guid gigId, CreatePackageDto dto)
+    {
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (profile == null) return BadRequest("Profile not found");
+
+        var gig = await _context.Gigs
+            .Include(g => g.Packages)
+            .FirstOrDefaultAsync(g => g.Id == gigId && !g.IsDeleted);
+
+        if (gig == null) return NotFound();
+        if (gig.SellerId != profile.Id) return Forbid();
+        if (gig.Packages.Count >= 3) return BadRequest("A gig can have at most 3 packages.");
+        if (gig.Packages.Any(p => p.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase)))
+            return BadRequest("A package with this name already exists on this gig.");
+
+        var package = new Package
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            Price = dto.Price,
+            Currency = dto.Currency,
+            DeliveryTimeInDays = dto.DeliveryTimeInDays,
+            GigId = gigId
+        };
+
+        _context.Packages.Add(package);
+
+        // Keep gig's StartingPrice in sync with the cheapest package
+        if (dto.Price < gig.StartingPrice || gig.StartingPrice == 0)
+        {
+            gig.StartingPrice = dto.Price;
+            gig.DeliveryTimeInDays = dto.DeliveryTimeInDays;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetGigPackages), new { gigId },
+            new PackageDto(package.Id, package.Name, package.Description,
+                new Money(package.Price, package.Currency), package.DeliveryTimeInDays));
+    }
+
+    /// <summary>
+    /// Update a package on a gig. Only the gig owner can call this.
+    /// </summary>
+    [HttpPut("gigs/{gigId}/packages/{packageId}")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePackage(Guid gigId, Guid packageId, UpdatePackageDto dto)
+    {
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (profile == null) return BadRequest("Profile not found");
+
+        var gig = await _context.Gigs
+            .Include(g => g.Packages)
+            .FirstOrDefaultAsync(g => g.Id == gigId && !g.IsDeleted);
+
+        if (gig == null) return NotFound();
+        if (gig.SellerId != profile.Id) return Forbid();
+
+        var package = gig.Packages.FirstOrDefault(p => p.Id == packageId);
+        if (package == null) return NotFound();
+
+        // Check for name collision with a different package
+        if (gig.Packages.Any(p => p.Id != packageId && p.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase)))
+            return BadRequest("Another package with this name already exists on this gig.");
+
+        package.Name = dto.Name;
+        package.Description = dto.Description;
+        package.Price = dto.Price;
+        package.Currency = dto.Currency;
+        package.DeliveryTimeInDays = dto.DeliveryTimeInDays;
+        package.UpdatedAt = DateTime.UtcNow;
+
+        // Resync gig's starting price with cheapest package
+        gig.StartingPrice = gig.Packages.Min(p => p.Price);
+
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Delete a package from a gig. Only the gig owner can call this.
+    /// A gig must always retain at least one package.
+    /// </summary>
+    [HttpDelete("gigs/{gigId}/packages/{packageId}")]
+    [Authorize]
+    public async Task<IActionResult> DeletePackage(Guid gigId, Guid packageId)
+    {
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (profile == null) return BadRequest("Profile not found");
+
+        var gig = await _context.Gigs
+            .Include(g => g.Packages)
+            .FirstOrDefaultAsync(g => g.Id == gigId && !g.IsDeleted);
+
+        if (gig == null) return NotFound();
+        if (gig.SellerId != profile.Id) return Forbid();
+
+        var package = gig.Packages.FirstOrDefault(p => p.Id == packageId);
+        if (package == null) return NotFound();
+
+        if (gig.Packages.Count == 1)
+            return BadRequest("Cannot delete the only package. A gig must have at least one package.");
+
+        _context.Packages.Remove(package);
+
+        // Resync gig's starting price
+        var remaining = gig.Packages.Where(p => p.Id != packageId).ToList();
+        gig.StartingPrice = remaining.Min(p => p.Price);
+
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 }

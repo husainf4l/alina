@@ -102,6 +102,7 @@ public class UpdateSettingsDto
     public ThemePreferencesDto? Theme { get; set; }
     public string? Language { get; set; }
     public string? Timezone { get; set; }
+    public string? Currency { get; set; } // e.g. "SAR", "AED", "USD"
     public NotificationPreferencesDto? Notifications { get; set; }
     public PrivacyPreferencesDto? Privacy { get; set; }
     public DashboardPreferencesDto? Dashboard { get; set; }

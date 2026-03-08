@@ -83,12 +83,19 @@ builder.Services.AddScoped<alina_backend.Modules.marketplace.SellerLevelService>
 
 // Add background services
 builder.Services.AddHostedService<alina_backend.Modules.marketplace.AutoReleaseService>();
+builder.Services.AddHostedService<alina_backend.Modules.finance.CurrencyRateRefreshService>();
+builder.Services.AddHttpClient("currency", c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(10);
+    c.DefaultRequestHeaders.Add("User-Agent", "alina-backend/1.0");
+});
 
 // Add SignalR
 builder.Services.AddSignalR();
 
-// Add memory cache for rate limiting
+// Add memory cache for rate limiting and currency caching
 builder.Services.AddMemoryCache();
+builder.Services.AddResponseCaching();
 
 // SEC-10: Configure ForwardedHeaders to only trust X-Forwarded-For from known/trusted proxies.
 // After UseForwardedHeaders(), context.Connection.RemoteIpAddress will be the real client IP.
@@ -190,6 +197,7 @@ app.UseForwardedHeaders();
 app.UseRateLimiting();  // Rate limiting before authentication
 app.UseCsrfProtection(); // CSRF protection after CORS
 
+app.UseResponseCaching();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

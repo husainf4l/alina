@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/context/AuthContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Body — Plus Jakarta Sans: modern variable grotesque, strong optical range
@@ -85,9 +86,11 @@ export default async function LocaleLayout({
         >
           <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""}>
             <AuthProvider>
-              <NextIntlClientProvider messages={messages}>
-                {children}
-              </NextIntlClientProvider>
+              <CurrencyProvider>
+                <NextIntlClientProvider messages={messages}>
+                  {children}
+                </NextIntlClientProvider>
+              </CurrencyProvider>
             </AuthProvider>
           </GoogleOAuthProvider>
         </ThemeProvider>

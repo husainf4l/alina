@@ -662,6 +662,7 @@
     "language": "Language",
     "timezone": "Timezone",
     "currency": "Currency",
+    "currencyLoading": "Loading live rates...",
     "emailNotifications": "Email Notifications",
     "pushNotifications": "Push Notifications",
     "notifOrders": "Orders & Deliveries",

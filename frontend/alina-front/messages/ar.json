@@ -660,6 +660,7 @@
     "language": "اللغة",
     "timezone": "المنطقة الزمنية",
     "currency": "العملة",
+    "currencyLoading": "جارٍ تحميل أسعار الصرف...",
     "emailNotifications": "إشعارات البريد الإلكتروني",
     "pushNotifications": "الإشعارات الفورية",
     "notifOrders": "الطلبات والتسليمات",

@@ -114,6 +114,94 @@ public class MediaController : ControllerBase
     }
 
     /// <summary>
+    /// Upload multiple files in a single request.
+    /// Each file is processed independently — any that fail are skipped and reported.
+    /// Only images (JPEG, PNG, GIF, WebP, SVG) are accepted for batch upload.
+    /// </summary>
+    [HttpPost("upload/batch")]
+    public async Task<ActionResult<BatchUploadResponse>> UploadFiles(
+        [FromForm] List<IFormFile> files,
+        [FromQuery] Guid? gigId,
+        [FromQuery] Guid? taskId,
+        [FromQuery] int? customOfferId)
+    {
+        if (files == null || files.Count == 0) return BadRequest("No files uploaded");
+        if (files.Count > 10) return BadRequest("Maximum 10 files per batch");
+
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdStr, out var userId)) return Unauthorized();
+
+        var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (profile == null) return BadRequest("Profile not found");
+
+        var succeeded = new List<MediaResponse>();
+        var failed = new List<BatchUploadError>();
+
+        foreach (var file in files)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    failed.Add(new BatchUploadError("(empty)", "File is empty"));
+                    continue;
+                }
+
+                var contentType = file.ContentType?.ToLowerInvariant() ?? string.Empty;
+                if (!PublicMimeTypes.Contains(contentType))
+                {
+                    failed.Add(new BatchUploadError(file.FileName, "Only image types are allowed in batch upload"));
+                    continue;
+                }
+
+                if (!AllowedMagicBytes.TryGetValue(contentType, out var expectedSignatures))
+                {
+                    failed.Add(new BatchUploadError(file.FileName, "File type not allowed"));
+                    continue;
+                }
+
+                byte[] header = new byte[16];
+                using (var peek = file.OpenReadStream())
+                    await peek.ReadAsync(header.AsMemory(0, Math.Min(16, (int)file.Length)));
+
+                if (!expectedSignatures.Any(sig => header.Take(sig.Length).SequenceEqual(sig)))
+                {
+                    failed.Add(new BatchUploadError(file.FileName, "File content does not match declared type"));
+                    continue;
+                }
+
+                using var stream = file.OpenReadStream();
+                var storageKey = await _storageService.UploadPublicFileAsync(stream, file.FileName, contentType, "media");
+
+                var media = new Media
+                {
+                    Url = storageKey,
+                    FileName = file.FileName.Length > 255 ? file.FileName[..255] : file.FileName,
+                    FileType = contentType,
+                    FileSize = file.Length,
+                    OwnerId = profile.Id,
+                    GigId = gigId,
+                    UserTaskId = taskId,
+                    CustomOfferId = customOfferId
+                };
+
+                _context.Media.Add(media);
+                await _context.SaveChangesAsync();
+
+                succeeded.Add(new MediaResponse(media, ResolveUrl(media)));
+                _logger.LogInformation("Batch upload: file {FileName} uploaded by user {UserId}", file.FileName, userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Batch upload: failed to upload {FileName}", file.FileName);
+                failed.Add(new BatchUploadError(file.FileName, "Upload failed unexpectedly"));
+            }
+        }
+
+        return Ok(new BatchUploadResponse(succeeded, failed));
+    }
+
+    /// <summary>
     /// Serve a PRIVATE file via the backend proxy.
     /// Issues a 302 redirect to a 15-minute presigned S3 URL.
     /// Public images do NOT use this endpoint — they are served directly via the CDN URL.
@@ -180,3 +268,9 @@ public record MediaResponse(
     public MediaResponse(Media m, string resolvedUrl) : this(
         m.Id, resolvedUrl, m.FileName, m.FileType, m.FileSize, m.CreatedAt) { }
 }
+
+public record BatchUploadError(string FileName, string Reason);
+
+public record BatchUploadResponse(
+    List<MediaResponse> Succeeded,
+    List<BatchUploadError> Failed);

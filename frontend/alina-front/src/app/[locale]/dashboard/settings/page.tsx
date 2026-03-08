@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import apiClient from "@/lib/apiClient";
-import { Settings, Globe, Bell, Shield, Save, RefreshCw } from "lucide-react";
+import { useCurrency } from "@/context/CurrencyContext";
+import { Settings, Globe, Bell, Shield, Save, RefreshCw, Check } from "lucide-react";
 
 interface NotificationPrefs {
   email?: { orders?: boolean; messages?: boolean; reviews?: boolean; marketing?: boolean; [k: string]: unknown };
@@ -45,7 +46,6 @@ const TIMEZONES = [
   "Asia/Riyadh",
   "Asia/Tokyo",
 ];
-const CURRENCIES = ["USD", "EUR", "GBP", "SAR", "AED", "EGP"];
 const VISIBILITIES = ["public", "private", "followers"];
 
 function Toggle({
@@ -119,6 +119,7 @@ function SelectField({
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
+  const { rates, ratesLoading, setCurrency } = useCurrency();
   const [activeTab, setActiveTab] = useState<TabId>("general");
   const [settings, setSettings] = useState<UserSettings>({});
   const [original, setOriginal] = useState<UserSettings>({});
@@ -132,9 +133,12 @@ export default function SettingsPage() {
       .then((r) => {
         setSettings(r.data ?? {});
         setOriginal(r.data ?? {});
+        // Sync the global currency context with the user's saved preference
+        if (r.data?.currency) setCurrency(r.data.currency);
       })
       .catch(() => setSettings({}))
       .finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isDirty = JSON.stringify(settings) !== JSON.stringify(original);
@@ -144,6 +148,8 @@ export default function SettingsPage() {
     try {
       await apiClient.put("/api/Settings", settings);
       setOriginal(settings);
+      // Keep the global currency context in sync
+      if (settings.currency) setCurrency(settings.currency);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch {
@@ -253,12 +259,49 @@ export default function SettingsPage() {
                   options={TIMEZONES}
                   onChange={(v) => setSettings((p) => ({ ...p, timezone: v }))}
                 />
-                <SelectField
-                  label={t("currency")}
-                  value={settings.currency ?? "USD"}
-                  options={CURRENCIES}
-                  onChange={(v) => setSettings((p) => ({ ...p, currency: v }))}
-                />
+              </div>
+
+              {/* Currency — live card picker */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  {t("currency")}
+                  {ratesLoading && (
+                    <span className="ms-2 text-xs text-gray-400">{t("currencyLoading")}</span>
+                  )}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {rates.map((r) => {
+                    const active = (settings.currency ?? "USD") === r.code;
+                    return (
+                      <button
+                        key={r.code}
+                        type="button"
+                        onClick={() => setSettings((p) => ({ ...p, currency: r.code }))}
+                        className={`relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-start transition-all ${
+                          active
+                            ? "border-[#c71463] bg-[#c71463]/5 ring-1 ring-[#c71463]/30"
+                            : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
+                        }`}
+                      >
+                        <span className="text-lg leading-none">{r.symbol}</span>
+                        <div className="min-w-0">
+                          <p className={`text-sm font-semibold leading-tight ${
+                            active ? "text-[#c71463]" : "text-gray-900 dark:text-white"
+                          }`}>{r.code}</p>
+                          <p className="text-[11px] text-gray-400 truncate">{r.name}</p>
+                          {r.code !== "USD" && (
+                            <p className="text-[10px] text-gray-400 tabular-nums">
+                              1 USD = {r.rate.toFixed(r.rate < 1 ? 4 : 2)}
+                            </p>
+                          )}
+                        </div>
+                        {active && (
+                          <Check className="absolute end-2 top-2 size-3.5 text-[#c71463] shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}

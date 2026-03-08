@@ -187,6 +187,20 @@ public record PackageDto(
     Money Price,
     int DeliveryTimeInDays);
 
+public record CreatePackageDto(
+    [Required][StringLength(100, MinimumLength = 2)] string Name,
+    [Required][StringLength(1000, MinimumLength = 10)] string Description,
+    [Range(0.01, 999999.99)] decimal Price,
+    string Currency = "USD",
+    [Range(1, 365)] int DeliveryTimeInDays = 1);
+
+public record UpdatePackageDto(
+    [Required][StringLength(100, MinimumLength = 2)] string Name,
+    [Required][StringLength(1000, MinimumLength = 10)] string Description,
+    [Range(0.01, 999999.99)] decimal Price,
+    string Currency = "USD",
+    [Range(1, 365)] int DeliveryTimeInDays = 1);
+
 // --- Gig Status Update ---
 
 public record UpdateGigStatusDto(

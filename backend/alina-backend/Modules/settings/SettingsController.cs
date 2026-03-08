@@ -100,6 +100,8 @@ public class SettingsController : ControllerBase
             settings.Language = updateDto.Language;
         if (!string.IsNullOrEmpty(updateDto.Timezone))
             settings.Timezone = updateDto.Timezone;
+        if (!string.IsNullOrEmpty(updateDto.Currency))
+            settings.Currency = updateDto.Currency.ToUpperInvariant();
 
         // Update notification preferences
         if (updateDto.Notifications != null)

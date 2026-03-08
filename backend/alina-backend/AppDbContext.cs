@@ -416,13 +416,21 @@ public class AppDbContext : DbContext
 
         // Seed Currency Rates (Approximate GCC rates relative to 1 USD)
         modelBuilder.Entity<CurrencyRate>().HasData(
-            new CurrencyRate { Code = "USD", Rate = 1.0000m },
-            new CurrencyRate { Code = "SAR", Rate = 3.7500m },
-            new CurrencyRate { Code = "AED", Rate = 3.6725m },
-            new CurrencyRate { Code = "JOD", Rate = 0.7090m },
-            new CurrencyRate { Code = "KWD", Rate = 0.3070m },
-            new CurrencyRate { Code = "BHD", Rate = 0.3760m },
-            new CurrencyRate { Code = "OMR", Rate = 0.3845m }
+            // Base
+            new CurrencyRate { Code = "USD", Rate = 1.0000m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            // Major
+            new CurrencyRate { Code = "EUR", Rate = 0.9200m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "GBP", Rate = 0.7900m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "TRY", Rate = 34.0000m, LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "EGP", Rate = 49.0000m, LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            // Gulf
+            new CurrencyRate { Code = "SAR", Rate = 3.7500m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "AED", Rate = 3.6725m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "KWD", Rate = 0.3070m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "BHD", Rate = 0.3760m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "OMR", Rate = 0.3845m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "QAR", Rate = 3.6400m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new CurrencyRate { Code = "JOD", Rate = 0.7090m,  LastUpdated = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
         );
 
         // Seed common languages
