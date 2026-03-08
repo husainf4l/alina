@@ -116,16 +116,12 @@ export default function OnboardingCard() {
       if (avatarFile) {
         const fd = new FormData();
         fd.append("file", avatarFile);
-        await apiClient.post("/api/auth/me/avatar", fd, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await apiClient.post("/api/auth/me/avatar", fd);
       }
       if (coverFile) {
         const fd = new FormData();
         fd.append("file", coverFile);
-        await apiClient.post("/api/auth/me/cover", fd, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await apiClient.post("/api/auth/me/cover", fd);
       }
     } catch {
       // Upload failed — non-blocking, user can update photos from their profile later

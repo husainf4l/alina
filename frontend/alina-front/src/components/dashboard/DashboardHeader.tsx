@@ -4,10 +4,10 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
-import { Bell, Search, ChevronDown, LogOut, Sparkles } from "lucide-react";
+import { Bell, Search, ChevronDown, LogOut, Sparkles, Home } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { cn, normalizeImageUrl } from "@/lib/utils";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 
 interface DashboardHeaderProps {
   aiOpen: boolean;
@@ -47,7 +47,16 @@ export default function DashboardHeader({ aiOpen, onAiToggle }: DashboardHeaderP
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-6">
-      {/* Search */}
+      {/* Home + Search */}
+      <div className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        >
+          <Home className="size-4" />
+          <span className="hidden md:inline">{t("home")}</span>
+        </Link>
+
       <div className="relative hidden sm:block">
         <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -59,6 +68,7 @@ export default function DashboardHeader({ aiOpen, onAiToggle }: DashboardHeaderP
             "focus:border-foreground/30 focus:ring-2 focus:ring-foreground/10 transition-colors"
           )}
         />
+      </div>
       </div>
 
       {/* Right controls */}

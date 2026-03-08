@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { cn } from "@/lib/utils";
+import { cn, normalizeImageUrl } from "@/lib/utils";
 import apiClient from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,8 @@ import {
   Loader2,
   Check,
   AlertCircle,
+  Upload,
+  X,
 } from "lucide-react";
 
 interface Category {
@@ -46,7 +48,10 @@ export default function CreateGigForm() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [galleryInput, setGalleryInput] = useState("");
+  const [uploadingMain, setUploadingMain] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const mainFileRef = useRef<HTMLInputElement>(null);
+  const galleryFileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<GigFormData>({
     title: "",
@@ -69,18 +74,54 @@ export default function CreateGigForm() {
   const set = (key: keyof GigFormData, value: string | string[]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const addGalleryImage = () => {
-    const url = galleryInput.trim();
-    if (!url || form.galleryImages.length >= 5) return;
-    set("galleryImages", [...form.galleryImages, url]);
-    setGalleryInput("");
-  };
-
   const removeGalleryImage = (idx: number) =>
     set(
       "galleryImages",
       form.galleryImages.filter((_, i) => i !== idx)
     );
+
+  /** Upload a file to /api/Media/upload and return the CDN URL */
+  const uploadFile = async (file: File): Promise<string> => {
+    const fd = new FormData();
+    fd.append("file", file);
+    // Do NOT set Content-Type manually — the browser must auto-generate it
+    // with the correct multipart boundary, otherwise the server can't parse the body.
+    const res = await apiClient.post<{ url: string }>("/api/Media/upload", fd);
+    return res.data.url;
+  };
+
+  const handleMainFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingMain(true);
+    try {
+      const url = await uploadFile(file);
+      set("mainImage", normalizeImageUrl(url) ?? url);
+    } catch {
+      setError(t("uploadError"));
+    } finally {
+      setUploadingMain(false);
+      if (mainFileRef.current) mainFileRef.current.value = "";
+    }
+  };
+
+  const handleGalleryFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length || form.galleryImages.length >= 5) return;
+    setUploadingGallery(true);
+    try {
+      const remaining = 5 - form.galleryImages.length;
+      const toUpload = files.slice(0, remaining);
+      const urls = await Promise.all(toUpload.map(uploadFile));
+      const normalized = urls.map((u) => normalizeImageUrl(u) ?? u);
+      set("galleryImages", [...form.galleryImages, ...normalized]);
+    } catch {
+      setError(t("uploadError"));
+    } finally {
+      setUploadingGallery(false);
+      if (galleryFileRef.current) galleryFileRef.current.value = "";
+    }
+  };
 
 
   const canProceed = () => {
@@ -314,60 +355,77 @@ export default function CreateGigForm() {
               <p className="text-sm text-muted-foreground mt-1">{t("stepMediaSubtitle")}</p>
             </div>
 
-            {/* Main image URL */}
+            {/* Main Image Upload */}
             <Field label={t("mainImageLabel")} hint={t("optional")}>
               <div className="flex flex-col gap-3">
+                {/* Hidden file input */}
                 <input
-                  type="url"
-                  value={form.mainImage}
-                  onChange={(e) => set("mainImage", e.target.value)}
-                  placeholder="https://..."
-                  className={inputCls}
+                  ref={mainFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleMainFileChange}
                 />
-                {form.mainImage && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={form.mainImage}
-                    alt="Main image preview"
-                    className="h-40 w-full rounded-2xl object-cover border border-border"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                    }}
-                  />
+                {form.mainImage ? (
+                  <div className="relative group rounded-2xl overflow-hidden border border-border">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={form.mainImage}
+                      alt="Main image preview"
+                      className="h-48 w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => set("mainImage", "")}
+                      className="absolute top-2 right-2 p-1.5 bg-black/60 text-white rounded-lg hover:bg-black/80 transition-colors"
+                    >
+                      <X className="size-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => mainFileRef.current?.click()}
+                      className="absolute bottom-2 right-2 flex items-center gap-1.5 px-3 py-1.5 bg-black/60 text-white text-xs rounded-lg hover:bg-black/80 transition-colors"
+                    >
+                      <Upload className="size-3" />
+                      {t("changeImage")}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => mainFileRef.current?.click()}
+                    disabled={uploadingMain}
+                    className="flex flex-col items-center justify-center gap-2 h-40 rounded-2xl border-2 border-dashed border-border hover:border-[#B05088] hover:bg-[#B05088]/5 transition-colors text-muted-foreground"
+                  >
+                    {uploadingMain ? (
+                      <Loader2 className="size-7 animate-spin text-[#B05088]" />
+                    ) : (
+                      <>
+                        <ImagePlus className="size-7" />
+                        <span className="text-sm">{t("clickToUpload")}</span>
+                        <span className="text-xs opacity-60">{t("imageHint")}</span>
+                      </>
+                    )}
+                  </button>
                 )}
               </div>
             </Field>
 
-            {/* Gallery */}
+            {/* Gallery Upload */}
             <Field
               label={t("galleryLabel")}
               hint={`${form.galleryImages.length}/5 · ${t("optional")}`}
             >
               <div className="flex flex-col gap-3">
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    value={galleryInput}
-                    onChange={(e) => setGalleryInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addGalleryImage())}
-                    placeholder="https://..."
-                    disabled={form.galleryImages.length >= 5}
-                    className={cn(inputCls, "flex-1")}
-                  />
-                  <button
-                    type="button"
-                    onClick={addGalleryImage}
-                    disabled={!galleryInput.trim() || form.galleryImages.length >= 5}
-                    className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-xl transition-colors",
-                      galleryInput.trim() && form.galleryImages.length < 5
-                        ? "bg-[#B05088] text-white hover:bg-[#9a4078]"
-                        : "bg-muted text-muted-foreground cursor-not-allowed"
-                    )}
-                  >
-                    <ImagePlus className="size-4" />
-                  </button>
-                </div>
+                {/* Hidden multi-file input */}
+                <input
+                  ref={galleryFileRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleGalleryFileChange}
+                />
 
                 {form.galleryImages.length > 0 && (
                   <div className="grid grid-cols-3 gap-2">
@@ -377,21 +435,53 @@ export default function CreateGigForm() {
                         <img
                           src={url}
                           alt={`Gallery ${i + 1}`}
-                          className="h-24 w-full rounded-xl object-cover border border-border"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
-                          }}
+                          className="h-28 w-full rounded-xl object-cover border border-border"
                         />
                         <button
                           type="button"
                           onClick={() => removeGalleryImage(i)}
-                          className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs"
+                          className="absolute top-1 right-1 p-1 bg-black/60 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          Remove
+                          <X className="size-3" />
                         </button>
                       </div>
                     ))}
+                    {form.galleryImages.length < 5 && (
+                      <button
+                        type="button"
+                        onClick={() => galleryFileRef.current?.click()}
+                        disabled={uploadingGallery}
+                        className="h-28 flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border hover:border-[#B05088] hover:bg-[#B05088]/5 transition-colors text-muted-foreground"
+                      >
+                        {uploadingGallery ? (
+                          <Loader2 className="size-5 animate-spin text-[#B05088]" />
+                        ) : (
+                          <>
+                            <ImagePlus className="size-5" />
+                            <span className="text-xs">{t("add")}</span>
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
+                )}
+
+                {form.galleryImages.length === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => galleryFileRef.current?.click()}
+                    disabled={uploadingGallery}
+                    className="flex flex-col items-center justify-center gap-2 h-32 rounded-2xl border-2 border-dashed border-border hover:border-[#B05088] hover:bg-[#B05088]/5 transition-colors text-muted-foreground"
+                  >
+                    {uploadingGallery ? (
+                      <Loader2 className="size-6 animate-spin text-[#B05088]" />
+                    ) : (
+                      <>
+                        <ImagePlus className="size-6" />
+                        <span className="text-sm">{t("clickToAddGallery")}</span>
+                      </>
+                    )}
+                  </button>
                 )}
               </div>
             </Field>

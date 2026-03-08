@@ -8,7 +8,10 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "login": "Log in",
-    "register": "Join"
+    "register": "Join",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Log out"
   },
   "Hero": {
     "heading": "Find the perfect",
@@ -207,10 +210,6 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "errorBioRequired": "Please add a short bio - it's required to become a seller."
   },
-  "Dashboard": {
-    "title": "Dashboard",
-    "subtitle": "Welcome back! Here's what's happening."
-  },
   "DashboardNav": {
     "overview": "Overview",
     "orders": "Orders",
@@ -222,6 +221,7 @@
     "settings": "Settings"
   },
   "DashboardHeader": {
+    "home": "Home",
     "searchPlaceholder": "Search...",
     "logout": "Log out"
   },
@@ -344,11 +344,17 @@
     "priceLabel": "Starting Price (USD)",
     "deliveryLabel": "Delivery Time",
     "days": "days",
-    "mainImageLabel": "Main Image URL",
+    "mainImageLabel": "Main Image",
     "mainImagePlaceholder": "https://…",
     "galleryLabel": "Gallery Images",
     "galleryPlaceholder": "Paste an image URL and press Enter",
     "optional": "Optional",
+    "clickToUpload": "Click to upload image",
+    "imageHint": "PNG, JPG, WEBP up to 10 MB",
+    "changeImage": "Change",
+    "clickToAddGallery": "Add photos",
+    "add": "Add",
+    "uploadError": "Upload failed. Please try again.",
     "cancel": "Cancel",
     "back": "Back",
     "next": "Next",
@@ -491,5 +497,174 @@
       "button1": "Get Started",
       "button2": "Explore All Services"
     }
+  },
+  "Home": {
+    "stats": {
+      "freelancers": "Active Freelancers",
+      "projects": "Projects Completed",
+      "satisfaction": "Client Satisfaction",
+      "countries": "Countries Served"
+    },
+    "categories": {
+      "title": "Browse by Category",
+      "subtitle": "Find the perfect freelancer for every project need",
+      "viewAll": "View all categories",
+      "items": {
+        "webDev":             { "title": "Web Development",      "count": "12,500+ freelancers" },
+        "graphicDesign":      { "title": "Graphic Design",        "count": "18,200+ freelancers" },
+        "writing":            { "title": "Writing & Translation",  "count": "15,800+ freelancers" },
+        "mobileApps":         { "title": "Mobile Apps",            "count": "8,400+ freelancers"  },
+        "videoAnimation":     { "title": "Video & Animation",      "count": "9,600+ freelancers"  },
+        "musicAudio":         { "title": "Music & Audio",           "count": "6,200+ freelancers"  },
+        "digitalMarketing":   { "title": "Digital Marketing",      "count": "11,300+ freelancers" },
+        "businessConsulting": { "title": "Business Consulting",    "count": "7,900+ freelancers"  },
+        "aiServices":         { "title": "AI Services",             "count": "5,100+ freelancers"  },
+        "photography":        { "title": "Photography",            "count": "10,400+ freelancers" }
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to get your project done",
+      "steps": {
+        "browse": { "title": "Browse & Choose",  "description": "Explore thousands of services and find the perfect match for your project needs." },
+        "work":   { "title": "Work Together",    "description": "Collaborate with your freelancer through our built-in messaging and file sharing." },
+        "pay":    { "title": "Pay Securely",      "description": "Release payment only when you are 100% satisfied with the delivered work." }
+      }
+    },
+    "trendingGigs": {
+      "title": "Trending Services",
+      "subtitle": "Most popular services on Alina right now",
+      "viewAll": "See all services",
+      "from": "From"
+    },
+    "topFreelancers": {
+      "title": "Top Freelancers",
+      "subtitle": "Highly rated talent ready to work with you",
+      "viewAll": "Browse all freelancers",
+      "startingAt": "Starting at"
+    },
+    "whyAlina": {
+      "title": "Why Choose Alina",
+      "subtitle": "Everything you need to hire confidently and get work done",
+      "items": {
+        "secure":    { "title": "Secure Payments",       "description": "Funds are held in escrow and released only when you approve the work." },
+        "fast":      { "title": "Fast Turnaround",        "description": "Filter by delivery time and get your project done in as little as 24 hours." },
+        "support":   { "title": "24/7 Support",           "description": "Our team is available around the clock to resolve any issue you face." },
+        "global":    { "title": "Global Talent Pool",     "description": "Access top freelancers from 160+ countries across every skill and industry." },
+        "vetted":    { "title": "Vetted Professionals",   "description": "Every seller is reviewed and rated by real clients after every project." },
+        "guarantee": { "title": "Satisfaction Guarantee", "description": "Not happy? We offer free revisions and refund protection on every order." }
+      }
+    },
+    "testimonials": {
+      "title": "What Our Clients Say",
+      "subtitle": "Thousands of businesses trust Alina every day",
+      "quotes": {
+        "t1": "We hired a logo designer in under 10 minutes. The quality blew us away — way above what we expected for the price.",
+        "t2": "Alina helped us find a developer who built our entire MVP in two weeks. Absolutely seamless experience.",
+        "t3": "I've used every freelance platform and Alina is by far the smoothest. No hidden fees, great talent.",
+        "t4": "Our backend was rebuilt in record time. The vetting system meant we got a true senior developer on the first try.",
+        "t5": "Sales jumped 40% after our store redesign done through Alina. Found an amazing designer in minutes.",
+        "t6": "The AI matching suggested three perfect candidates in seconds. Hired the first one and loved the result."
+      },
+      "roles": {
+        "startup-founder":   "Startup Founder",
+        "marketing-manager": "Marketing Manager",
+        "product-designer":  "Product Designer",
+        "cto":               "CTO",
+        "ecommerce-owner":   "E-commerce Owner",
+        "content-creator":   "Content Creator"
+      }
+    },
+    "cta": {
+      "heading":          "Ready to Get Started?",
+      "description":      "Join over 1 million freelancers and businesses already using Alina.",
+      "findWork":         "Find a Service",
+      "becomeFreelancer": "Become a Freelancer",
+      "trust":            "Free to join. No subscription required."
+    }
+  },
+
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's what's happening.",
+    "greeting": "Welcome back, {name}!",
+    "totalGigs": "Total Gigs",
+    "totalOrders": "Orders",
+    "totalEarnings": "Total Earnings",
+    "avgRating": "Avg. Rating",
+    "completedOrders": "Completed",
+    "responseRate": "Response Rate",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No recent activity yet."
+  },
+
+  "Orders": {
+    "title": "Orders",
+    "noOrders": "No orders found",
+    "noOrdersHint": "Orders will appear here once clients place them.",
+    "colTitle": "Title",
+    "colBuyer": "Buyer",
+    "colAmount": "Amount",
+    "colStatus": "Status",
+    "colDeadline": "Deadline",
+    "sellerReceives": "You Receive",
+    "deliveryMessage": "Delivery Message",
+    "showing": "Showing {from}–{to} of {total}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+
+  "Messages": {
+    "title": "Messages",
+    "searchPlaceholder": "Search conversations…",
+    "noChats": "No conversations yet.",
+    "noMessages": "No messages yet. Say hello!",
+    "messagePlaceholder": "Type a message…",
+    "selectChat": "Select a conversation",
+    "selectChatHint": "Choose someone from the left to start chatting.",
+    "online": "Online"
+  },
+
+  "Notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "You're all caught up!",
+    "emptyHint": "New notifications will appear here."
+  },
+
+  "Wallet": {
+    "title": "Wallet",
+    "available": "Available Balance",
+    "escrow": "In Escrow",
+    "escrowNote": "Held until orders complete",
+    "transactions": "Transaction History",
+    "loadAll": "Load all",
+    "noTransactions": "No transactions yet.",
+    "unavailable": "Wallet information unavailable."
+  },
+
+  "SettingsPage": {
+    "title": "Settings",
+    "save": "Save Changes",
+    "generalSettings": "General",
+    "language": "Language",
+    "timezone": "Timezone",
+    "currency": "Currency",
+    "emailNotifications": "Email Notifications",
+    "pushNotifications": "Push Notifications",
+    "notifOrders": "Orders & Deliveries",
+    "notifOrdersDesc": "Get notified when orders are placed or updated.",
+    "notifMessages": "Messages",
+    "notifMessagesDesc": "Get notified when you receive a new message.",
+    "notifReviews": "Reviews & Ratings",
+    "notifMarketing": "Marketing & Promotions",
+    "notifMarketingDesc": "Occasional tips, offers, and feature updates.",
+    "privacySettings": "Privacy",
+    "profileVisibility": "Profile Visibility",
+    "showEmail": "Show Email Address",
+    "showEmailDesc": "Display your email on your public profile.",
+    "showPhone": "Show Phone Number",
+    "activityStatus": "Show Activity Status",
+    "activityStatusDesc": "Let others see when you were last active."
   }
 }
