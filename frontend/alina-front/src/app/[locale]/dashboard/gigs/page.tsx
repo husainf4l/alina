@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Link } from "@/i18n/navigation";
 import apiClient from "@/lib/apiClient";
 import { normalizeImageUrl, cn } from "@/lib/utils";
-import { Plus, Briefcase, Star, Clock, ToggleLeft, ToggleRight, Loader2 } from "lucide-react";
+import { Plus, Briefcase, Star, Clock, ToggleLeft, ToggleRight, Loader2, Pencil, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Gig {
@@ -155,20 +155,39 @@ export default function GigsPage() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-1 border-t border-border">
-                  <span className="text-sm font-semibold text-foreground">
+                <div className="flex items-center justify-between pt-2 border-t border-border gap-2">
+                  <span className="text-sm font-semibold text-foreground shrink-0">
                     {gig.startingPrice != null ? `$${gig.startingPrice}` : "—"}
                   </span>
-                  <button
-                    onClick={() => toggleStatus(gig)}
-                    title={gig.isActive ? t("pause") : t("activate")}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {gig.isActive
-                      ? <ToggleRight className="size-5 text-[#B05088]" />
-                      : <ToggleLeft className="size-5" />
-                    }
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <Link href={`/dashboard/gigs/${gig.id}/edit`}>
+                      <button
+                        title={t("editButton")}
+                        className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium bg-[#B05088]/10 text-[#B05088] hover:bg-[#B05088]/20 transition-colors"
+                      >
+                        <Pencil className="size-3" />{t("editButton")}
+                      </button>
+                    </Link>
+                    <a
+                      href={`/services/${gig.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={t("viewButton")}
+                      className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                    >
+                      <ExternalLink className="size-3" />{t("viewButton")}
+                    </a>
+                    <button
+                      onClick={() => toggleStatus(gig)}
+                      title={gig.isActive ? t("pause") : t("activate")}
+                      className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                    >
+                      {gig.isActive
+                        ? <ToggleRight className="size-5 text-[#B05088]" />
+                        : <ToggleLeft className="size-5" />
+                      }
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -318,7 +318,15 @@
     "pause": "إيقاف مؤقت",
     "notSellerTitle": "مطلوب حساب بائع",
     "notSellerBody": "تحتاج إلى حساب بائع لإدارة الخدمات. حدّث دورك في ملفك الشخصي.",
-    "notSellerCta": "الذهاب إلى الملف الشخصي"
+    "notSellerCta": "الذهاب إلى الملف الشخصي",
+    "editButton": "تعديل",
+    "viewButton": "عرض",
+    "editPageTitle": "تعديل الخدمة",
+    "editPageSubtitle": "تحديث تفاصيل خدمتك",
+    "saveButton": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ…",
+    "loadingGig": "جارٍ تحميل الخدمة…",
+    "gigNotFound": "الخدمة غير موجودة"
   },
   "CreateGig": {
     "stepBasics": "الأساسيات",
