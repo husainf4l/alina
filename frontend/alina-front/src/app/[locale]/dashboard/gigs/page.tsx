@@ -35,7 +35,7 @@ export default function GigsPage() {
     if (!isSeller) { setLoading(false); return; }
     setFetchError(null);
     apiClient
-      .get("/api/Marketplace/gigs/my", { params: { PageNumber: 1, PageSize: 50 } })
+      .get("/api/Marketplace/gigs/me", { params: { PageNumber: 1, PageSize: 50 } })
       .then(({ data }) => setGigs(data?.items ?? data ?? []))
       .catch((err) => {
         const msg = err?.response?.data?.message ?? err?.response?.data?.error_description ?? err?.message ?? "Failed to load gigs";
