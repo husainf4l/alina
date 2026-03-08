@@ -12,6 +12,23 @@ using alina_backend.Modules.finance;
 using alina_backend.Modules.notifications;
 using alina_backend.Modules.validation;
 
+// Load .env file into environment variables before building the host.
+// .NET configuration picks these up automatically via Environment variable provider.
+var envFile = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envFile))
+{
+    foreach (var line in File.ReadAllLines(envFile))
+    {
+        var trimmed = line.Trim();
+        if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith('#')) continue;
+        var idx = trimmed.IndexOf('=');
+        if (idx < 0) continue;
+        var key = trimmed[..idx].Trim();
+        var value = trimmed[(idx + 1)..].Trim();
+        Environment.SetEnvironmentVariable(key, value);
+    }
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -130,9 +147,22 @@ if (!string.IsNullOrEmpty(privateKeyPath))
 }
 
 // Add AWS S3 Services
-var awsOptions = builder.Configuration.GetAWSOptions();
-builder.Services.AddDefaultAWSOptions(awsOptions);
-builder.Services.AddAWSService<Amazon.S3.IAmazonS3>();
+// Build AWSOptions manually — GetAWSOptions() does not read AccessKeyId/SecretAccessKey from config.
+// Credentials come from .env → Environment.SetEnvironmentVariable → AWS:* config keys.
+var awsAccessKey = builder.Configuration["AWS:AccessKeyId"];
+var awsSecretKey = builder.Configuration["AWS:SecretAccessKey"];
+var awsRegion = builder.Configuration["AWS:Region"] ?? "me-central-1";
+
+Amazon.Runtime.AWSCredentials awsCredentials = !string.IsNullOrEmpty(awsAccessKey) && !string.IsNullOrEmpty(awsSecretKey)
+    ? new Amazon.Runtime.BasicAWSCredentials(awsAccessKey, awsSecretKey)
+    : new Amazon.Runtime.EnvironmentVariablesAWSCredentials(); // fallback to AWS_ACCESS_KEY_ID env vars
+
+var s3Config = new Amazon.S3.AmazonS3Config
+{
+    RegionEndpoint = Amazon.RegionEndpoint.GetBySystemName(awsRegion)
+};
+
+builder.Services.AddSingleton<Amazon.S3.IAmazonS3>(_ => new Amazon.S3.AmazonS3Client(awsCredentials, s3Config));
 builder.Services.AddScoped<alina_backend.Modules.media.IStorageService, alina_backend.Modules.media.S3StorageService>();
 
 var app = builder.Build();
