@@ -9,6 +9,7 @@ export interface AuthUser {
   fullName: string;
   email: string;
   role: string;
+  isAdmin?: boolean;
   profileCompletionPercentage: number;
   displayName?: string;
   bio?: string;
@@ -28,6 +29,7 @@ function mapProfile(profile: Record<string, unknown>): Partial<AuthUser> {
     role: (profile.userRole ?? profile.role) as string | undefined,
     fullName: profile.fullName as string | undefined,
     email: profile.email as string | undefined,
+    isAdmin: (profile.isAdmin ?? false) as boolean,
   };
 }
 
@@ -69,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             fullName: mapped.fullName ?? data.user_full_name,
             email: mapped.email ?? data.user_email,
             role: mapped.role ?? data.user_role,
+            isAdmin: mapped.isAdmin ?? false,
             profileCompletionPercentage: mapped.profileCompletionPercentage ?? 0,
             displayName: mapped.displayName,
             bio: mapped.bio,
@@ -109,6 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       fullName: data.user_full_name,
       email: data.user_email,
       role: mapped.role ?? data.user_role,
+      isAdmin: mapped.isAdmin ?? false,
       profileCompletionPercentage: mapped.profileCompletionPercentage ?? 0,
       displayName: mapped.displayName,
       bio: mapped.bio,
@@ -162,6 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               coverUrl: mapped.coverUrl,
               fullName: mapped.fullName ?? prev.fullName,
               role: mapped.role ?? prev.role,
+              isAdmin: mapped.isAdmin ?? prev.isAdmin,
             }
           : prev
       );

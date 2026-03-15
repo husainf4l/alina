@@ -2,10 +2,11 @@
 
 import { use, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import apiClient from "@/lib/apiClient";
 import { normalizeImageUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import {
   Star,
   Clock,
@@ -55,12 +56,25 @@ interface GigDto {
 export default function GigDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const t = useTranslations("Services");
+  const router = useRouter();
+  const { user } = useAuth();
 
   const [gig, setGig] = useState<GigDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPkg, setSelectedPkg] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
+
+  const handleContinue = () => {
+    if (!gig) return;
+    if (!user) {
+      router.push("/auth");
+      return;
+    }
+    const selectedPackage = gig.packages.find((p) => p.id === selectedPkg) ?? gig.packages[0];
+    const pkgName = selectedPackage?.name ?? "";
+    router.push(`/checkout?gigId=${gig.id}&packageName=${encodeURIComponent(pkgName)}`);
+  };
 
   useEffect(() => {
     apiClient
@@ -355,8 +369,12 @@ export default function GigDetailPage({ params }: { params: Promise<{ id: string
                     <p className="text-sm text-muted-foreground leading-relaxed border-t border-border pt-3">{selectedPackage.description}</p>
                   )}
 
-                  <Button className="w-full rounded-xl bg-[#c71463] hover:bg-[#c71463]/90 text-white font-bold text-base py-6 shadow-lg shadow-[#c71463]/20 transition-all hover:shadow-[#c71463]/30 hover:-translate-y-0.5">
-                    Continue →
+                  <Button
+                    type="button"
+                    onClick={handleContinue}
+                    className="w-full rounded-xl bg-[#c71463] hover:bg-[#c71463]/90 text-white font-bold text-base py-6 shadow-lg shadow-[#c71463]/20 transition-all hover:shadow-[#c71463]/30 hover:-translate-y-0.5"
+                  >
+                    {user ? "Continue →" : "Sign in to Order"}
                   </Button>
 
                   <Button variant="outline" className="w-full rounded-xl gap-2 font-semibold py-5">

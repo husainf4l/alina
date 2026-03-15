@@ -160,9 +160,21 @@ var awsAccessKey = builder.Configuration["AWS:AccessKeyId"];
 var awsSecretKey = builder.Configuration["AWS:SecretAccessKey"];
 var awsRegion = builder.Configuration["AWS:Region"] ?? "me-central-1";
 
-Amazon.Runtime.AWSCredentials awsCredentials = !string.IsNullOrEmpty(awsAccessKey) && !string.IsNullOrEmpty(awsSecretKey)
-    ? new Amazon.Runtime.BasicAWSCredentials(awsAccessKey, awsSecretKey)
-    : new Amazon.Runtime.EnvironmentVariablesAWSCredentials(); // fallback to AWS_ACCESS_KEY_ID env vars
+Amazon.Runtime.AWSCredentials awsCredentials;
+if (!string.IsNullOrEmpty(awsAccessKey) && !string.IsNullOrEmpty(awsSecretKey))
+{
+    awsCredentials = new Amazon.Runtime.BasicAWSCredentials(awsAccessKey, awsSecretKey);
+}
+else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"))
+      && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")))
+{
+    awsCredentials = new Amazon.Runtime.EnvironmentVariablesAWSCredentials();
+}
+else
+{
+    // No credentials configured — S3 ops will fail at runtime but app can still start
+    awsCredentials = new Amazon.Runtime.AnonymousAWSCredentials();
+}
 
 var s3Config = new Amazon.S3.AmazonS3Config
 {

@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { MessageCircle, Send, Search } from "lucide-react";
 
 interface ChatSummary {
+  id: string;
   otherUserId: string;
   otherUserName: string;
   lastMessage: string;
@@ -63,10 +64,11 @@ export default function MessagesPage() {
   // Load chat list
   useEffect(() => {
     apiClient
-      .get<ChatSummary[]>("/api/Messaging/chats")
+      .get<ChatSummary[]>("/api/Messaging/conversations")
       .then((r) => {
-        setChats(r.data ?? []);
-        setFiltered(r.data ?? []);
+        const data = Array.isArray(r.data) ? r.data : (r.data as { items?: ChatSummary[] })?.items ?? [];
+        setChats(data);
+        setFiltered(data);
       })
       .catch(() => setChats([]))
       .finally(() => setLoadingChats(false));
@@ -89,13 +91,14 @@ export default function MessagesPage() {
   }, [search, chats]);
 
   // Load messages for selected chat
-  const loadMessages = useCallback(async (userId: string) => {
+  const loadMessages = useCallback(async (conversationId: string) => {
     try {
-      const r = await apiClient.get<MessageDto[]>(
-        `/api/Messaging/messages/${userId}`,
+      const r = await apiClient.get<MessageDto[] | { items?: MessageDto[] }>(
+        `/api/Messaging/conversations/${conversationId}/messages`,
         { params: { pageSize: 50 } }
       );
-      setMessages(Array.isArray(r.data) ? r.data : []);
+      const data = Array.isArray(r.data) ? r.data : (r.data as { items?: MessageDto[] })?.items ?? [];
+      setMessages(data);
     } catch {
       setMessages([]);
     }
@@ -104,12 +107,12 @@ export default function MessagesPage() {
   useEffect(() => {
     if (!selectedChat) return;
     setLoadingMessages(true);
-    loadMessages(selectedChat.otherUserId).finally(() =>
+    loadMessages(selectedChat.id).finally(() =>
       setLoadingMessages(false)
     );
     // Poll every 5 seconds
     pollRef.current = setInterval(
-      () => loadMessages(selectedChat.otherUserId),
+      () => loadMessages(selectedChat.id),
       5000
     );
     return () => {
@@ -126,17 +129,16 @@ export default function MessagesPage() {
     if (!newMessage.trim() || !selectedChat || sending) return;
     setSending(true);
     try {
-      const r = await apiClient.post<MessageDto>("/api/Messaging/messages", {
-        receiverId: selectedChat.otherUserId,
-        content: newMessage.trim(),
-        attachmentUrl: null,
-      });
+      const r = await apiClient.post<MessageDto>(
+        `/api/Messaging/conversations/${selectedChat.id}/messages`,
+        { content: newMessage.trim() }
+      );
       setMessages((prev) => [...prev, r.data]);
       setNewMessage("");
       // Update chat list preview
       setChats((prev) =>
         prev.map((c) =>
-          c.otherUserId === selectedChat.otherUserId
+          c.id === selectedChat.id
             ? { ...c, lastMessage: newMessage.trim(), lastMessageTime: new Date().toISOString() }
             : c
         )

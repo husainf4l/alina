@@ -11,6 +11,10 @@ import {
   TrendingUp,
   TrendingDown,
   RefreshCw,
+  Banknote,
+  CheckCircle2,
+  AlertCircle,
+  Send,
 } from "lucide-react";
 
 interface Money {
@@ -79,6 +83,14 @@ export default function WalletPage() {
   const [loadingTx, setLoadingTx] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
+  // Withdrawal form state
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawMethod, setWithdrawMethod] = useState("BankTransfer");
+  const [withdrawDetails, setWithdrawDetails] = useState("");
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawSuccess, setWithdrawSuccess] = useState(false);
+  const [withdrawError, setWithdrawError] = useState("");
+
   useEffect(() => {
     apiClient
       .get<WalletDto>("/api/Wallet")
@@ -108,6 +120,34 @@ export default function WalletPage() {
   };
 
   const transactions = showAll ? allTx : wallet?.recentTransactions ?? [];
+
+  const handleWithdraw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const amount = parseFloat(withdrawAmount);
+    if (!amount || amount <= 0 || !withdrawDetails.trim()) return;
+    setWithdrawing(true);
+    setWithdrawSuccess(false);
+    setWithdrawError("");
+    try {
+      await apiClient.post("/api/Withdrawal", {
+        amount,
+        currency: wallet?.availableBalance?.currency ?? "USD",
+        method: withdrawMethod,
+        accountDetails: withdrawDetails.trim(),
+      });
+      setWithdrawSuccess(true);
+      setWithdrawAmount("");
+      setWithdrawDetails("");
+      // Refresh wallet balance
+      const r = await apiClient.get<WalletDto>("/api/Wallet");
+      setWallet(r.data);
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      setWithdrawError(msg ?? t("withdrawal.error"));
+    } finally {
+      setWithdrawing(false);
+    }
+  };
 
   return (
     <div className="p-6 max-w-4xl space-y-8">
@@ -168,6 +208,103 @@ export default function WalletPage() {
                 {wallet.escrowBalance.currency} · {t("escrowNote")}
               </p>
             </div>
+          </div>
+
+          {/* Withdraw Funds */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+            <div className="flex items-center gap-2 mb-5">
+              <Banknote className="w-5 h-5 text-[#c71463]" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {t("withdrawal.title")}
+              </h2>
+            </div>
+
+            {withdrawSuccess && (
+              <div className="mb-4 flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-400 text-sm">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                {t("withdrawal.success")}
+              </div>
+            )}
+            {withdrawError && (
+              <div className="mb-4 flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {withdrawError}
+              </div>
+            )}
+
+            <form onSubmit={handleWithdraw} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Amount */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                    {t("withdrawal.amount")}
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
+                    <input
+                      type="number"
+                      min="1"
+                      step="0.01"
+                      value={withdrawAmount}
+                      onChange={(e) => { setWithdrawAmount(e.target.value); setWithdrawSuccess(false); setWithdrawError(""); }}
+                      placeholder="0.00"
+                      required
+                      className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30 focus:border-[#c71463]/50"
+                    />
+                  </div>
+                  {wallet?.availableBalance && (
+                    <p className="mt-1 text-xs text-gray-400">
+                      {t("withdrawal.available")}: ${Number(wallet.availableBalance.amount).toFixed(2)}
+                    </p>
+                  )}
+                </div>
+
+                {/* Method */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                    {t("withdrawal.method")}
+                  </label>
+                  <select
+                    value={withdrawMethod}
+                    onChange={(e) => setWithdrawMethod(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30 focus:border-[#c71463]/50"
+                  >
+                    <option value="BankTransfer">{t("withdrawal.methods.bank")}</option>
+                    <option value="PayPal">{t("withdrawal.methods.paypal")}</option>
+                    <option value="Stripe">{t("withdrawal.methods.stripe")}</option>
+                    <option value="Wise">{t("withdrawal.methods.wise")}</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Account Details */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  {t("withdrawal.accountDetails")}
+                </label>
+                <textarea
+                  value={withdrawDetails}
+                  onChange={(e) => { setWithdrawDetails(e.target.value); setWithdrawSuccess(false); setWithdrawError(""); }}
+                  placeholder={t("withdrawal.accountDetailsPlaceholder")}
+                  rows={3}
+                  required
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30 focus:border-[#c71463]/50 resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={withdrawing || !withdrawAmount || !withdrawDetails.trim()}
+                className="flex items-center gap-2 px-6 py-2.5 bg-[#c71463] hover:bg-[#a50f51] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-sm"
+              >
+                {withdrawing ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+                {withdrawing ? t("withdrawal.submitting") : t("withdrawal.submit")}
+              </button>
+            </form>
           </div>
 
           {/* Transaction History */}

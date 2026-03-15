@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
+import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -14,6 +15,13 @@ import {
   UserCircle,
   ChevronLeft,
   ChevronRight,
+  BarChart2,
+  Target,
+  Star,
+  Heart,
+  Tag,
+  LifeBuoy,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -25,12 +33,19 @@ const NAV_ITEMS = [
   { key: "messages", href: "/dashboard/messages", icon: MessageSquare },
   { key: "notifications", href: "/dashboard/notifications", icon: Bell },
   { key: "wallet", href: "/dashboard/wallet", icon: Wallet },
+  { key: "favorites", href: "/dashboard/favorites", icon: Heart },
+  { key: "offers", href: "/dashboard/offers", icon: Tag },
+  { key: "analytics", href: "/dashboard/analytics", icon: BarChart2 },
+  { key: "goals", href: "/dashboard/goals", icon: Target },
+  { key: "reviews", href: "/dashboard/reviews", icon: Star },
   { key: "profile", href: "/dashboard/profile", icon: UserCircle },
   { key: "settings", href: "/dashboard/settings", icon: Settings },
+  { key: "support", href: "/dashboard/support", icon: LifeBuoy },
 ] as const;
 
 export default function DashboardSidebar() {
   const t = useTranslations("DashboardNav");
+  const { user } = useAuth();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -92,6 +107,25 @@ export default function DashboardSidebar() {
             </Link>
           );
         })}
+
+        {/* Admin link — only for admins */}
+        {user?.isAdmin && (
+          <>
+            <div className="my-1 border-t border-border" />
+            <Link
+              href="/admin"
+              className={cn(
+                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                pathname.startsWith("/admin")
+                  ? "bg-[#c71463]/10 text-[#c71463]"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <ShieldCheck className="size-4 shrink-0" />
+              {!collapsed && <span>{t("admin")}</span>}
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* Collapse toggle */}

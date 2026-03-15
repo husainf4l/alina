@@ -175,7 +175,25 @@
     "privacyLink": "سياسة الخصوصية",
     "loading": "يرجى الانتظار...",
     "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "errorPasswordMismatch": "كلمتا المرور غير متطابقتين."
+    "errorPasswordMismatch": "كلمتا المرور غير متطابقتين.",
+    "forgotTitle": "نسيت كلمة المرور؟",
+    "forgotSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+    "forgotSendButton": "إرسال رابط الإعادة",
+    "forgotSending": "جارٍ الإرسال…",
+    "forgotSuccessTitle": "تحقق من بريدك الوارد",
+    "forgotSuccessDesc": "إذا كان هناك حساب بهذا البريد الإلكتروني، ستصلك رسالة بالرابط قريباً.",
+    "backToLogin": "العودة إلى تسجيل الدخول",
+    "newPasswordLabel": "كلمة المرور الجديدة",
+    "resetTitle": "تعيين كلمة مرور جديدة",
+    "resetSubtitle": "أدخل كلمة مرورك الجديدة أدناه.",
+    "resetButton": "تعيين كلمة المرور",
+    "resetError": "فشلت إعادة التعيين. قد يكون الرابط منتهي الصلاحية.",
+    "resetPasswordTooShort": "كلمة المرور يجب أن تكون 8 أحرف على الأقل.",
+    "resetSuccessTitle": "تم تحديث كلمة المرور!",
+    "resetSuccessDesc": "تم تغيير كلمة مرورك. سيتم توجيهك إلى صفحة تسجيل الدخول…",
+    "resetInvalidTitle": "رابط غير صالح أو منتهي",
+    "resetInvalidDesc": "هذا الرابط غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.",
+    "token": "token"
   },
   "Onboarding": {
     "profileTitle": "أكمل",
@@ -217,10 +235,19 @@
     "messages": "الرسائل",
     "notifications": "الإشعارات",
     "wallet": "المحفظة",
+    "favorites": "المفضلة",
+    "offers": "العروض المخصصة",
+    "analytics": "التحليلات",
+    "goals": "الأهداف",
+    "reviews": "التقييمات",
     "profile": "الملف الشخصي",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "support": "الدعم",
+    "admin": "لوحة التحكم"
   },
-  "DashboardHeader": {    "home": "الرئيسية",    "searchPlaceholder": "بحث...",
+  "DashboardHeader": {
+    "home": "الرئيسية",
+    "searchPlaceholder": "بحث...",
     "logout": "تسجيل الخروج"
   },
   "Profile": {
@@ -241,7 +268,26 @@
     "saveButton": "حفظ التغييرات",
     "saving": "جارٍ الحفظ...",
     "saveSuccess": "تم تحديث الملف الشخصي بنجاح!",
-    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "professionalTitleLabel": "المسمى الوظيفي",
+    "professionalTitlePlaceholder": "مثلاً: مطور ويب متكامل، مصمم جرافيك",
+    "skillsLabel": "المهارات",
+    "skillsPlaceholder": "أضف مهارة (اضغط Enter)",
+    "addSkill": "إضافة مهارة",
+    "languagesLabel": "اللغات",
+    "languagesPlaceholder": "أضف لغة (اضغط Enter)",
+    "addLanguage": "إضافة لغة",
+    "socialLinksTitle": "روابط التواصل الاجتماعي",
+    "websiteLabel": "الموقع الإلكتروني",
+    "linkedInLabel": "لينكد إن",
+    "githubLabel": "جيت هاب",
+    "twitterLabel": "تويتر / إكس",
+    "preferencesTitle": "التفضيلات",
+    "timezoneLabel": "المنطقة الزمنية",
+    "timezonePlaceholder": "مثلاً: UTC، Asia/Dubai",
+    "currencyLabel": "العملة المفضلة",
+    "profileVisibilityLabel": "ملف شخصي عام",
+    "profileVisibilityHint": "اجعل ملفك الشخصي مرئياً للجميع"
   },
   "Contact": {
     "hero": {
@@ -506,6 +552,26 @@
       "description": "انضم إلى آلاف العملاء الراضين الذين يثقون في ألينا لاحتياجاتهم من العمل الحر",
       "button1": "ابدأ الآن",
       "button2": "استكشف جميع الخدمات"
+    },
+    "gigs": {
+      "all": "الكل",
+      "filter": "تصفية:",
+      "showing": "{count} خدمة متاحة",
+      "resultsFor": "{count} نتيجة لـ \"{query}\"",
+      "empty": "لا توجد خدمات.",
+      "clearSearch": "مسح البحث",
+      "filters": "الفلاتر",
+      "clearFilters": "مسح الفلاتر",
+      "minPrice": "أدنى سعر",
+      "maxPrice": "أعلى سعر",
+      "deliveryTime": "وقت التسليم",
+      "anyDelivery": "أي وقت",
+      "delivery1d": "حتى يوم واحد",
+      "delivery3d": "حتى 3 أيام",
+      "delivery7d": "حتى 7 أيام",
+      "delivery14d": "حتى 14 يومًا",
+      "minRating": "أدنى تقييم",
+      "anyRating": "أي تقييم"
     }
   },
   "Home": {
@@ -515,30 +581,22 @@
       "satisfaction": "رضا العملاء",
       "countries": "دولة حول العالم"
     },
-    "categories": {
-      "title": "تصفح حسب الفئة",
-      "subtitle": "اعثر على المستقل المثالي لكل احتياجات مشروعك",
-      "viewAll": "عرض جميع الفئات",
-      "items": {
-        "webDev":             { "title": "تطوير الويب",              "count": "+12,500 مستقل" },
-        "graphicDesign":      { "title": "التصميم الجرافيكي",        "count": "+18,200 مستقل" },
-        "writing":            { "title": "الكتابة والترجمة",         "count": "+15,800 مستقل" },
-        "mobileApps":         { "title": "تطبيقات الجوال",           "count": "+8,400 مستقل"  },
-        "videoAnimation":     { "title": "الفيديو والرسوم المتحركة",  "count": "+9,600 مستقل"  },
-        "musicAudio":         { "title": "الموسيقى والصوت",           "count": "+6,200 مستقل"  },
-        "digitalMarketing":   { "title": "التسويق الرقمي",            "count": "+11,300 مستقل" },
-        "businessConsulting": { "title": "الاستشارات التجارية",       "count": "+7,900 مستقل"  },
-        "aiServices":         { "title": "خدمات الذكاء الاصطناعي",   "count": "+5,100 مستقل"  },
-        "photography":        { "title": "التصوير الفوتوغرافي",       "count": "+10,400 مستقل" }
-      }
-    },
     "howItWorks": {
       "title": "كيف يعمل",
       "subtitle": "ثلاث خطوات بسيطة لإنجاز مشروعك",
       "steps": {
-        "browse": { "title": "تصفح واختر",    "description": "استكشف آلاف الخدمات واعثر على التطابق المثالي لاحتياجات مشروعك." },
-        "work":   { "title": "اعمل معاً",     "description": "تعاون مع مستقلك عبر نظام المراسلة ومشاركة الملفات المدمج لدينا." },
-        "pay":    { "title": "ادفع بأمان",    "description": "أطلق الدفع فقط عندما تكون راضياً بنسبة 100% عن العمل المسلَّم." }
+        "browse": {
+          "title": "تصفح واختر",
+          "description": "استكشف آلاف الخدمات واعثر على التطابق المثالي لاحتياجات مشروعك."
+        },
+        "work": {
+          "title": "اعمل معاً",
+          "description": "تعاون مع مستقلك عبر نظام المراسلة ومشاركة الملفات المدمج لدينا."
+        },
+        "pay": {
+          "title": "ادفع بأمان",
+          "description": "أطلق الدفع فقط عندما تكون راضياً بنسبة 100% عن العمل المسلَّم."
+        }
       }
     },
     "trendingGigs": {
@@ -557,12 +615,30 @@
       "title": "لماذا تختار ألينا",
       "subtitle": "كل ما تحتاجه للتوظيف بثقة وإنجاز العمل",
       "items": {
-        "secure":    { "title": "مدفوعات آمنة",          "description": "تُحفظ الأموال في الضمان وتُطلق فقط عند موافقتك على العمل." },
-        "fast":      { "title": "تسليم سريع",             "description": "صفّ حسب وقت التسليم وأنجز مشروعك خلال 24 ساعة." },
-        "support":   { "title": "دعم على مدار الساعة",    "description": "فريقنا متاح على مدار الساعة لحل أي مشكلة تواجهها." },
-        "global":    { "title": "مجموعة مواهب عالمية",   "description": "الوصول إلى أفضل المستقلين من أكثر من 160 دولة في كل مجال." },
-        "vetted":    { "title": "محترفون موثوقون",        "description": "كل بائع يتم مراجعته وتقييمه من قبل عملاء حقيقيين بعد كل مشروع." },
-        "guarantee": { "title": "ضمان الرضا",             "description": "غير راضٍ؟ نقدم مراجعات مجانية وحماية الاسترداد على كل طلب." }
+        "secure": {
+          "title": "مدفوعات آمنة",
+          "description": "تُحفظ الأموال في الضمان وتُطلق فقط عند موافقتك على العمل."
+        },
+        "fast": {
+          "title": "تسليم سريع",
+          "description": "صفّ حسب وقت التسليم وأنجز مشروعك خلال 24 ساعة."
+        },
+        "support": {
+          "title": "دعم على مدار الساعة",
+          "description": "فريقنا متاح على مدار الساعة لحل أي مشكلة تواجهها."
+        },
+        "global": {
+          "title": "مجموعة مواهب عالمية",
+          "description": "الوصول إلى أفضل المستقلين من أكثر من 160 دولة في كل مجال."
+        },
+        "vetted": {
+          "title": "محترفون موثوقون",
+          "description": "كل بائع يتم مراجعته وتقييمه من قبل عملاء حقيقيين بعد كل مشروع."
+        },
+        "guarantee": {
+          "title": "ضمان الرضا",
+          "description": "غير راضٍ؟ نقدم مراجعات مجانية وحماية الاسترداد على كل طلب."
+        }
       }
     },
     "testimonials": {
@@ -577,23 +653,22 @@
         "t6": "اقترح الذكاء الاصطناعي ثلاثة مرشحين مثاليين في ثوانٍ. وظّفت الأول وأحببت النتيجة."
       },
       "roles": {
-        "startup-founder":   "مؤسس شركة ناشئة",
+        "startup-founder": "مؤسس شركة ناشئة",
         "marketing-manager": "مدير تسويق",
-        "product-designer":  "مصمم منتجات",
-        "cto":               "مدير تقني",
-        "ecommerce-owner":   "مالك متجر إلكتروني",
-        "content-creator":   "صانع محتوى"
+        "product-designer": "مصمم منتجات",
+        "cto": "مدير تقني",
+        "ecommerce-owner": "مالك متجر إلكتروني",
+        "content-creator": "صانع محتوى"
       }
     },
     "cta": {
-      "heading":          "هل أنت مستعد للبدء؟",
-      "description":      "انضم إلى أكثر من مليون مستقل وشركة يستخدمون ألينا بالفعل.",
-      "findWork":         "اعثر على خدمة",
+      "heading": "هل أنت مستعد للبدء؟",
+      "description": "انضم إلى أكثر من مليون مستقل وشركة يستخدمون ألينا بالفعل.",
+      "findWork": "اعثر على خدمة",
       "becomeFreelancer": "كن مستقلاً",
-      "trust":            "مجاني للانضمام. لا اشتراك مطلوب."
+      "trust": "مجاني للانضمام. لا اشتراك مطلوب."
     }
   },
-
   "Dashboard": {
     "title": "لوحة التحكم",
     "subtitle": "مرحباً بعودتك! إليك آخر التحديثات.",
@@ -607,7 +682,6 @@
     "recentActivity": "النشاط الأخير",
     "noActivity": "لا يوجد نشاط حديث بعد."
   },
-
   "Orders": {
     "title": "الطلبات",
     "noOrders": "لا توجد طلبات",
@@ -623,7 +697,40 @@
     "prev": "السابق",
     "next": "التالي"
   },
-
+  "Checkout": {
+    "title": "تقديم طلبك",
+    "subtitle": "راجع تفاصيل طلبك وأدخل متطلباتك",
+    "gigNotFound": "الخدمة غير موجودة",
+    "gigNotFoundHint": "الخدمة التي تبحث عنها غير موجودة أو تمت إزالتها.",
+    "backToServices": "العودة إلى الخدمات",
+    "backToGig": "العودة إلى الخدمة",
+    "requirementsTitle": "أخبرنا بما تحتاجه",
+    "requirementsSubtitle": "صف متطلبات مشروعك ليتمكن البائع من البدء",
+    "requirementsPlaceholder": "صف مشروعك بالتفصيل. أضف أي متطلبات أو مراجع أو تعليمات للبائع…",
+    "requirementsHint": "كن محدداً قدر الإمكان للحصول على أفضل النتائج.",
+    "orderSummary": "ملخص الطلب",
+    "service": "الخدمة",
+    "delivery": "التسليم",
+    "day": "يوم",
+    "days": "أيام",
+    "included": "مشمول",
+    "packagePrice": "سعر الباقة",
+    "serviceFee": "رسوم الخدمة",
+    "total": "الإجمالي",
+    "walletNote": "المبلغ سيُحتجز في الضمان ويُحرَّر للبائع عند اكتمال الطلب.",
+    "confirmOrder": "تأكيد وتقديم الطلب",
+    "placing": "جارٍ تقديم الطلب…",
+    "orderError": "فشل تقديم الطلب. يرجى المحاولة مرة أخرى.",
+    "successTitle": "تم تقديم الطلب!",
+    "successDesc": "تم تقديم طلبك بنجاح. سيبدأ البائع العمل قريباً.",
+    "successRedirecting": "جارٍ توجيهك إلى طلباتك…",
+    "guaranteesTitle": "ضماناتنا",
+    "guarantee1": "دفع آمن — محتجز في الضمان",
+    "guarantee2": "استرداد كامل إذا لم يتم التسليم",
+    "guarantee3": "دعم العملاء على مدار الساعة",
+    "gigId": "gigId",
+    "packageName": "packageName"
+  },
   "Messages": {
     "title": "الرسائل",
     "searchPlaceholder": "بحث في المحادثات…",
@@ -634,14 +741,12 @@
     "selectChatHint": "اختر شخصاً من اليسار لبدء الدردشة.",
     "online": "متصل"
   },
-
   "Notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
     "empty": "لقد اطلعت على جميع الإشعارات!",
     "emptyHint": "ستظهر الإشعارات الجديدة هنا."
   },
-
   "Wallet": {
     "title": "المحفظة",
     "available": "الرصيد المتاح",
@@ -650,9 +755,26 @@
     "transactions": "سجل المعاملات",
     "loadAll": "تحميل الكل",
     "noTransactions": "لا توجد معاملات بعد.",
-    "unavailable": "معلومات المحفظة غير متاحة."
+    "unavailable": "معلومات المحفظة غير متاحة.",
+    "withdrawal": {
+      "title": "سحب الأموال",
+      "amount": "المبلغ",
+      "method": "طريقة السحب",
+      "methods": {
+        "bank": "تحويل بنكي",
+        "paypal": "PayPal",
+        "stripe": "Stripe",
+        "wise": "Wise"
+      },
+      "accountDetails": "تفاصيل الحساب",
+      "accountDetailsPlaceholder": "أدخل رقم الحساب البنكي أو IBAN أو بريد PayPal الإلكتروني، إلخ.",
+      "available": "المتاح",
+      "submit": "طلب سحب",
+      "submitting": "جارٍ المعالجة...",
+      "success": "تم تقديم طلب السحب بنجاح.",
+      "error": "فشل في تقديم طلب السحب."
+    }
   },
-
   "SettingsPage": {
     "title": "الإعدادات",
     "save": "حفظ التغييرات",
@@ -676,6 +798,174 @@
     "showEmailDesc": "اعرض بريدك الإلكتروني في ملفك الشخصي العام.",
     "showPhone": "إظهار رقم الهاتف",
     "activityStatus": "إظهار حالة النشاط",
-    "activityStatusDesc": "اسمح للآخرين برؤية آخر مرة كنت فيها نشطاً."
+    "activityStatusDesc": "اسمح للآخرين برؤية آخر مرة كنت فيها نشطاً.",
+    "appearanceSettings": "المظهر",
+    "themeLabel": "السمة",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "themeSystem": "النظام",
+    "themeDescription": "اختر كيف تبدو ألينا. سمة النظام تطابق إعدادات جهازك.",
+    "securitySettings": "الأمان",
+    "changePasswordTitle": "تغيير كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "currentPasswordPlaceholder": "أدخل كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "newPasswordPlaceholder": "أدخل كلمة مرور جديدة (8 أحرف على الأقل)",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+    "updatePassword": "تحديث كلمة المرور",
+    "passwordFieldsRequired": "جميع حقول كلمة المرور مطلوبة",
+    "passwordMismatch": "كلمتا المرور الجديدتان غير متطابقتين",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordChangeSuccess": "تم تحديث كلمة المرور بنجاح!",
+    "passwordChangeError": "فشل تحديث كلمة المرور. يرجى التحقق من كلمة المرور الحالية.",
+    "twoFactorTitle": "المصادقة الثنائية",
+    "twoFactorDescription": "أضف طبقة إضافية من الأمان إلى حسابك باستخدام المصادقة الثنائية.",
+    "enable2FA": "تفعيل المصادقة الثنائية",
+    "accountSettings": "الحساب",
+    "accountInfoTitle": "معلومات الحساب",
+    "accountEmail": "البريد الإلكتروني",
+    "accountRole": "الدور",
+    "accountCompletion": "اكتمال الملف الشخصي",
+    "deleteAccountTitle": "حذف الحساب",
+    "deleteAccountWarning": "هذا الإجراء دائم ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك وخدماتك وطلباتك ورسائلك بشكل دائم.",
+    "deleteConfirmLabel": "اكتب DELETE للتأكيد",
+    "deleteConfirmPlaceholder": "DELETE",
+    "deleteAccountButton": "حذف حسابي",
+    "deletingAccount": "جارٍ الحذف...",
+    "deleteAccountError": "فشل حذف الحساب. يرجى المحاولة مرة أخرى لاحقاً."
+  },
+  "Favorites": {
+    "title": "المفضلة",
+    "subtitle": "الخدمات التي حفظتها لوقت لاحق.",
+    "noFavorites": "لا توجد مفضلات بعد",
+    "noFavoritesHint": "احفظ الخدمات التي تعجبك وستجدها هنا.",
+    "browseServices": "تصفح الخدمات",
+    "count": "{count} خدمة محفوظة",
+    "remove": "إزالة من المفضلة",
+    "by": "بواسطة",
+    "startingAt": "يبدأ من",
+    "view": "عرض"
+  },
+  "Offers": {
+    "title": "العروض المخصصة",
+    "subtitle": "إدارة العروض المخصصة الواردة والصادرة.",
+    "received": "الواردة",
+    "sent": "المرسلة",
+    "noReceived": "لا توجد عروض واردة",
+    "noSent": "لا توجد عروض مرسلة",
+    "noOffersHint": "ستظهر العروض المخصصة هنا بمجرد تبادلها.",
+    "from": "من",
+    "to": "إلى",
+    "days": "أيام",
+    "expiresIn": "تنتهي خلال {days} أيام",
+    "showMore": "عرض التفاصيل",
+    "showLess": "إخفاء التفاصيل",
+    "accept": "قبول",
+    "decline": "رفض",
+    "acceptOffer": "قبول العرض",
+    "declineOffer": "رفض العرض",
+    "acceptConfirm": "أنت على وشك قبول \u201c{title}\u201d مقابل {price}. سيتم إبلاغ البائع.",
+    "declineConfirm": "أنت على وشك رفض \u201c{title}\u201d. سيتم إبلاغ البائع.",
+    "responseMessage": "رسالة",
+    "optional": "اختياري",
+    "acceptMessagePlaceholder": "أضف ملاحظة للبائع (اختياري)…",
+    "declineMessagePlaceholder": "أخبره بسبب رفضك (اختياري)…",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "respondError": "تعذّر إرسال ردّك. يرجى المحاولة مرة أخرى.",
+    "status": {
+      "pending": "قيد الانتظار",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "expired": "منتهي الصلاحية",
+      "withdrawn": "مسحوب"
+    }
+  },
+  "Support": {
+    "title": "مركز الدعم",
+    "subtitle": "أرسل تذكرةً وسنرد عليك في أقرب وقت.",
+    "newTicket": "تذكرة جديدة",
+    "cancel": "إلغاء",
+    "subjectLabel": "الموضوع",
+    "subjectPlaceholder": "صف مشكلتك بإيجاز…",
+    "messageLabel": "الرسالة",
+    "messagePlaceholder": "صف مشكلتك بالتفصيل…",
+    "submit": "إرسال التذكرة",
+    "submitSuccess": "تم إرسال تذكرتك بنجاح. سنرد خلال 24 ساعة.",
+    "submitError": "تعذّر إرسال تذكرتك. يرجى المحاولة مرة أخرى.",
+    "noTickets": "لا توجد تذاكر بعد",
+    "noTicketsHint": "افتح تذكرةً إذا كنت بحاجة إلى مساعدة.",
+    "count": "{count} تذكرة",
+    "ticketId": "رقم التذكرة",
+    "lastUpdated": "آخر تحديث",
+    "status": {
+      "Open": "مفتوحة",
+      "InProgress": "جاري",
+      "Resolved": "تم حلها",
+      "Closed": "مغلقة"
+    }
+  },
+  "Analytics": {
+    "title": "التحليلات",
+    "subtitle": "تتبع أدائك واتجاهات إيراداتك بمرور الوقت.",
+    "earnings30d": "الأرباح (30 يوم)",
+    "orders30d": "الطلبات (30 يوم)",
+    "orderGrowth": "نمو الطلبات",
+    "conversionRate": "معدل التحويل",
+    "profileViews": "مشاهدات الملف الشخصي",
+    "gigClicks": "نقرات الخدمات",
+    "totalCustomers": "إجمالي العملاء",
+    "repeatCustomers": "العملاء المتكررون",
+    "retention": "استبقاء",
+    "last7d": "آخر 7 أيام",
+    "revenueTrend": "اتجاه الإيرادات (30 يوم)",
+    "orderTrend": "اتجاه الطلبات (30 يوم)",
+    "performance": "أداء البائع",
+    "completionRate": "معدل الإتمام",
+    "onTimeDelivery": "التسليم في الوقت المحدد",
+    "responseRate": "معدل الاستجابة",
+    "avgRating": "متوسط التقييم",
+    "customerInsights": "رؤى العملاء",
+    "avgOrderValue": "متوسط قيمة الطلب",
+    "topLocations": "أبرز المواقع الجغرافية",
+    "topGigs": "الخدمات الأعلى أداءً",
+    "gigTitle": "الخدمة",
+    "orders": "الطلبات",
+    "revenue": "الإيرادات",
+    "noData": "لا توجد بيانات كافية بعد."
+  },
+  "Goals": {
+    "title": "أهدافي",
+    "subtitle": "حدد أهداف الأداء وتابعها لتنمية عملك.",
+    "newGoal": "هدف جديد",
+    "editGoal": "تعديل الهدف",
+    "noGoals": "لا توجد أهداف بعد",
+    "noGoalsHint": "أنشئ هدفك الأول لبدء تتبع التقدم.",
+    "activeGoals": "نشط",
+    "completedGoals": "محقق",
+    "otherGoals": "موقوف / منتهٍ",
+    "achieved": "تم التحقيق!",
+    "daysLeft": "{days} يوم متبقٍ",
+    "dueToday": "يستحق اليوم",
+    "expired": "منتهٍ",
+    "confirmDelete": "هل أنت متأكد من حذف هذا الهدف؟",
+    "formTitle": "العنوان",
+    "formTitlePlaceholder": "مثال: كسب 1,000 دولار هذا الشهر",
+    "formDesc": "الوصف",
+    "formType": "النوع",
+    "formPeriod": "الفترة",
+    "formTarget": "القيمة المستهدفة",
+    "formEndDate": "تاريخ الانتهاء",
+    "formStatus": "الحالة",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "SellerReviews": {
+    "title": "تقييماتي",
+    "subtitle": "التقييمات التي تركها المشترون على طلباتك المكتملة.",
+    "noReviews": "لا توجد تقييمات بعد",
+    "noReviewsHint": "ستظهر التقييمات هنا بعد أن يقيّم المشترون عملك المكتمل.",
+    "basedOn": "بناءً على {count} تقييمات"
   }
 }

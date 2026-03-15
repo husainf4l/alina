@@ -175,7 +175,25 @@
     "privacyLink": "Privacy Policy",
     "loading": "Please wait...",
     "errorGeneric": "Something went wrong. Please try again.",
-    "errorPasswordMismatch": "Passwords do not match."
+    "errorPasswordMismatch": "Passwords do not match.",
+    "forgotTitle": "Forgot your password?",
+    "forgotSubtitle": "Enter your email and we'll send you a reset link.",
+    "forgotSendButton": "Send Reset Link",
+    "forgotSending": "Sending…",
+    "forgotSuccessTitle": "Check your inbox",
+    "forgotSuccessDesc": "If an account exists for that email, you'll receive a password reset link shortly.",
+    "backToLogin": "Back to login",
+    "newPasswordLabel": "New password",
+    "resetTitle": "Set a new password",
+    "resetSubtitle": "Enter your new password below.",
+    "resetButton": "Set New Password",
+    "resetError": "Failed to reset password. The link may have expired.",
+    "resetPasswordTooShort": "Password must be at least 8 characters.",
+    "resetSuccessTitle": "Password updated!",
+    "resetSuccessDesc": "Your password has been changed. Redirecting to the login page…",
+    "resetInvalidTitle": "Invalid or expired link",
+    "resetInvalidDesc": "This reset link is invalid or has expired. Please request a new one.",
+    "token": "token"
   },
   "Onboarding": {
     "profileTitle": "Complete your",
@@ -217,8 +235,15 @@
     "messages": "Messages",
     "notifications": "Notifications",
     "wallet": "Wallet",
+    "favorites": "Favorites",
+    "offers": "Custom Offers",
+    "analytics": "Analytics",
+    "goals": "Goals",
+    "reviews": "Reviews",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "support": "Support",
+    "admin": "Admin Panel"
   },
   "DashboardHeader": {
     "home": "Home",
@@ -243,7 +268,26 @@
     "saveButton": "Save changes",
     "saving": "Saving...",
     "saveSuccess": "Profile updated successfully!",
-    "errorGeneric": "Something went wrong. Please try again."
+    "errorGeneric": "Something went wrong. Please try again.",
+    "professionalTitleLabel": "Professional title",
+    "professionalTitlePlaceholder": "e.g. Full Stack Developer, Graphic Designer",
+    "skillsLabel": "Skills",
+    "skillsPlaceholder": "Add a skill (press Enter)",
+    "addSkill": "Add skill",
+    "languagesLabel": "Languages",
+    "languagesPlaceholder": "Add a language (press Enter)",
+    "addLanguage": "Add language",
+    "socialLinksTitle": "Social Links",
+    "websiteLabel": "Website",
+    "linkedInLabel": "LinkedIn",
+    "githubLabel": "GitHub",
+    "twitterLabel": "Twitter / X",
+    "preferencesTitle": "Preferences",
+    "timezoneLabel": "Timezone",
+    "timezonePlaceholder": "e.g. UTC, America/New_York",
+    "currencyLabel": "Preferred currency",
+    "profileVisibilityLabel": "Public profile",
+    "profileVisibilityHint": "Make your profile visible to everyone"
   },
   "Contact": {
     "hero": {
@@ -508,6 +552,26 @@
       "description": "Join thousands of satisfied clients who trust ALINA for their freelance needs",
       "button1": "Get Started",
       "button2": "Explore All Services"
+    },
+    "gigs": {
+      "all": "All",
+      "filter": "Filter:",
+      "showing": "{count} services available",
+      "resultsFor": "{count} results for \"{query}\"",
+      "empty": "No services found.",
+      "clearSearch": "Clear search",
+      "filters": "Filters",
+      "clearFilters": "Clear filters",
+      "minPrice": "Min price",
+      "maxPrice": "Max price",
+      "deliveryTime": "Delivery time",
+      "anyDelivery": "Any delivery",
+      "delivery1d": "Up to 1 day",
+      "delivery3d": "Up to 3 days",
+      "delivery7d": "Up to 7 days",
+      "delivery14d": "Up to 14 days",
+      "minRating": "Min rating",
+      "anyRating": "Any rating"
     }
   },
   "Home": {
@@ -517,30 +581,22 @@
       "satisfaction": "Client Satisfaction",
       "countries": "Countries Served"
     },
-    "categories": {
-      "title": "Browse by Category",
-      "subtitle": "Find the perfect freelancer for every project need",
-      "viewAll": "View all categories",
-      "items": {
-        "webDev":             { "title": "Web Development",      "count": "12,500+ freelancers" },
-        "graphicDesign":      { "title": "Graphic Design",        "count": "18,200+ freelancers" },
-        "writing":            { "title": "Writing & Translation",  "count": "15,800+ freelancers" },
-        "mobileApps":         { "title": "Mobile Apps",            "count": "8,400+ freelancers"  },
-        "videoAnimation":     { "title": "Video & Animation",      "count": "9,600+ freelancers"  },
-        "musicAudio":         { "title": "Music & Audio",           "count": "6,200+ freelancers"  },
-        "digitalMarketing":   { "title": "Digital Marketing",      "count": "11,300+ freelancers" },
-        "businessConsulting": { "title": "Business Consulting",    "count": "7,900+ freelancers"  },
-        "aiServices":         { "title": "AI Services",             "count": "5,100+ freelancers"  },
-        "photography":        { "title": "Photography",            "count": "10,400+ freelancers" }
-      }
-    },
     "howItWorks": {
       "title": "How It Works",
       "subtitle": "Three simple steps to get your project done",
       "steps": {
-        "browse": { "title": "Browse & Choose",  "description": "Explore thousands of services and find the perfect match for your project needs." },
-        "work":   { "title": "Work Together",    "description": "Collaborate with your freelancer through our built-in messaging and file sharing." },
-        "pay":    { "title": "Pay Securely",      "description": "Release payment only when you are 100% satisfied with the delivered work." }
+        "browse": {
+          "title": "Browse & Choose",
+          "description": "Explore thousands of services and find the perfect match for your project needs."
+        },
+        "work": {
+          "title": "Work Together",
+          "description": "Collaborate with your freelancer through our built-in messaging and file sharing."
+        },
+        "pay": {
+          "title": "Pay Securely",
+          "description": "Release payment only when you are 100% satisfied with the delivered work."
+        }
       }
     },
     "trendingGigs": {
@@ -559,12 +615,30 @@
       "title": "Why Choose Alina",
       "subtitle": "Everything you need to hire confidently and get work done",
       "items": {
-        "secure":    { "title": "Secure Payments",       "description": "Funds are held in escrow and released only when you approve the work." },
-        "fast":      { "title": "Fast Turnaround",        "description": "Filter by delivery time and get your project done in as little as 24 hours." },
-        "support":   { "title": "24/7 Support",           "description": "Our team is available around the clock to resolve any issue you face." },
-        "global":    { "title": "Global Talent Pool",     "description": "Access top freelancers from 160+ countries across every skill and industry." },
-        "vetted":    { "title": "Vetted Professionals",   "description": "Every seller is reviewed and rated by real clients after every project." },
-        "guarantee": { "title": "Satisfaction Guarantee", "description": "Not happy? We offer free revisions and refund protection on every order." }
+        "secure": {
+          "title": "Secure Payments",
+          "description": "Funds are held in escrow and released only when you approve the work."
+        },
+        "fast": {
+          "title": "Fast Turnaround",
+          "description": "Filter by delivery time and get your project done in as little as 24 hours."
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Our team is available around the clock to resolve any issue you face."
+        },
+        "global": {
+          "title": "Global Talent Pool",
+          "description": "Access top freelancers from 160+ countries across every skill and industry."
+        },
+        "vetted": {
+          "title": "Vetted Professionals",
+          "description": "Every seller is reviewed and rated by real clients after every project."
+        },
+        "guarantee": {
+          "title": "Satisfaction Guarantee",
+          "description": "Not happy? We offer free revisions and refund protection on every order."
+        }
       }
     },
     "testimonials": {
@@ -579,23 +653,22 @@
         "t6": "The AI matching suggested three perfect candidates in seconds. Hired the first one and loved the result."
       },
       "roles": {
-        "startup-founder":   "Startup Founder",
+        "startup-founder": "Startup Founder",
         "marketing-manager": "Marketing Manager",
-        "product-designer":  "Product Designer",
-        "cto":               "CTO",
-        "ecommerce-owner":   "E-commerce Owner",
-        "content-creator":   "Content Creator"
+        "product-designer": "Product Designer",
+        "cto": "CTO",
+        "ecommerce-owner": "E-commerce Owner",
+        "content-creator": "Content Creator"
       }
     },
     "cta": {
-      "heading":          "Ready to Get Started?",
-      "description":      "Join over 1 million freelancers and businesses already using Alina.",
-      "findWork":         "Find a Service",
+      "heading": "Ready to Get Started?",
+      "description": "Join over 1 million freelancers and businesses already using Alina.",
+      "findWork": "Find a Service",
       "becomeFreelancer": "Become a Freelancer",
-      "trust":            "Free to join. No subscription required."
+      "trust": "Free to join. No subscription required."
     }
   },
-
   "Dashboard": {
     "title": "Dashboard",
     "subtitle": "Welcome back! Here's what's happening.",
@@ -609,7 +682,6 @@
     "recentActivity": "Recent Activity",
     "noActivity": "No recent activity yet."
   },
-
   "Orders": {
     "title": "Orders",
     "noOrders": "No orders found",
@@ -625,7 +697,40 @@
     "prev": "Previous",
     "next": "Next"
   },
-
+  "Checkout": {
+    "title": "Place Your Order",
+    "subtitle": "Review your order details and provide your requirements",
+    "gigNotFound": "Gig not found",
+    "gigNotFoundHint": "The gig you're looking for doesn't exist or has been removed.",
+    "backToServices": "Back to services",
+    "backToGig": "Back to gig",
+    "requirementsTitle": "Tell us what you need",
+    "requirementsSubtitle": "Describe your project so the seller can get started",
+    "requirementsPlaceholder": "Describe your project in detail. Include any specific requirements, references, or instructions for the seller…",
+    "requirementsHint": "Be as specific as possible to get the best results.",
+    "orderSummary": "Order Summary",
+    "service": "Service",
+    "delivery": "Delivery",
+    "day": "day",
+    "days": "days",
+    "included": "Included",
+    "packagePrice": "Package Price",
+    "serviceFee": "Service Fee",
+    "total": "Total",
+    "walletNote": "Amount will be held in escrow and released to the seller upon completion.",
+    "confirmOrder": "Confirm & Place Order",
+    "placing": "Placing order…",
+    "orderError": "Failed to place order. Please try again.",
+    "successTitle": "Order Placed!",
+    "successDesc": "Your order has been placed successfully. The seller will start working shortly.",
+    "successRedirecting": "Redirecting to your orders…",
+    "guaranteesTitle": "Our Guarantees",
+    "guarantee1": "Secure payment — held in escrow",
+    "guarantee2": "Full refund if not delivered",
+    "guarantee3": "24/7 customer support",
+    "gigId": "gigId",
+    "packageName": "packageName"
+  },
   "Messages": {
     "title": "Messages",
     "searchPlaceholder": "Search conversations…",
@@ -636,14 +741,12 @@
     "selectChatHint": "Choose someone from the left to start chatting.",
     "online": "Online"
   },
-
   "Notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
     "empty": "You're all caught up!",
     "emptyHint": "New notifications will appear here."
   },
-
   "Wallet": {
     "title": "Wallet",
     "available": "Available Balance",
@@ -652,9 +755,26 @@
     "transactions": "Transaction History",
     "loadAll": "Load all",
     "noTransactions": "No transactions yet.",
-    "unavailable": "Wallet information unavailable."
+    "unavailable": "Wallet information unavailable.",
+    "withdrawal": {
+      "title": "Withdraw Funds",
+      "amount": "Amount",
+      "method": "Withdrawal Method",
+      "methods": {
+        "bank": "Bank Transfer",
+        "paypal": "PayPal",
+        "stripe": "Stripe",
+        "wise": "Wise"
+      },
+      "accountDetails": "Account Details",
+      "accountDetailsPlaceholder": "Enter bank account number, IBAN, PayPal email, etc.",
+      "available": "Available",
+      "submit": "Request Withdrawal",
+      "submitting": "Processing...",
+      "success": "Withdrawal request submitted successfully.",
+      "error": "Failed to submit withdrawal request."
+    }
   },
-
   "SettingsPage": {
     "title": "Settings",
     "save": "Save Changes",
@@ -678,6 +798,174 @@
     "showEmailDesc": "Display your email on your public profile.",
     "showPhone": "Show Phone Number",
     "activityStatus": "Show Activity Status",
-    "activityStatusDesc": "Let others see when you were last active."
+    "activityStatusDesc": "Let others see when you were last active.",
+    "appearanceSettings": "Appearance",
+    "themeLabel": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "themeDescription": "Choose how Alina looks. System theme matches your device settings.",
+    "securitySettings": "Security",
+    "changePasswordTitle": "Change Password",
+    "currentPassword": "Current password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPassword": "New password",
+    "newPasswordPlaceholder": "Enter new password (min 8 characters)",
+    "confirmPassword": "Confirm new password",
+    "confirmPasswordPlaceholder": "Re-enter new password",
+    "updatePassword": "Update Password",
+    "passwordFieldsRequired": "All password fields are required",
+    "passwordMismatch": "New passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordChangeSuccess": "Password updated successfully!",
+    "passwordChangeError": "Failed to update password. Please check your current password.",
+    "twoFactorTitle": "Two-Factor Authentication",
+    "twoFactorDescription": "Add an extra layer of security to your account with 2FA.",
+    "enable2FA": "Enable 2FA",
+    "accountSettings": "Account",
+    "accountInfoTitle": "Account Information",
+    "accountEmail": "Email",
+    "accountRole": "Role",
+    "accountCompletion": "Profile Completion",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountWarning": "This action is permanent and cannot be undone. All your data, gigs, orders, and messages will be permanently deleted.",
+    "deleteConfirmLabel": "Type DELETE to confirm",
+    "deleteConfirmPlaceholder": "DELETE",
+    "deleteAccountButton": "Delete My Account",
+    "deletingAccount": "Deleting...",
+    "deleteAccountError": "Failed to delete account. Please try again later."
+  },
+  "Favorites": {
+    "title": "My Favorites",
+    "subtitle": "Services you have saved for later.",
+    "noFavorites": "No favorites yet",
+    "noFavoritesHint": "Save services you love to find them here.",
+    "browseServices": "Browse Services",
+    "count": "{count} saved services",
+    "remove": "Remove from favorites",
+    "by": "by",
+    "startingAt": "From",
+    "view": "View"
+  },
+  "Offers": {
+    "title": "Custom Offers",
+    "subtitle": "Manage custom offers you have received and sent.",
+    "received": "Received",
+    "sent": "Sent",
+    "noReceived": "No received offers",
+    "noSent": "No sent offers",
+    "noOffersHint": "Custom offers will appear here once exchanged.",
+    "from": "From",
+    "to": "To",
+    "days": "days",
+    "expiresIn": "Expires in {days}d",
+    "showMore": "Show details",
+    "showLess": "Hide details",
+    "accept": "Accept",
+    "decline": "Decline",
+    "acceptOffer": "Accept offer",
+    "declineOffer": "Decline offer",
+    "acceptConfirm": "You are about to accept \u201c{title}\u201d for {price}. The seller will be notified.",
+    "declineConfirm": "You are about to decline \u201c{title}\u201d. The seller will be notified.",
+    "responseMessage": "Message",
+    "optional": "optional",
+    "acceptMessagePlaceholder": "Add a note to the seller (optional)…",
+    "declineMessagePlaceholder": "Let them know why you are declining (optional)…",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "respondError": "Could not submit your response. Please try again.",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Declined",
+      "expired": "Expired",
+      "withdrawn": "Withdrawn"
+    }
+  },
+  "Support": {
+    "title": "Support Center",
+    "subtitle": "Submit a ticket and we will get back to you shortly.",
+    "newTicket": "New Ticket",
+    "cancel": "Cancel",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Briefly describe your issue…",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Describe your issue in detail…",
+    "submit": "Submit Ticket",
+    "submitSuccess": "Your ticket has been submitted. We will respond within 24 hours.",
+    "submitError": "Could not submit your ticket. Please try again.",
+    "noTickets": "No support tickets yet",
+    "noTicketsHint": "Open a ticket if you need any help.",
+    "count": "{count} ticket{count, plural, one {} other {s}}",
+    "ticketId": "Ticket ID",
+    "lastUpdated": "Last updated",
+    "status": {
+      "Open": "Open",
+      "InProgress": "In Progress",
+      "Resolved": "Resolved",
+      "Closed": "Closed"
+    }
+  },
+  "Analytics": {
+    "title": "Analytics",
+    "subtitle": "Track your performance and revenue trends over time.",
+    "earnings30d": "Earnings (30d)",
+    "orders30d": "Orders (30d)",
+    "orderGrowth": "Order Growth",
+    "conversionRate": "Conversion Rate",
+    "profileViews": "Profile Views",
+    "gigClicks": "Gig Clicks",
+    "totalCustomers": "Total Customers",
+    "repeatCustomers": "Repeat Customers",
+    "retention": "retention",
+    "last7d": "last 7d",
+    "revenueTrend": "Revenue Trend (30 days)",
+    "orderTrend": "Order Trend (30 days)",
+    "performance": "Seller Performance",
+    "completionRate": "Completion Rate",
+    "onTimeDelivery": "On-Time Delivery",
+    "responseRate": "Response Rate",
+    "avgRating": "Average Rating",
+    "customerInsights": "Customer Insights",
+    "avgOrderValue": "Avg Order Value",
+    "topLocations": "Top Locations",
+    "topGigs": "Top Performing Gigs",
+    "gigTitle": "Gig",
+    "orders": "Orders",
+    "revenue": "Revenue",
+    "noData": "Not enough data yet."
+  },
+  "Goals": {
+    "title": "My Goals",
+    "subtitle": "Set and track performance goals to grow your business.",
+    "newGoal": "New Goal",
+    "editGoal": "Edit Goal",
+    "noGoals": "No goals yet",
+    "noGoalsHint": "Create your first goal to start tracking progress.",
+    "activeGoals": "Active",
+    "completedGoals": "Achieved",
+    "otherGoals": "Paused / Expired",
+    "achieved": "Achieved!",
+    "daysLeft": "{days}d left",
+    "dueToday": "Due today",
+    "expired": "Expired",
+    "confirmDelete": "Are you sure you want to delete this goal?",
+    "formTitle": "Title",
+    "formTitlePlaceholder": "e.g. Earn $1,000 this month",
+    "formDesc": "Description",
+    "formType": "Type",
+    "formPeriod": "Period",
+    "formTarget": "Target Value",
+    "formEndDate": "End Date",
+    "formStatus": "Status",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "SellerReviews": {
+    "title": "My Reviews",
+    "subtitle": "Reviews left by buyers on your completed orders.",
+    "noReviews": "No reviews yet",
+    "noReviewsHint": "Reviews will appear here after buyers rate your completed work.",
+    "basedOn": "Based on {count} reviews"
   }
 }

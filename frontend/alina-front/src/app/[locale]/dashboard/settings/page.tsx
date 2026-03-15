@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/context/AuthContext";
 import apiClient from "@/lib/apiClient";
 import { useCurrency } from "@/context/CurrencyContext";
-import { Settings, Globe, Bell, Shield, Save, RefreshCw, Check } from "lucide-react";
+import { Settings, Globe, Bell, Shield, Save, RefreshCw, Check, Moon, Sun, Monitor, Lock, Trash2, AlertTriangle, User } from "lucide-react";
 
 interface NotificationPrefs {
   email?: { orders?: boolean; messages?: boolean; reviews?: boolean; marketing?: boolean; [k: string]: unknown };
@@ -23,16 +24,20 @@ interface UserSettings {
   language?: string;
   timezone?: string;
   currency?: string;
+  theme?: "light" | "dark" | "system";
   notifications?: NotificationPrefs;
   privacy?: PrivacyPrefs;
 }
 
-type TabId = "general" | "notifications" | "privacy";
+type TabId = "general" | "notifications" | "privacy" | "appearance" | "security" | "account";
 
 const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: "general", label: "General", icon: Globe },
+  { id: "appearance", label: "Appearance", icon: Monitor },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "privacy", label: "Privacy", icon: Shield },
+  { id: "security", label: "Security", icon: Lock },
+  { id: "account", label: "Account", icon: User },
 ];
 
 const LANGUAGES = ["en", "ar", "fr", "de", "es"];
@@ -119,6 +124,7 @@ function SelectField({
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
+  const { user } = useAuth();
   const { rates, ratesLoading, setCurrency } = useCurrency();
   const [activeTab, setActiveTab] = useState<TabId>("general");
   const [settings, setSettings] = useState<UserSettings>({});
@@ -126,6 +132,17 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  
+  // Security tab states
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+  
+  // Account deletion
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     apiClient
@@ -181,6 +198,54 @@ export default function SettingsPage() {
       ...prev,
       privacy: { ...prev.privacy, [key]: value },
     }));
+  };
+  
+  const handlePasswordChange = async () => {
+    setPasswordError("");
+    setPasswordSuccess(false);
+    
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError(t("passwordFieldsRequired"));
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t("passwordMismatch"));
+      return;
+    }
+    
+    if (newPassword.length < 8) {
+      setPasswordError(t("passwordTooShort"));
+      return;
+    }
+    
+    try {
+      await apiClient.post("/api/auth/change-password", {
+        currentPassword,
+        newPassword,
+      });
+      setPasswordSuccess(true);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setPasswordSuccess(false), 3000);
+    } catch (err) {
+      const data = (err as { response?: { data?: { message?: string } } })?.response?.data;
+      setPasswordError(data?.message ?? t("passwordChangeError"));
+    }
+  };
+  
+  const handleDeleteAccount = async () => {
+    if (deleteConfirm !== "DELETE") return;
+    
+    setDeleting(true);
+    try {
+      await apiClient.delete("/api/auth/me");
+      window.location.href = "/";
+    } catch {
+      setDeleting(false);
+      alert(t("deleteAccountError"));
+    }
   };
 
   return (
@@ -246,7 +311,7 @@ export default function SettingsPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">
                 {t("generalSettings")}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <SelectField
                   label={t("language")}
                   value={settings.language ?? "en"}
@@ -259,49 +324,12 @@ export default function SettingsPage() {
                   options={TIMEZONES}
                   onChange={(v) => setSettings((p) => ({ ...p, timezone: v }))}
                 />
-              </div>
-
-              {/* Currency — live card picker */}
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                  {t("currency")}
-                  {ratesLoading && (
-                    <span className="ms-2 text-xs text-gray-400">{t("currencyLoading")}</span>
-                  )}
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {rates.map((r) => {
-                    const active = (settings.currency ?? "USD") === r.code;
-                    return (
-                      <button
-                        key={r.code}
-                        type="button"
-                        onClick={() => setSettings((p) => ({ ...p, currency: r.code }))}
-                        className={`relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-start transition-all ${
-                          active
-                            ? "border-[#c71463] bg-[#c71463]/5 ring-1 ring-[#c71463]/30"
-                            : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
-                        }`}
-                      >
-                        <span className="text-lg leading-none">{r.symbol}</span>
-                        <div className="min-w-0">
-                          <p className={`text-sm font-semibold leading-tight ${
-                            active ? "text-[#c71463]" : "text-gray-900 dark:text-white"
-                          }`}>{r.code}</p>
-                          <p className="text-[11px] text-gray-400 truncate">{r.name}</p>
-                          {r.code !== "USD" && (
-                            <p className="text-[10px] text-gray-400 tabular-nums">
-                              1 USD = {r.rate.toFixed(r.rate < 1 ? 4 : 2)}
-                            </p>
-                          )}
-                        </div>
-                        {active && (
-                          <Check className="absolute end-2 top-2 size-3.5 text-[#c71463] shrink-0" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <SelectField
+                  label={t("currency")}
+                  value={settings.currency ?? "USD"}
+                  options={rates.map(r => r.code)}
+                  onChange={(v) => setSettings((p) => ({ ...p, currency: v }))}
+                />
               </div>
             </>
           )}
@@ -385,6 +413,248 @@ export default function SettingsPage() {
                   checked={settings.privacy?.activityStatus ?? true}
                   onChange={(v) => setPrivacy("activityStatus", v)}
                 />
+              </div>
+            </>
+          )}
+
+          {/* Appearance Tab */}
+          {activeTab === "appearance" && (
+            <>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+                {t("appearanceSettings")}
+              </p>
+              
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  {t("themeLabel")}
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSettings((p) => ({ ...p, theme: "light" }))}
+                    className={`relative flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
+                      (settings.theme ?? "system") === "light"
+                        ? "border-[#c71463] bg-[#c71463]/5 ring-1 ring-[#c71463]/30"
+                        : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                    }`}
+                  >
+                    <Sun className={`size-6 ${
+                      (settings.theme ?? "system") === "light" ? "text-[#c71463]" : "text-gray-400"
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      (settings.theme ?? "system") === "light" ? "text-[#c71463]" : "text-gray-700 dark:text-gray-300"
+                    }`}>{t("themeLight")}</span>
+                    {(settings.theme ?? "system") === "light" && (
+                      <Check className="absolute end-2 top-2 size-4 text-[#c71463]" />
+                    )}
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setSettings((p) => ({ ...p, theme: "dark" }))}
+                    className={`relative flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
+                      (settings.theme ?? "system") === "dark"
+                        ? "border-[#c71463] bg-[#c71463]/5 ring-1 ring-[#c71463]/30"
+                        : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                    }`}
+                  >
+                    <Moon className={`size-6 ${
+                      (settings.theme ?? "system") === "dark" ? "text-[#c71463]" : "text-gray-400"
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      (settings.theme ?? "system") === "dark" ? "text-[#c71463]" : "text-gray-700 dark:text-gray-300"
+                    }`}>{t("themeDark")}</span>
+                    {(settings.theme ?? "system") === "dark" && (
+                      <Check className="absolute end-2 top-2 size-4 text-[#c71463]" />
+                    )}
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setSettings((p) => ({ ...p, theme: "system" }))}
+                    className={`relative flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
+                      (settings.theme ?? "system") === "system"
+                        ? "border-[#c71463] bg-[#c71463]/5 ring-1 ring-[#c71463]/30"
+                        : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
+                    }`}
+                  >
+                    <Monitor className={`size-6 ${
+                      (settings.theme ?? "system") === "system" ? "text-[#c71463]" : "text-gray-400"
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      (settings.theme ?? "system") === "system" ? "text-[#c71463]" : "text-gray-700 dark:text-gray-300"
+                    }`}>{t("themeSystem")}</span>
+                    {(settings.theme ?? "system") === "system" && (
+                      <Check className="absolute end-2 top-2 size-4 text-[#c71463]" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">{t("themeDescription")}</p>
+              </div>
+            </>
+          )}
+
+          {/* Security Tab */}
+          {activeTab === "security" && (
+            <>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+                {t("securitySettings")}
+              </p>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                    {t("changePasswordTitle")}
+                  </h3>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                        {t("currentPassword")}
+                      </label>
+                      <input
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30"
+                        placeholder={t("currentPasswordPlaceholder")}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                        {t("newPassword")}
+                      </label>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30"
+                        placeholder={t("newPasswordPlaceholder")}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                        {t("confirmPassword")}
+                      </label>
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c71463]/30"
+                        placeholder={t("confirmPasswordPlaceholder")}
+                      />
+                    </div>
+                    
+                    {passwordError && (
+                      <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+                        {passwordError}
+                      </div>
+                    )}
+                    
+                    {passwordSuccess && (
+                      <div className="rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-600 dark:text-green-400">
+                        {t("passwordChangeSuccess")}
+                      </div>
+                    )}
+                    
+                    <button
+                      type="button"
+                      onClick={handlePasswordChange}
+                      className="px-4 py-2.5 bg-[#c71463] text-white rounded-xl text-sm font-medium hover:bg-[#a50f51] transition-all"
+                    >
+                      {t("updatePassword")}
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    {t("twoFactorTitle")}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    {t("twoFactorDescription")}
+                  </p>
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  >
+                    {t("enable2FA")}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Account Tab */}
+          {activeTab === "account" && (
+            <>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+                {t("accountSettings")}
+              </p>
+              
+              <div className="space-y-4">
+                <div className="rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {t("accountInfoTitle")}
+                    </h3>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500 dark:text-gray-400">{t("accountEmail")}:</span>
+                      <span className="text-gray-900 dark:text-white font-medium">{user?.email}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500 dark:text-gray-400">{t("accountRole")}:</span>
+                      <span className="text-gray-900 dark:text-white font-medium capitalize">{user?.role}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500 dark:text-gray-400">{t("accountCompletion")}:</span>
+                      <span className="text-gray-900 dark:text-white font-medium">{user?.profileCompletionPercentage ?? 0}%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                    <AlertTriangle className="size-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-semibold text-red-900 dark:text-red-200 mb-1">
+                        {t("deleteAccountTitle")}
+                      </h3>
+                      <p className="text-sm text-red-700 dark:text-red-300 mb-3">
+                        {t("deleteAccountWarning")}
+                      </p>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-red-700 dark:text-red-300 mb-1.5">
+                            {t("deleteConfirmLabel")}
+                          </label>
+                          <input
+                            type="text"
+                            value={deleteConfirm}
+                            onChange={(e) => setDeleteConfirm(e.target.value)}
+                            placeholder={t("deleteConfirmPlaceholder")}
+                            className="w-full px-3 py-2.5 rounded-xl border border-red-300 dark:border-red-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                          />
+                        </div>
+                        
+                        <button
+                          type="button"
+                          onClick={handleDeleteAccount}
+                          disabled={deleteConfirm !== "DELETE" || deleting}
+                          className="flex items-center gap-2 px-4 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                        >
+                          <Trash2 className="size-4" />
+                          {deleting ? t("deletingAccount") : t("deleteAccountButton")}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
